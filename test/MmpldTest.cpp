@@ -18,50 +18,63 @@ namespace test {
     public:
 
         TEST_METHOD(TestLowLevel) {
+            typedef mmpld::colour_type c_t;
+            typedef mmpld::vertex_type v_t;
+            typedef std::underlying_type<c_t>::type cc_t;
+            typedef std::underlying_type<v_t>::type cv_t;
             this->setWorkingDirectory();
 
-            this->testLowLevlSingleList<std::ifstream>("test_xyz_float_int_float.mmpld");
-            this->testLowLevlSingleList<FILE *>("test_xyz_float_int_float.mmpld");
-            this->testLowLevlSingleList<int>("test_xyz_float_int_float.mmpld");
-            this->testLowLevlSingleList<HANDLE>("test_xyz_float_int_float.mmpld");
+            {
+                auto header = this->testLowLevelSingleList<std::ifstream>("test_xyz_float_int_float.mmpld");
+                Assert::AreEqual(cv_t(v_t::float_xyz), cv_t(header.vertex_type), L"vertex_type of test_xyz_float_int_float.mmpld");
+                Assert::AreEqual(cc_t(c_t::intensity), cc_t(header.colour_type), L"colour_type of test_xyz_float_int_float.mmpld");
+            }
+            {
+                auto header = this->testLowLevelSingleList<FILE *>("test_xyz_float_none.mmpld");
+                Assert::AreEqual(cv_t(v_t::float_xyz), cv_t(header.vertex_type), L"vertex_type of test_xyz_float_none.mmpld");
+                Assert::AreEqual(cc_t(c_t::none), cc_t(header.colour_type), L"colour_type of test_xyz_float_none.mmpld");
+            }
+            {
+                auto header = this->testLowLevelSingleList<int>("test_xyz_float_rgb_float.mmpld");
+                Assert::AreEqual(cv_t(v_t::float_xyz), cv_t(header.vertex_type), L"vertex_type of test_xyz_float_rgb_float.mmpld");
+                Assert::AreEqual(cc_t(c_t::rgb32), cc_t(header.colour_type), L"colour_type of test_xyz_float_rgb_float.mmpld");
+            }
+            {
+                auto header = this->testLowLevelSingleList<HANDLE>("test_xyz_float_rgba_byte.mmpld");
+                Assert::AreEqual(cv_t(v_t::float_xyz), cv_t(header.vertex_type), L"vertex_type of test_xyz_float_rgba_byte.mmpld");
+                Assert::AreEqual(cc_t(c_t::rgba8), cc_t(header.colour_type), L"colour_type of test_xyz_float_rgba_byte.mmpld");
+            }
 
-            this->testLowLevlSingleList<FILE *>(L"test_xyz_float_int_float.mmpld");
-            this->testLowLevlSingleList<int>(L"test_xyz_float_int_float.mmpld");
-            this->testLowLevlSingleList<HANDLE>(L"test_xyz_float_int_float.mmpld");
-
-
-            /*
-            mmpld::file<std::ifstream> cppFile("test_xyz_float_int_float.mmpld");
-            mmpld::file<int> fhFile("test_xyz_float_int_float.mmpld");
-            mmpld::file<FILE *> fpFile("test_xyz_float_int_float.mmpld");
-            mmpld::file<HANDLE> wFile("test_xyz_float_int_float.mmpld");
-           
-            mmpld::frame_header frameHeader;
-            std::vector<std::uint64_t> offsets;
-            cppFile.read_frame(0, frameHeader, std::back_inserter(offsets));
-            fhFile.read_frame(0, frameHeader, std::back_inserter(offsets));
-            fpFile.read_frame(0, frameHeader, std::back_inserter(offsets));
-            wFile.read_frame(0, frameHeader, std::back_inserter(offsets));
-
-            std::ifstream cs("mmpld", std::ios::binary);
-            mmpld::read_file_header(cs, fileHeader, seekTable);
-            mmpld::read_frame_header(cs, frameHeader, fileHeader.version);
-            mmpld::read_list_header(cs, listHeader);
-
-            int fh = ::_open("mmpld", O_RDONLY);
-            mmpld::read_file_header(fh, fileHeader, seekTable);
-            mmpld::read_frame_header(fh, frameHeader, fileHeader.version);
-            mmpld::read_list_header(fh, listHeader);
-
-            FILE *fp = ::fopen("mmpld", "wr");
-            mmpld::read_file_header(fp, fileHeader, seekTable);
-            mmpld::read_frame_header(fp, frameHeader, fileHeader.version);
-            mmpld::read_list_header(fp, listHeader);
-
-            auto props = mmpld::get_properties<unsigned int>(listHeader);
-            auto stride = mmpld::get_stride<unsigned int>(listHeader);
-            */
-
+            {
+                auto header = this->testLowLevelSingleList<FILE *>(L"test_xyz_float_rgba_float.mmpld");
+                Assert::AreEqual(cv_t(v_t::float_xyz), cv_t(header.vertex_type), L"vertex_type of test_xyz_float_rgba_float.mmpld");
+                Assert::AreEqual(cc_t(c_t::rgba32), cc_t(header.colour_type), L"colour_type of test_xyz_float_rgba_float.mmpld");
+            }
+            {
+                auto header = this->testLowLevelSingleList<int>(L"test_xyzr_float_int_float.mmpld");
+                Assert::AreEqual(cv_t(v_t::float_xyzr), cv_t(header.vertex_type), L"vertex_type of test_xyzr_float_int_float.mmpld");
+                Assert::AreEqual(cc_t(c_t::intensity), cc_t(header.colour_type), L"colour_type of test_xyzr_float_int_float.mmpld");
+            }
+            {
+                auto header = this->testLowLevelSingleList<HANDLE>(L"test_xyzr_float_none.mmpld");
+                Assert::AreEqual(cv_t(v_t::float_xyzr), cv_t(header.vertex_type), L"vertex_type of test_xyzr_float_none.mmpld");
+                Assert::AreEqual(cc_t(c_t::none), cc_t(header.colour_type), L"colour_type of test_xyzr_float_none.mmpld");
+            }
+            {
+                auto header = this->testLowLevelSingleList<HANDLE>(L"test_xyzr_float_rgb_float.mmpld");
+                Assert::AreEqual(cv_t(v_t::float_xyzr), cv_t(header.vertex_type), L"vertex_type of test_xyzr_float_rgb_float.mmpld");
+                Assert::AreEqual(cc_t(c_t::rgb32), cc_t(header.colour_type), L"colour_type of test_xyzr_float_rgb_float.mmpld");
+            }
+            {
+                auto header = this->testLowLevelSingleList<HANDLE>(L"test_xyzr_float_rgba_byte.mmpld");
+                Assert::AreEqual(cv_t(v_t::float_xyzr), cv_t(header.vertex_type), L"vertex_type of test_xyzr_float_rgba_byte.mmpld");
+                Assert::AreEqual(cc_t(c_t::rgba8), cc_t(header.colour_type), L"colour_type of test_xyzr_float_rgba_byte.mmpld");
+            }
+            {
+                auto header = this->testLowLevelSingleList<HANDLE>(L"test_xyzr_float_rgba_float.mmpld");
+                Assert::AreEqual(cv_t(v_t::float_xyzr), cv_t(header.vertex_type), L"vertex_type of test_xyzr_float_rgba_float.mmpld");
+                Assert::AreEqual(cc_t(c_t::rgba32), cc_t(header.colour_type), L"colour_type of test_xyzr_float_rgba_float.mmpld");
+            }
         }
 
         TEST_METHOD(TestProperties) {
@@ -319,7 +332,7 @@ namespace test {
 
     private:
 
-        template<class F, class C> mmpld::list_header testLowLevlSingleList(const C *path) {
+        template<class F, class C> mmpld::list_header testLowLevelSingleList(const C *path) {
             typedef F file_type;
             typedef mmpld::detail::io_traits<F, C> io_type;
 
