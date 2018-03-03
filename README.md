@@ -61,8 +61,12 @@ for (decltype(fileHeader.frames) i = 0; i < fileHeader.frames; ++i) {
             ptr += cnt;
             rem -= cnt;
         }
+
+        /* Do something with the content of 'particles'. */
     } /* end for (decltype(frameHeader.lists) j = 0; ... */
 } /* end for (decltype(fileHeader.frames) i = 0; ... */
+
+::CloseHandle(hFile);
 ```
 
 
