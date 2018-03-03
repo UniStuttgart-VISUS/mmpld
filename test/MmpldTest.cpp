@@ -64,6 +64,82 @@ namespace test {
 
         }
 
+        TEST_METHOD(TestStride) {
+            mmpld::list_header header;
+
+            header.colour_type = mmpld::colour_type::none;
+            header.vertex_type = mmpld::vertex_type::float_xyz;
+            Assert::AreEqual(size_t(3 * sizeof(float)), mmpld::get_stride<size_t>(header), L"Stride of float_xyz + none");
+
+            header.colour_type = mmpld::colour_type::none;
+            header.vertex_type = mmpld::vertex_type::float_xyzr;
+            Assert::AreEqual(size_t(4 * sizeof(float)), mmpld::get_stride<size_t>(header), L"Stride of float_xyzr + none");
+
+            header.colour_type = mmpld::colour_type::none;
+            header.vertex_type = mmpld::vertex_type::short_xyz;
+            Assert::AreEqual(size_t(3 * sizeof(short)), mmpld::get_stride<size_t>(header), L"Stride of short_xyz + none");
+
+            header.colour_type = mmpld::colour_type::intensity;
+            header.vertex_type = mmpld::vertex_type::float_xyz;
+            Assert::AreEqual(size_t(3 * sizeof(float) + sizeof(float)), mmpld::get_stride<size_t>(header), L"Stride of float_xyz + intensity");
+
+            header.colour_type = mmpld::colour_type::intensity;
+            header.vertex_type = mmpld::vertex_type::float_xyzr;
+            Assert::AreEqual(size_t(4 * sizeof(float) + sizeof(float)), mmpld::get_stride<size_t>(header), L"Stride of float_xyzr + intensity");
+
+            header.colour_type = mmpld::colour_type::intensity;
+            header.vertex_type = mmpld::vertex_type::short_xyz;
+            Assert::AreEqual(size_t(3 * sizeof(short) + sizeof(float)), mmpld::get_stride<size_t>(header), L"Stride of short_xyz + intensity");
+
+            header.colour_type = mmpld::colour_type::rgb8;
+            header.vertex_type = mmpld::vertex_type::float_xyz;
+            Assert::AreEqual(size_t(3 * sizeof(float) + 3 * sizeof(char)), mmpld::get_stride<size_t>(header), L"Stride of float_xyz + rgb8");
+
+            header.colour_type = mmpld::colour_type::rgb8;
+            header.vertex_type = mmpld::vertex_type::float_xyzr;
+            Assert::AreEqual(size_t(4 * sizeof(float) + 3 * sizeof(char)), mmpld::get_stride<size_t>(header), L"Stride of float_xyzr + rgb8");
+
+            header.colour_type = mmpld::colour_type::rgb8;
+            header.vertex_type = mmpld::vertex_type::short_xyz;
+            Assert::AreEqual(size_t(3 * sizeof(short) + 3 * sizeof(char)), mmpld::get_stride<size_t>(header), L"Stride of short_xyz + rgb8");
+
+            header.colour_type = mmpld::colour_type::rgba8;
+            header.vertex_type = mmpld::vertex_type::float_xyz;
+            Assert::AreEqual(size_t(3 * sizeof(float) + 4 * sizeof(char)), mmpld::get_stride<size_t>(header), L"Stride of float_xyz + rgba8");
+
+            header.colour_type = mmpld::colour_type::rgba8;
+            header.vertex_type = mmpld::vertex_type::float_xyzr;
+            Assert::AreEqual(size_t(4 * sizeof(float) + 4 * sizeof(char)), mmpld::get_stride<size_t>(header), L"Stride of float_xyzr + rgba8");
+
+            header.colour_type = mmpld::colour_type::rgba8;
+            header.vertex_type = mmpld::vertex_type::short_xyz;
+            Assert::AreEqual(size_t(3 * sizeof(short) + 4 * sizeof(char)), mmpld::get_stride<size_t>(header), L"Stride of short_xyz + rgba8");
+
+            header.colour_type = mmpld::colour_type::rgb32;
+            header.vertex_type = mmpld::vertex_type::float_xyz;
+            Assert::AreEqual(size_t(3 * sizeof(float) + 3 * sizeof(float)), mmpld::get_stride<size_t>(header), L"Stride of float_xyz + rgb32");
+
+            header.colour_type = mmpld::colour_type::rgb32;
+            header.vertex_type = mmpld::vertex_type::float_xyzr;
+            Assert::AreEqual(size_t(4 * sizeof(float) + 3 * sizeof(float)), mmpld::get_stride<size_t>(header), L"Stride of float_xyzr + rgb32");
+
+            header.colour_type = mmpld::colour_type::rgb32;
+            header.vertex_type = mmpld::vertex_type::short_xyz;
+            Assert::AreEqual(size_t(3 * sizeof(short) + 3 * sizeof(float)), mmpld::get_stride<size_t>(header), L"Stride of short_xyz + rgb32");
+
+            header.colour_type = mmpld::colour_type::rgba32;
+            header.vertex_type = mmpld::vertex_type::float_xyz;
+            Assert::AreEqual(size_t(3 * sizeof(float) + 4 * sizeof(float)), mmpld::get_stride<size_t>(header), L"Stride of float_xyz + rgba32");
+
+            header.colour_type = mmpld::colour_type::rgba32;
+            header.vertex_type = mmpld::vertex_type::float_xyzr;
+            Assert::AreEqual(size_t(4 * sizeof(float) + 4 * sizeof(float)), mmpld::get_stride<size_t>(header), L"Stride of float_xyzr + rgba32");
+
+            header.colour_type = mmpld::colour_type::rgba32;
+            header.vertex_type = mmpld::vertex_type::short_xyz;
+            Assert::AreEqual(size_t(3 * sizeof(short) + 4 * sizeof(float)), mmpld::get_stride<size_t>(header), L"Stride of short_xyz + rgba32");
+        }
+
         TEST_METHOD(TestToString) {
             Assert::AreEqual("none", mmpld::to_string<char>(mmpld::colour_type::none).c_str(), L"Stringisation of colour type \"none\"");
             Assert::AreEqual("rgb8", mmpld::to_string<char>(mmpld::colour_type::rgb8).c_str(), L"Stringisation of colour type \"rgb8\"");
