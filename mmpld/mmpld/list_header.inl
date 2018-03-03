@@ -6,6 +6,54 @@
 
 
 /*
+ * mmpld::get_offsets
+ */
+template<class T>
+T mmpld::get_offsets(const list_header& header, T& pos, T& rad, T& col) {
+    const auto retval = std::is_signed<T>::value
+        ? std::numeric_limits<T>::lowest()
+        : (std::numeric_limits<T>::max)();
+
+    pos = rad = col = retval;
+
+    switch (header.vertex_type) {
+        case mmpld::vertex_type::float_xyz:
+            pos = 0;
+            col = vertex_traits<vertex_type::float_xyz>::size;
+            break;
+
+        case mmpld::vertex_type::float_xyzr:
+            pos = 0;
+            rad = 3 * sizeof(float);
+            break;
+
+        case mmpld::vertex_type::short_xyz:
+            pos = 0;
+            break;
+    }
+
+    switch (header.colour_type) {
+        case mmpld::colour_type::rgb8:
+        case mmpld::colour_type::rgba8:
+        case mmpld::colour_type::intensity:
+        case mmpld::colour_type::rgb32:
+        case mmpld::colour_type::rgba32:
+            if (pos == retval) {
+                col = 0;
+            }
+            break;
+
+        case mmpld::colour_type::none:
+        default:
+            col = retval;
+            break;
+    }
+
+    return retval;
+}
+
+
+/*
  * mmpld::get_properties
  */
 template<class T> T mmpld::get_properties(const list_header& header) {
@@ -52,37 +100,37 @@ template<class T> T mmpld::get_stride(const list_header& header) {
 
     switch (header.vertex_type) {
         case mmpld::vertex_type::float_xyz:
-            retval += 12;
+            retval += vertex_traits<vertex_type::float_xyz>::size;
             break;
 
         case mmpld::vertex_type::float_xyzr:
-            retval += 16;
+            retval += vertex_traits<vertex_type::float_xyzr>::size;
             break;
 
         case mmpld::vertex_type::short_xyz:
-            retval += 6;
+            retval += vertex_traits<vertex_type::short_xyz>::size;
             break;
     }
 
     switch (header.colour_type) {
         case mmpld::colour_type::rgb8:
-            retval += 3;
+            retval += colour_traits<colour_type::rgb8>::size;
             break;
 
         case mmpld::colour_type::rgba8:
-            retval += 4;
+            retval += colour_traits<colour_type::rgba8>::size;
             break;
 
         case mmpld::colour_type::intensity:
-            retval += 4;
+            retval += colour_traits<colour_type::intensity>::size;
             break;
 
         case mmpld::colour_type::rgb32:
-            retval += 12;
+            retval += colour_traits<colour_type::rgb32>::size;
             break;
 
         case mmpld::colour_type::rgba32:
-            retval += 16;
+            retval += colour_traits<colour_type::rgba32>::size;
             break;
     }
 

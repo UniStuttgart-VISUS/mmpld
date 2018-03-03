@@ -61,6 +61,14 @@ namespace mmpld {
         ~file(void);
 
         /// <summary>
+        /// Gets the number of frames in the file.
+        /// </summary>
+        /// <returns>The number of frames in the file.</returns>
+        inline size_type frames(void) const {
+            return static_cast<size_type>(this->_file_header.frames);
+        }
+
+        /// <summary>
         /// Gets the file header of the MMPLD data set.
         /// </summary>
         /// <returns>The MMPLD header.</returns>

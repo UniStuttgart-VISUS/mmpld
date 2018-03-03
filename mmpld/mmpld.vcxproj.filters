@@ -53,6 +53,12 @@
     <ClInclude Include="mmpld\file.h">
       <Filter>Header Files\mmpld</Filter>
     </ClInclude>
+    <ClInclude Include="mmpld\particle_view.h">
+      <Filter>Header Files\mmpld</Filter>
+    </ClInclude>
+    <ClInclude Include="mmpld\convert.h">
+      <Filter>Header Files\mmpld</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="mmpld\file_header.inl">
@@ -74,6 +80,9 @@
       <Filter>Header Files\mmpld</Filter>
     </None>
     <None Include="mmpld\colour_type.inl">
+      <Filter>Header Files\mmpld</Filter>
+    </None>
+    <None Include="mmpld\convert.inl">
       <Filter>Header Files\mmpld</Filter>
     </None>
   </ItemGroup>

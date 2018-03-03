@@ -69,7 +69,7 @@ namespace mmpld {
     }
 
     /// <summary>
-    /// Allows testing two <see cref="particle_properties" />.
+    /// Allows for testing two <see cref="particle_properties" />.
     /// </summary>
     inline particle_properties operator &(const particle_properties lhs,
             const particle_properties rhs) {
@@ -79,7 +79,7 @@ namespace mmpld {
     }
 
     /// <summary>
-    /// Allows for combining two <see cref="particle_properties" />.
+    /// Allows for testing two <see cref="particle_properties" />.
     /// </summary>
     inline particle_properties& operator &=(particle_properties& lhs,
             const particle_properties rhs) {

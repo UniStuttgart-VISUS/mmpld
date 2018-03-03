@@ -17,6 +17,109 @@ namespace test {
 
     public:
 
+        TEST_METHOD(TestConvert) {
+            {
+                typedef mmpld::particle_view<mmpld::vertex_type::float_xyz, mmpld::colour_type::intensity> src_view;
+                typedef src_view dst_view;
+                std::vector<std::uint8_t> src(2 * src_view::stride());
+                std::vector<std::uint8_t> dst(2 * dst_view::stride());
+                mmpld::list_header src_header;
+                src_header.vertex_type = src_view::vertex_traits::vertex_type;
+                src_header.colour_type = src_view::colour_traits::colour_type;
+                src_header.radius = 12.0f;
+                src_header.colour[0] = 0.7f;
+                src_header.colour[1] = 0.8f;
+                src_header.colour[2] = 0.9f;
+                src_header.colour[3] = 0.5f;
+
+                src_view::position(src.data())[0] = 1.0f;
+                src_view::position(src.data())[1] = 2.0f;
+                src_view::position(src.data())[2] = 3.0f;
+                *src_view::colour(src.data()) = 0.5f;
+
+                src_view::position(src.data() + src_view::stride())[0] = 4.0f;
+                src_view::position(src.data() + src_view::stride())[1] = 5.0f;
+                src_view::position(src.data() + src_view::stride())[2] = 6.0f;
+                *src_view::colour(src.data() + src_view::stride()) = 1.0f;
+
+                auto cnt = mmpld::convert<dst_view>(src.data(), src_header, dst.data(), 2);
+                Assert::AreEqual(size_t(2), cnt, L"All particles have been converted.");
+
+                for (size_t i = 0, end = src.size(); i < end; ++i) {
+                    Assert::AreEqual(src[i], dst[i], L"Particle has been copied.");
+                }
+            }
+
+            {
+                typedef mmpld::particle_view<mmpld::vertex_type::float_xyz, mmpld::colour_type::intensity> src_view;
+                typedef mmpld::particle_view<mmpld::vertex_type::short_xyz, mmpld::colour_type::intensity> dst_view;
+                std::vector<std::uint8_t> src(2 * src_view::stride());
+                std::vector<std::uint8_t> dst(2 * dst_view::stride());
+                mmpld::list_header src_header;
+                src_header.vertex_type = src_view::vertex_traits::vertex_type;
+                src_header.colour_type = src_view::colour_traits::colour_type;
+                src_header.radius = 12.0f;
+                src_header.colour[0] = 0.7f;
+                src_header.colour[1] = 0.8f;
+                src_header.colour[2] = 0.9f;
+                src_header.colour[3] = 0.5f;
+
+                src_view::position(src.data())[0] = 1.0f;
+                src_view::position(src.data())[1] = 2.0f;
+                src_view::position(src.data())[2] = 3.0f;
+                *src_view::colour(src.data()) = 0.5f;
+
+                src_view::position(src.data() + src_view::stride())[0] = 4.0f;
+                src_view::position(src.data() + src_view::stride())[1] = 5.0f;
+                src_view::position(src.data() + src_view::stride())[2] = 6.0f;
+                *src_view::colour(src.data() + src_view::stride()) = 1.0f;
+
+                auto cnt = mmpld::convert<dst_view>(src.data(), src_header, dst.data(), 2);
+                Assert::AreEqual(size_t(2), cnt, L"All particles have been converted.");
+
+                Assert::AreEqual(dst_view::vertex_type(1), dst_view::position(dst.data())[0], L"Conversion to short at [0]");
+                Assert::AreEqual(dst_view::vertex_type(2), dst_view::position(dst.data())[1], L"Conversion to short at [1]");
+                Assert::AreEqual(dst_view::vertex_type(3), dst_view::position(dst.data())[2], L"Conversion to short at [2]");
+                Assert::AreEqual(*src_view::colour(src.data()), *dst_view::colour(dst.data()), L"Unchanged intensity");
+
+                Assert::AreEqual(dst_view::vertex_type(4), dst_view::position(dst.data() + dst_view::stride())[0], L"Conversion to short at [0]");
+                Assert::AreEqual(dst_view::vertex_type(5), dst_view::position(dst.data() + dst_view::stride())[1], L"Conversion to short at [1]");
+                Assert::AreEqual(dst_view::vertex_type(6), dst_view::position(dst.data() + dst_view::stride())[2], L"Conversion to short at [2]");
+                Assert::AreEqual(*src_view::colour(src.data() + src_view::stride()), *dst_view::colour(dst.data() + dst_view::stride()), L"Unchanged intensity");
+
+            }
+
+            {
+                typedef mmpld::particle_view<mmpld::vertex_type::float_xyz, mmpld::colour_type::intensity> src_view;
+                typedef mmpld::particle_view<mmpld::vertex_type::float_xyzr, mmpld::colour_type::none> dst_view;
+                std::vector<std::uint8_t> src(2 * src_view::stride());
+                std::vector<std::uint8_t> dst(2 * dst_view::stride());
+                mmpld::list_header src_header;
+                src_header.vertex_type = src_view::vertex_traits::vertex_type;
+                src_header.colour_type = src_view::colour_traits::colour_type;
+                src_header.radius = 12.0f;
+                src_header.colour[0] = 0.7f;
+                src_header.colour[1] = 0.8f;
+                src_header.colour[2] = 0.9f;
+                src_header.colour[3] = 0.5f;
+
+                src_view::position(src.data())[0] = 1.0f;
+                src_view::position(src.data())[1] = 2.0f;
+                src_view::position(src.data())[2] = 3.0f;
+                *src_view::colour(src.data()) = 0.5f;
+
+                src_view::position(src.data() + src_view::stride())[0] = 4.0f;
+                src_view::position(src.data() + src_view::stride())[1] = 5.0f;
+                src_view::position(src.data() + src_view::stride())[2] = 6.0f;
+                *src_view::colour(src.data() + src_view::stride()) = 1.0f;
+
+                auto cnt = mmpld::convert<dst_view>(src.data(), src_header, dst.data(), 2);
+                Assert::AreEqual(size_t(2), cnt, L"All particles have been converted.");
+            }
+
+
+        }
+
         TEST_METHOD(TestLowLevel) {
             typedef mmpld::colour_type c_t;
             typedef mmpld::vertex_type v_t;
@@ -75,6 +178,173 @@ namespace test {
                 Assert::AreEqual(cv_t(v_t::float_xyzr), cv_t(header.vertex_type), L"vertex_type of test_xyzr_float_rgba_float.mmpld");
                 Assert::AreEqual(cc_t(c_t::rgba32), cc_t(header.colour_type), L"colour_type of test_xyzr_float_rgba_float.mmpld");
             }
+        }
+
+        TEST_METHOD(TestParticleView) {
+            const auto DATA = reinterpret_cast<std::uint8_t *>(1);
+
+            {
+                typedef mmpld::particle_view<mmpld::vertex_type::float_xyz, mmpld::colour_type::intensity> view_type;
+                typedef view_type::colour_type *c_t;
+                typedef view_type::vertex_type *v_t;
+                Assert::AreEqual(c_t(DATA + 12), view_type::colour(DATA), L"Colour pointer of colour_type::intensity");
+                Assert::AreEqual(v_t(DATA + 0), view_type::position(DATA), L"Position pointer of vertex_type::float_xyz");
+                Assert::AreEqual(v_t(nullptr), view_type::radius(DATA), L"Radius pointer of vertex_type::float_xyz");
+            }
+
+            {
+                typedef mmpld::particle_view<mmpld::vertex_type::float_xyz, mmpld::colour_type::none> view_type;
+                typedef view_type::colour_type *c_t;
+                typedef view_type::vertex_type *v_t;
+                Assert::AreEqual(c_t(nullptr), view_type::colour(DATA), L"Colour pointer of colour_type::none");
+                Assert::AreEqual(v_t(DATA + 0), view_type::position(DATA), L"Position pointer of vertex_type::float_xyz");
+                Assert::AreEqual(v_t(nullptr), view_type::radius(DATA), L"Radius pointer of vertex_type::float_xyz");
+            }
+
+            {
+                typedef mmpld::particle_view<mmpld::vertex_type::float_xyz, mmpld::colour_type::rgb32> view_type;
+                typedef view_type::colour_type *c_t;
+                typedef view_type::vertex_type *v_t;
+                Assert::AreEqual(c_t(DATA + 12), view_type::colour(DATA), L"Colour pointer of colour_type::rgb32");
+                Assert::AreEqual(v_t(DATA + 0), view_type::position(DATA), L"Position pointer of vertex_type::float_xyz");
+                Assert::AreEqual(v_t(nullptr), view_type::radius(DATA), L"Radius pointer of vertex_type::float_xyz");
+            }
+
+            {
+                typedef mmpld::particle_view<mmpld::vertex_type::float_xyz, mmpld::colour_type::rgb8> view_type;
+                typedef view_type::colour_type *c_t;
+                typedef view_type::vertex_type *v_t;
+                Assert::AreEqual(c_t(DATA + 12), view_type::colour(DATA), L"Colour pointer of colour_type::rgb8");
+                Assert::AreEqual(v_t(DATA + 0), view_type::position(DATA), L"Position pointer of vertex_type::float_xyz");
+                Assert::AreEqual(v_t(nullptr), view_type::radius(DATA), L"Radius pointer of vertex_type::float_xyz");
+            }
+
+            {
+                typedef mmpld::particle_view<mmpld::vertex_type::float_xyz, mmpld::colour_type::rgba32> view_type;
+                typedef view_type::colour_type *c_t;
+                typedef view_type::vertex_type *v_t;
+                Assert::AreEqual(c_t(DATA + 12), view_type::colour(DATA), L"Colour pointer of colour_type::rgba32");
+                Assert::AreEqual(v_t(DATA + 0), view_type::position(DATA), L"Position pointer of vertex_type::float_xyz");
+                Assert::AreEqual(v_t(nullptr), view_type::radius(DATA), L"Radius pointer of vertex_type::float_xyz");
+            }
+
+            {
+                typedef mmpld::particle_view<mmpld::vertex_type::float_xyz, mmpld::colour_type::rgba8> view_type;
+                typedef view_type::colour_type *c_t;
+                typedef view_type::vertex_type *v_t;
+                Assert::AreEqual(c_t(DATA + 12), view_type::colour(DATA), L"Colour pointer of colour_type::rgba8");
+                Assert::AreEqual(v_t(DATA + 0), view_type::position(DATA), L"Position pointer of vertex_type::float_xyz");
+                Assert::AreEqual(v_t(nullptr), view_type::radius(DATA), L"Radius pointer of vertex_type::float_xyz");
+            }
+
+            {
+                typedef mmpld::particle_view<mmpld::vertex_type::float_xyzr, mmpld::colour_type::intensity> view_type;
+                typedef view_type::colour_type *c_t;
+                typedef view_type::vertex_type *v_t;
+                Assert::AreEqual(c_t(DATA + 16), view_type::colour(DATA), L"Colour pointer of colour_type::intensity");
+                Assert::AreEqual(v_t(DATA + 0), view_type::position(DATA), L"Position pointer of vertex_type::float_xyzr");
+                Assert::AreEqual(v_t(DATA + 12), view_type::radius(DATA), L"Radius pointer of vertex_type::float_xyzr");
+            }
+
+            {
+                typedef mmpld::particle_view<mmpld::vertex_type::float_xyzr, mmpld::colour_type::none> view_type;
+                typedef view_type::colour_type *c_t;
+                typedef view_type::vertex_type *v_t;
+                Assert::AreEqual(c_t(nullptr), view_type::colour(DATA), L"Colour pointer of colour_type::none");
+                Assert::AreEqual(v_t(DATA + 0), view_type::position(DATA), L"Position pointer of vertex_type::float_xyzr");
+                Assert::AreEqual(v_t(DATA + 12), view_type::radius(DATA), L"Radius pointer of vertex_type::float_xyzr");
+            }
+
+            {
+                typedef mmpld::particle_view<mmpld::vertex_type::float_xyzr, mmpld::colour_type::rgb32> view_type;
+                typedef view_type::colour_type *c_t;
+                typedef view_type::vertex_type *v_t;
+                Assert::AreEqual(c_t(DATA + 16), view_type::colour(DATA), L"Colour pointer of colour_type::rgb32");
+                Assert::AreEqual(v_t(DATA + 0), view_type::position(DATA), L"Position pointer of vertex_type::float_xyzr");
+                Assert::AreEqual(v_t(DATA + 12), view_type::radius(DATA), L"Radius pointer of vertex_type::float_xyzr");
+            }
+
+            {
+                typedef mmpld::particle_view<mmpld::vertex_type::float_xyzr, mmpld::colour_type::rgb8> view_type;
+                typedef view_type::colour_type *c_t;
+                typedef view_type::vertex_type *v_t;
+                Assert::AreEqual(c_t(DATA + 16), view_type::colour(DATA), L"Colour pointer of colour_type::rgb8");
+                Assert::AreEqual(v_t(DATA + 0), view_type::position(DATA), L"Position pointer of vertex_type::float_xyzr");
+                Assert::AreEqual(v_t(DATA + 12), view_type::radius(DATA), L"Radius pointer of vertex_type::float_xyzr");
+            }
+
+            {
+                typedef mmpld::particle_view<mmpld::vertex_type::float_xyzr, mmpld::colour_type::rgba32> view_type;
+                typedef view_type::colour_type *c_t;
+                typedef view_type::vertex_type *v_t;
+                Assert::AreEqual(c_t(DATA + 16), view_type::colour(DATA), L"Colour pointer of colour_type::rgba32");
+                Assert::AreEqual(v_t(DATA + 0), view_type::position(DATA), L"Position pointer of vertex_type::float_xyzr");
+                Assert::AreEqual(v_t(DATA + 12), view_type::radius(DATA), L"Radius pointer of vertex_type::float_xyzr");
+            }
+
+            {
+                typedef mmpld::particle_view<mmpld::vertex_type::float_xyzr, mmpld::colour_type::rgba8> view_type;
+                typedef view_type::colour_type *c_t;
+                typedef view_type::vertex_type *v_t;
+                Assert::AreEqual(c_t(DATA + 16), view_type::colour(DATA), L"Colour pointer of colour_type::rgba8");
+                Assert::AreEqual(v_t(DATA + 0), view_type::position(DATA), L"Position pointer of vertex_type::float_xyzr");
+                Assert::AreEqual(v_t(DATA + 12), view_type::radius(DATA), L"Radius pointer of vertex_type::float_xyzr");
+            }
+
+            {
+                typedef mmpld::particle_view<mmpld::vertex_type::short_xyz, mmpld::colour_type::intensity> view_type;
+                typedef view_type::colour_type *c_t;
+                typedef view_type::vertex_type *v_t;
+                Assert::AreEqual(c_t(DATA + 6), view_type::colour(DATA), L"Colour pointer of colour_type::intensity");
+                Assert::AreEqual(v_t(DATA + 0), view_type::position(DATA), L"Position pointer of vertex_type::short_xyz");
+                Assert::AreEqual(v_t(nullptr), view_type::radius(DATA), L"Radius pointer of vertex_type::short_xyz");
+            }
+
+            {
+                typedef mmpld::particle_view<mmpld::vertex_type::short_xyz, mmpld::colour_type::none> view_type;
+                typedef view_type::colour_type *c_t;
+                typedef view_type::vertex_type *v_t;
+                Assert::AreEqual(c_t(nullptr), view_type::colour(DATA), L"Colour pointer of colour_type::none");
+                Assert::AreEqual(v_t(DATA + 0), view_type::position(DATA), L"Position pointer of vertex_type::short_xyz");
+                Assert::AreEqual(v_t(nullptr), view_type::radius(DATA), L"Radius pointer of vertex_type::short_xyz");
+            }
+
+            {
+                typedef mmpld::particle_view<mmpld::vertex_type::short_xyz, mmpld::colour_type::rgb32> view_type;
+                typedef view_type::colour_type *c_t;
+                typedef view_type::vertex_type *v_t;
+                Assert::AreEqual(c_t(DATA + 6), view_type::colour(DATA), L"Colour pointer of colour_type::rgb32");
+                Assert::AreEqual(v_t(DATA + 0), view_type::position(DATA), L"Position pointer of vertex_type::short_xyz");
+                Assert::AreEqual(v_t(nullptr), view_type::radius(DATA), L"Radius pointer of vertex_type::short_xyz");
+            }
+
+            {
+                typedef mmpld::particle_view<mmpld::vertex_type::short_xyz, mmpld::colour_type::rgb8> view_type;
+                typedef view_type::colour_type *c_t;
+                typedef view_type::vertex_type *v_t;
+                Assert::AreEqual(c_t(DATA + 6), view_type::colour(DATA), L"Colour pointer of colour_type::rgb8");
+                Assert::AreEqual(v_t(DATA + 0), view_type::position(DATA), L"Position pointer of vertex_type::short_xyz");
+                Assert::AreEqual(v_t(nullptr), view_type::radius(DATA), L"Radius pointer of vertex_type::short_xyz");
+            }
+
+            {
+                typedef mmpld::particle_view<mmpld::vertex_type::short_xyz, mmpld::colour_type::rgba32> view_type;
+                typedef view_type::colour_type *c_t;
+                typedef view_type::vertex_type *v_t;
+                Assert::AreEqual(c_t(DATA + 6), view_type::colour(DATA), L"Colour pointer of colour_type::rgba32");
+                Assert::AreEqual(v_t(DATA + 0), view_type::position(DATA), L"Position pointer of vertex_type::short_xyz");
+                Assert::AreEqual(v_t(nullptr), view_type::radius(DATA), L"Radius pointer of vertex_type::short_xyz");
+            }
+
+            {
+                typedef mmpld::particle_view<mmpld::vertex_type::short_xyz, mmpld::colour_type::rgba8> view_type;
+                typedef view_type::colour_type *c_t;
+                typedef view_type::vertex_type *v_t;
+                Assert::AreEqual(c_t(DATA + 6), view_type::colour(DATA), L"Colour pointer of colour_type::rgba8");
+                Assert::AreEqual(v_t(DATA + 0), view_type::position(DATA), L"Position pointer of vertex_type::short_xyz");
+                Assert::AreEqual(v_t(nullptr), view_type::radius(DATA), L"Radius pointer of vertex_type::short_xyz");
+            }
+
         }
 
         TEST_METHOD(TestProperties) {
@@ -328,6 +598,20 @@ namespace test {
             Assert::AreEqual(L"float_xyz", mmpld::to_string<wchar_t>(mmpld::vertex_type::float_xyz).c_str(), L"Stringisation of vertex type \"float_xyz\"");
             Assert::AreEqual(L"float_xyzr", mmpld::to_string<wchar_t>(mmpld::vertex_type::float_xyzr).c_str(), L"Stringisation of vertex type \"float_xyzr\"");
             Assert::AreEqual(L"short_xyz", mmpld::to_string<wchar_t>(mmpld::vertex_type::short_xyz).c_str(), L"Stringisation of vertex type \"short_xyz\"");
+        }
+
+        TEST_METHOD(TestTraits) {
+            Assert::AreEqual(size_t(0), mmpld::colour_traits<mmpld::colour_type::none>::size, L"Size of colour_type::none");
+            Assert::AreEqual(size_t(3), mmpld::colour_traits<mmpld::colour_type::rgb8>::size, L"Size of colour_type::rgb8");
+            Assert::AreEqual(size_t(4), mmpld::colour_traits<mmpld::colour_type::rgba8>::size, L"Size of colour_type::rgba8");
+            Assert::AreEqual(size_t(4), mmpld::colour_traits<mmpld::colour_type::intensity>::size, L"Size of colour_type::intensity");
+            Assert::AreEqual(size_t(12), mmpld::colour_traits<mmpld::colour_type::rgb32>::size, L"Size of colour_type::rgb32");
+            Assert::AreEqual(size_t(16), mmpld::colour_traits<mmpld::colour_type::rgba32>::size, L"Size of colour_type::rgba32");
+
+            Assert::AreEqual(size_t(0), mmpld::vertex_traits<mmpld::vertex_type::none>::size, L"Size of vertex_type::none");
+            Assert::AreEqual(size_t(12), mmpld::vertex_traits<mmpld::vertex_type::float_xyz>::size, L"Size of vertex_type::float_xyz");
+            Assert::AreEqual(size_t(16), mmpld::vertex_traits<mmpld::vertex_type::float_xyzr>::size, L"Size of vertex_type::float_xyzr");
+            Assert::AreEqual(size_t(6), mmpld::vertex_traits<mmpld::vertex_type::short_xyz>::size, L"Size of vertex_type::short_xyz");
         }
 
     private:

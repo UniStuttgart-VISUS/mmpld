@@ -7,6 +7,7 @@
 #pragma once
 
 #include <limits>
+#include <type_traits>
 
 #include "mmpld/colour_type.h"
 #include "mmpld/io.h"
@@ -65,6 +66,20 @@ namespace mmpld {
     };
 
     /// <summary>
+    /// Gets the offsets of the individual components of a particle in the
+    /// given list.
+    /// </summary>
+    /// <tparam name="T">The scalar type to express the offsets in. If this is
+    /// a signed type, invalid offsets will be negative. Otherwise, the maximum
+    /// value of the type is used to express invalid offsets.</tparam>
+    /// <param name="pos">Receives the offset of the position in bytes.</param>
+    /// <param name="rad">Receives the offset of the radius in bytes.</param>
+    /// <param name="col">Receives the offset of the colour in bytes.</param>
+    /// <returns>The value that is used to express invalid offsets.</returns>
+    template<class T>
+    T get_offsets(const list_header& header, T& pos, T& rad, T& col);
+
+    /// <summary>
     /// Retrieve the particle properties of the list described by the given
     /// header.
     /// </summary>
@@ -73,6 +88,18 @@ namespace mmpld {
     /// <param name="header">The list header to get the properties for.</param>
     /// <returns>A bitmask holding the particle properties.</returns>
     template<class T> T get_properties(const list_header& header);
+
+    /// <summary>
+    /// Compute the size of the raw particle data in the list.
+    /// </summary>
+    /// <tparam name="T">The scalar type to express the size in. This is
+    /// usually <c>size_t</c> when working on the CPU or <c>UINT</c> when
+    /// working with Direct3D.</tparam>
+    /// <param name="header">The list header to get the size for.</param>
+    /// <returns>The total size of the particles in bytes.</returns>
+    template<class T> inline T get_size(const list_header& header) {
+        return static_cast<T>(header.particles) * get_stride<T>(header);
+    }
 
     /// <summary>
     /// Compute the stride of the particles in the list described by the given
