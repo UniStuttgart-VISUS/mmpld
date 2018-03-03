@@ -1,92 +1,67 @@
 /// <copyright file="io.inl" company="Visualisierungsinstitut der Universität Stuttgart">
 /// Copyright © 2018 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
-/// Copyright © 2017 SFB-TRR 161. Alle Rechte vorbehalten.
 /// </copyright>
 /// <author>Christoph Müller</author>
 
 
 /*
- * mmpld::detail::open
+ * mmpld::detail::read_all
  */
-template<class C, class T>
-void mmpld::detail::open(const C *path, std::basic_ifstream<C, T>& stream) {
-    if (path == nullptr) {
-        std::invalid_argument("The path must not be nullptr.");
-    }
-
-    stream.open(path, std::ios::binary);
-}
-
-
-/*
- * mmpld::detail::open
- */
-template<class C> void mmpld::detail::open(const C *path, int& stream) {
-    if (path == nullptr) {
-        std::invalid_argument("The path must not be nullptr.");
-    }
-
-    stream = io_traits<C>::open(path, O_BINARY | O_RDONLY);
-    if (stream == -1) {
-        throw std::system_error(errno, std::system_category());
-    }
-}
-
-
-/*
- * mmpld::detail::open
- */
-template<class C> void mmpld::detail::open(const C *path, FILE *& stream) {
-    if (path == nullptr) {
-        std::invalid_argument("The path must not be nullptr.");
-    }
-
-    stream = io_traits<C>::fopen(path, MMPLD_TPL_LITERAL(C, "rb"));
-    if (stream == nullptr) {
-        throw std::system_error(errno, std::system_category());
-    }
-}
-
-
-/*
- * mmpld::detail::read
- */
-template<class T> T& mmpld::detail::read(int handle, T& retval) {
-    auto dst = reinterpret_cast<std::uint8_t *>(&retval);
-    auto rem = sizeof(retval);
+template<class T>
+void mmpld::detail::read_all(FILE *file, T *dst, const size_t cnt) {
+    auto ptr = reinterpret_cast<std::uint8_t *>(dst);
+    auto rem = cnt * sizeof(T);
 
     while (rem > 0) {
-#if defined(WIN32)
-        auto cnt = ::_read(handle, dst, rem);
-#else /* defined(WIN32) */
-        auto cnt = ::read(handle, dst, rem);
-#endif /* defined(WIN32) */
+        auto cnt = ::fread(ptr, 1, rem, file);
+        if (::ferror(file)) {
+            throw std::system_error(errno, std::system_category());
+        }
+        ptr += cnt;
+        rem -= cnt;
+    }
+}
+
+
+/*
+ * mmpld::detail::read_all
+ */
+template<class T>
+void mmpld::detail::read_all(int file, T *dst, const size_t cnt) {
+    auto ptr = reinterpret_cast<std::uint8_t *>(dst);
+    auto rem = static_cast<unsigned int>(cnt * sizeof(T));
+
+    while (rem > 0) {
+#if defined(_WIN32)
+        auto cnt = ::_read(file, ptr, rem);
+#else /* defined(_WIN32) */
+        auto cnt = ::read(file, ptr, rem);
+#endif /* defined(_WIN32) */
         if (cnt == -1) {
             throw std::system_error(errno, std::system_category());
         }
-        dst += cnt;
+        ptr += cnt;
         rem -= cnt;
     }
-
-    return retval;
 }
 
 
+#if defined(_WIN32)
 /*
- * mmpld::detail::read
+ * mmpld::detail::read_all
  */
-template<class T> T& mmpld::detail::read(FILE *handle, T& retval) {
-    auto dst = reinterpret_cast<std::uint8_t *>(&retval);
-    auto rem = sizeof(retval);
+template<class T>
+void mmpld::detail::read_all(HANDLE file, T *dst, const size_t cnt) {
+    auto ptr = reinterpret_cast<std::uint8_t *>(dst);
+    auto rem = static_cast<DWORD>(cnt * sizeof(T));
 
     while (rem > 0) {
-        auto cnt = ::fread(dst, rem, 1, handle);
-        if (::ferror(handle)) {
-            throw std::system_error(errno, std::system_category());
+        DWORD cnt = 0;
+        if (!::ReadFile(file, ptr, rem, &cnt, nullptr)) {
+            throw std::system_error(::GetLastError(), std::system_category());
         }
-        dst += cnt;
+        ptr += cnt;
         rem -= cnt;
     }
-
-    return retval;
 }
+#endif /* defined(_WIN32) */
