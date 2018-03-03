@@ -41,8 +41,8 @@ namespace mmpld {
     /// <param name="version">The file format version obtained from the
     /// <see cref="mmpld::file_header" />.</param>
     /// <returns><paramref name="stream" />.</returns>
-    template<class T> T& read_frame_header(T& stream, frame_header& header,
-        const std::uint16_t version);
+    template<class T> T& read_frame_header(T& stream, const std::uint16_t version,
+        frame_header& header);
 
 } /* end namespace mmpld */
 

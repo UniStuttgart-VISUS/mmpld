@@ -8,8 +8,8 @@
 /*
  * mmpld::read_frame_header
  */
-template<class T> T& mmpld::read_frame_header(T& stream, frame_header& header,
-        const std::uint16_t version) {
+template<class T> T& mmpld::read_frame_header(T& stream,
+        const std::uint16_t version, frame_header& header) {
     unsigned int major, minor;
     mmpld::parse_version(version, major, minor);
 

@@ -351,7 +351,7 @@ namespace test {
             Assert::AreEqual(seekTable.size(), size_t(fileHeader.frames), L"Number of frames and size of seek table match.");
 
             io_type::seek(hFile, seekTable[0]);
-            mmpld::read_frame_header(hFile, frameHeader, fileHeader.version);
+            mmpld::read_frame_header(hFile, fileHeader.version, frameHeader);
             Assert::AreEqual(std::int32_t(1), frameHeader.lists, L"Frame #1 holds one particle list.");
 
             mmpld::read_list_header(hFile, listHeader);

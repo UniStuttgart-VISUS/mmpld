@@ -12,7 +12,7 @@ The low-level API provides APIs for reading and interpreting the MMPLD file head
 ```C++
 #include "mmpld.h"
 
-mpld::file_header fileHeader;
+mmpld::file_header fileHeader;
 mmpld::frame_header frameHeader;
 mmpld::list_header listHeader;
 std::vector<std::uint8_t> particles;
@@ -33,12 +33,12 @@ for (decltype(fileHeader.frames) i = 0; i < fileHeader.frames; ++i) {
     offset.QuadPart = seekTable[i];
 
     // Seek to the begin of the frame using the offset from 'seekTable'.
-    if (!::SetFilePointerEx(file, o, nullptr, FILE_BEGIN)) { /* Handle error. */ }
+    if (!::SetFilePointerEx(hFile, offset, nullptr, FILE_BEGIN)) { /* Handle error. */ }
 
     // Read the frame header.
-    mmpld::read_frame_header(hFile, frameHeader, fileHeader.version);
+    mmpld::read_frame_header(hFile, fileHeader.version, frameHeader);
 
-    // Process all particles lists which are located directly after the frame
+    // Process all particle lists which are located directly after the frame
     // header. Each particle list has its own header which allows for finding
     // out about its format and size.
     for (decltype(frameHeader.lists) j = 0; j < frameHeader.lists; ++j) {
