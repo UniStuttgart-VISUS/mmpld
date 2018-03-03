@@ -70,5 +70,11 @@
     <None Include="mmpld\file.inl">
       <Filter>Header Files\mmpld</Filter>
     </None>
+    <None Include="mmpld\vertex_type.inl">
+      <Filter>Header Files\mmpld</Filter>
+    </None>
+    <None Include="mmpld\colour_type.inl">
+      <Filter>Header Files\mmpld</Filter>
+    </None>
   </ItemGroup>
 </Project>

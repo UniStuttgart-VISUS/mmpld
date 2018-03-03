@@ -166,11 +166,13 @@
     <ClInclude Include="mmpld\vertex_type.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="mmpld\colour_type.inl" />
     <None Include="mmpld\file.inl" />
     <None Include="mmpld\file_header.inl" />
     <None Include="mmpld\frame_header.inl" />
     <None Include="mmpld\io.inl" />
     <None Include="mmpld\list_header.inl" />
+    <None Include="mmpld\vertex_type.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -7,6 +7,9 @@
 #pragma once
 
 #include <cinttypes>
+#include <string>
+
+#include "mmpld/literal.h"
 
 
 namespace mmpld {
@@ -47,4 +50,14 @@ namespace mmpld {
         rgba32 = 5
     };
 
+    /// <summary>
+    /// Convert the given colour type to a human-readable representation.
+    /// </summary>
+    /// <tparam name="C>The character type of the string to create.</tparam>
+    /// <param name="value">The value to be converted.</param>
+    /// <returns>A string representation of <paramref name="value" />.</returns>
+    template<class C> std::basic_string<C> to_string(const colour_type value);
+
 } /* end namespace mmpld */
+
+#include "mmpld/colour_type.inl"

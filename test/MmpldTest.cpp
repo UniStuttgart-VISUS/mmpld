@@ -64,6 +64,32 @@ namespace test {
 
         }
 
+        TEST_METHOD(TestToString) {
+            Assert::AreEqual("none", mmpld::to_string<char>(mmpld::colour_type::none).c_str(), L"Stringisation of colour type \"none\"");
+            Assert::AreEqual("rgb8", mmpld::to_string<char>(mmpld::colour_type::rgb8).c_str(), L"Stringisation of colour type \"rgb8\"");
+            Assert::AreEqual("rgba8", mmpld::to_string<char>(mmpld::colour_type::rgba8).c_str(), L"Stringisation of colour type \"rgba8\"");
+            Assert::AreEqual("intensity", mmpld::to_string<char>(mmpld::colour_type::intensity).c_str(), L"Stringisation of colour type \"intensity\"");
+            Assert::AreEqual("rgb32", mmpld::to_string<char>(mmpld::colour_type::rgb32).c_str(), L"Stringisation of colour type \"rgb32\"");
+            Assert::AreEqual("rgba32", mmpld::to_string<char>(mmpld::colour_type::rgba32).c_str(), L"Stringisation of colour type \"rgba32\"");
+
+            Assert::AreEqual(L"none", mmpld::to_string<wchar_t>(mmpld::colour_type::none).c_str(), L"Stringisation of colour type \"none\"");
+            Assert::AreEqual(L"rgb8", mmpld::to_string<wchar_t>(mmpld::colour_type::rgb8).c_str(), L"Stringisation of colour type \"rgb8\"");
+            Assert::AreEqual(L"rgba8", mmpld::to_string<wchar_t>(mmpld::colour_type::rgba8).c_str(), L"Stringisation of colour type \"rgba8\"");
+            Assert::AreEqual(L"intensity", mmpld::to_string<wchar_t>(mmpld::colour_type::intensity).c_str(), L"Stringisation of colour type \"intensity\"");
+            Assert::AreEqual(L"rgb32", mmpld::to_string<wchar_t>(mmpld::colour_type::rgb32).c_str(), L"Stringisation of colour type \"rgb32\"");
+            Assert::AreEqual(L"rgba32", mmpld::to_string<wchar_t>(mmpld::colour_type::rgba32).c_str(), L"Stringisation of colour type \"rgba32\"");
+
+            Assert::AreEqual("none", mmpld::to_string<char>(mmpld::vertex_type::none).c_str(), L"Stringisation of vertex type \"none\"");
+            Assert::AreEqual("float_xyz", mmpld::to_string<char>(mmpld::vertex_type::float_xyz).c_str(), L"Stringisation of vertex type \"float_xyz\"");
+            Assert::AreEqual("float_xyzr", mmpld::to_string<char>(mmpld::vertex_type::float_xyzr).c_str(), L"Stringisation of vertex type \"float_xyzr\"");
+            Assert::AreEqual("short_xyz", mmpld::to_string<char>(mmpld::vertex_type::short_xyz).c_str(), L"Stringisation of vertex type \"short_xyz\"");
+
+            Assert::AreEqual(L"none", mmpld::to_string<wchar_t>(mmpld::vertex_type::none).c_str(), L"Stringisation of vertex type \"none\"");
+            Assert::AreEqual(L"float_xyz", mmpld::to_string<wchar_t>(mmpld::vertex_type::float_xyz).c_str(), L"Stringisation of vertex type \"float_xyz\"");
+            Assert::AreEqual(L"float_xyzr", mmpld::to_string<wchar_t>(mmpld::vertex_type::float_xyzr).c_str(), L"Stringisation of vertex type \"float_xyzr\"");
+            Assert::AreEqual(L"short_xyz", mmpld::to_string<wchar_t>(mmpld::vertex_type::short_xyz).c_str(), L"Stringisation of vertex type \"short_xyz\"");
+        }
+
     private:
 
         template<class F, class C> mmpld::list_header testLowLevlSingleList(const C *path) {
@@ -81,15 +107,15 @@ namespace test {
             io_type::open(path, hFile);
 
             mmpld::read_file_header(hFile, fileHeader, seekTable);
-            Assert::AreEqual(fileHeader.frames, std::uint32_t(1), L"Number of expected frames matches.");
-            Assert::AreEqual(size_t(fileHeader.frames), seekTable.size(), L"Number of frames and size of seek table match.");
+            Assert::AreEqual(std::uint32_t(1), fileHeader.frames, L"Number of expected frames matches.");
+            Assert::AreEqual(seekTable.size(), size_t(fileHeader.frames), L"Number of frames and size of seek table match.");
 
             io_type::seek(hFile, seekTable[0]);
             mmpld::read_frame_header(hFile, frameHeader, fileHeader.version);
-            Assert::AreEqual(frameHeader.lists, std::int32_t(1), L"Frame #1 holds one particle list.");
+            Assert::AreEqual(std::int32_t(1), frameHeader.lists, L"Frame #1 holds one particle list.");
 
             mmpld::read_list_header(hFile, listHeader);
-            Assert::AreEqual(listHeader.particles, std::uint64_t(4), L"List holds four particles.");
+            Assert::AreEqual(std::uint64_t(4), listHeader.particles, L"List holds four particles.");
 
             return listHeader;
         }
