@@ -113,23 +113,23 @@ namespace mmpld {
         /// file.
         /// </summary>
         /// <remarks>
-        /// <para>The method assumes that the file pointer stands on the begin
-        /// of a particle list, eg after <see cref="open_frame" /> returned. It
-        /// will read the list header in any case and return it to
-        /// <paramref name="header" />. The results of a call if the file
-        /// pointer does not stand at the begin of a particle list are
-        /// undefined!</para>
-        /// <para>If <paramref name="dst" /> is not <c>nullptr</c>, it is
-        /// assumed that <paramref name="cnt" /> bytes of data can be written
-        /// to this location. In this case, the method will read as many
-        /// particles as possible and store them to <paramref name="dst" />.
-        /// Please note that only full particles are read, ie if
-        /// <paramref name="cnt" /> is not divisible by the stride of the
-        /// particles in the list, not the whole buffer will be filled.</para>
-        /// <para>If not the whole list could be returned to
-        /// <paramref name="dst" />, the rest of the list will be skipped, ie
-        /// the file pointer is moved to the next list or frame.</para>
+        /// <para>The method assumes that the file pointer stands at the begin
+        /// of a particle list header. If this assumption does not hold, the
+        /// results of the call are undefined!</para>
+        /// <para>The list header will be read in any case and returned to
+        /// <paramref name="header" />. For the actual data, the same operations
+        /// are performed as for the overload in which the caller must provide
+        /// the list header, ie the bounds of the memory block provided are
+        /// honoured. This overload provides, however, the option to skip until
+        /// the end of the particle list.</para>
+        /// <para>Please not that it is important to consume the whole
+        /// particle list or reset the file to a new frame as otherwise,
+        /// subsequent operations might lead corrupt results! It is strongly
+        /// recommended to use other overloads allocating the memory themselves
+        /// instead of this method.</para>
         /// </remarks>
+        /// <param name="skip_remaining">If <c>true</c>, skip all particle data
+        /// that could not be returned to <paramref name="dst" />.</param>
         /// <param name="header">Receives the list header.</param>
         /// <param name="dst">Receives at most <paramref name="cnt" /> bytes
         /// of particle data if not <c>nullptr</c>.</param>
@@ -137,12 +137,50 @@ namespace mmpld {
         /// <paramref name="dst" />.</param>
         /// <returns>The number of particles that has actually been read
         /// from the file</returns>
-        size_type read_particles(list_header& header, void *dst,
+        size_type read_particles(const bool skip_remaining, list_header& header,
+            void *dst, const size_type cnt);
+
+        /// <summary>
+        /// Reads particles from the current position in the file, assuming
+        /// that <paramref name="header" /> is the list header of the list
+        /// to be read.
+        /// </summary>
+        /// <remarks>
+        /// <para>The method assumes that the file pointer stands on the begin
+        /// of valid particle, eg after a particle list header. The results of
+        /// a call to this method if this assumption does not hold are
+        /// undefined!</para>
+        /// <para>If <paramref name="dst" /> is not <c>nullptr</c>, it is
+        /// assumed that <paramref name="cnt" /> bytes of data can be written
+        /// to this location. In this case, the method will read as many
+        /// particles as possible and store them to <paramref name="dst" />.
+        /// Please note that only full particles are read, ie if
+        /// <paramref name="cnt" /> is not divisible by the stride of the
+        /// particles in the list, not the whole buffer will be filled. You
+        /// can make subsequent calls this this method to read the rest
+        /// of the list.</para>
+        /// <para>Please not that it is important to consume the whole
+        /// particle list or reset the file to a new frame as otherwise,
+        /// subsequent operations might lead corrupt results! It is strongly
+        /// recommended to use other overloads allocating the memory themselves
+        /// instead of this method.</para>
+        /// </remarks>
+        /// <param name="header">The list header describing the particles.
+        /// </param>
+        /// <param name="dst">Receives at most <paramref name="cnt" /> bytes
+        /// of particle data if not <c>nullptr</c>.</param>
+        /// <param name="cnt">The number of bytes that can be written to
+        /// <paramref name="dst" />.</param>
+        /// <returns>The number of particles that have actually been read
+        /// from the file</returns>
+        size_type read_particles(const list_header& header, void *dst,
             const size_type cnt);
 
         /// <summary>
         /// Reads a particle list from the current position in the file.
         /// </summary>
+        /// <param name="header">Receives the list header.</param>
+        /// <returns>All particle data in the frame</returns>
         std::vector<std::uint8_t> read_particles(list_header& header);
 
         /// <summary>

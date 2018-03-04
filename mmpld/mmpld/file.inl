@@ -50,19 +50,16 @@ void mmpld::file<F, C>::open_frame(const frame_number_type frame) {
  */
 template<class F, class C>
 typename mmpld::file<F, C>::size_type mmpld::file<F, C>::read_particles(
-        list_header& header, void *dst, const size_type cnt) {
+        const bool skip_remaining, list_header& header, void *dst,
+        const size_type cnt) {
     mmpld::read_list_header(this->_file, header);
-    auto stride = mmpld::get_stride<size_type>(header);
-    auto retval = static_cast<size_type>(cnt / stride);
+    auto retval =  this->read_particles(header, dst, cnt);
 
-    if (dst != nullptr) {
-        io_traits_type::read(this->_file, dst, retval * stride);
-    }
-
-    if (retval < header.particles) {
-        auto missing = (header.particles - retval) * stride;
-        auto offset = io_traits_type::tell(this->_file);
-        io_traits_type::seek(this->_file, offset + missing);
+    if (skip_remaining && (retval < header.particles)) {
+        auto stride = mmpld::get_stride<size_t>(header);
+        auto cur = io_traits_type::tell(this->_file);
+        auto rem = (header.particles - retval) * stride;
+        io_traits_type::seek(this->_file, cur + rem);
     }
 
     return retval;
@@ -70,16 +67,33 @@ typename mmpld::file<F, C>::size_type mmpld::file<F, C>::read_particles(
 
 
 /*
- *
+ * mmpld::file<F, C>::read_particles
+ */
+template<class F, class C>
+typename mmpld::file<F, C>::size_type mmpld::file<F, C>::read_particles(
+        const list_header& header, void *dst, const size_type cnt) {
+    auto stride = mmpld::get_stride<size_type>(header);
+    auto retval = static_cast<size_type>(cnt / stride);
+
+    if (dst != nullptr) {
+        io_traits_type::read(this->_file, dst, retval * stride);
+    }
+
+    return retval;
+}
+
+
+/*
+ *  mmpld::file<F, C>::read_particles
  */
 template<class F, class C>
 std::vector<std::uint8_t> mmpld::file<F, C>::read_particles(
         list_header& header) {
-    mmpld::read_list_header(this->_file, header);
+    this->read_particles(false, header, nullptr, 0);
     auto size = mmpld::get_size(header);
 
     std::vector<std::uint8_t> retval(size);
-    io_traits_type::read(this->_file, retval.data(), size);
+    this->read_particles(header, retval.data(), size);
 
     return retval;
 }

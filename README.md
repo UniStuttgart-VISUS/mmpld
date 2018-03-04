@@ -74,7 +74,7 @@ for (decltype(fileHeader.frames) i = 0; i < fileHeader.frames; ++i) {
 
 ## The mmpld::file class
 
-The `mmpld::file` class is a stateful wrapper around the low-level API, which allows you to parse through an MMPLD file one frame after another. The `mmpld::file` class is responsible for all I/O operations and keeps track of the seek table and the file pointer for you. The following code illustrates how to iterate over all particles in a file using this abstraction layer:
+The `mmpld::file` class is a stateful wrapper around the low-level API, which allows you to parse through an MMPLD file one frame after another. The `mmpld::file` class is responsible for all I/O operations and keeps track of the seek table and the file pointer for you. The following code, which does roughly the same as the low-level API sample above, illustrates how to iterate over all particles in a file using this abstraction layer:
 
 ```C++
 #include "mmpld.h"
@@ -88,6 +88,11 @@ mmpld::file<HANDLE, TCHAR> file(_T("test.mmpld"));
 for (mmpld::file::frame_number_type f = 0; f < file.frames; ++f) {
     file.open_frame(f);
 
+    for (auto l = 0; l < file.frame_header().lists; ++l)
+        mmpld::list_header listHeader;
+        auto particles = file.read_particles(listHeader);
 
+        /* Do something with the content of 'particles'. */
+    }
 }
 ```
