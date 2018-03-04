@@ -165,6 +165,7 @@
     <ClInclude Include="mmpld\literal.h" />
     <ClInclude Include="mmpld\particle_properties.h" />
     <ClInclude Include="mmpld\particle_traits.h" />
+    <ClInclude Include="mmpld\particle_view.h" />
     <ClInclude Include="mmpld\vertex_type.h" />
   </ItemGroup>
   <ItemGroup>
@@ -175,6 +176,7 @@
     <None Include="mmpld\frame_header.inl" />
     <None Include="mmpld\io.inl" />
     <None Include="mmpld\list_header.inl" />
+    <None Include="mmpld\particle_view.inl" />
     <None Include="mmpld\vertex_type.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

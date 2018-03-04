@@ -19,8 +19,12 @@ namespace mmpld {
     /// time.
     /// </summary>
     /// <remarks>
-    /// The particle traits are mostly used if an application needs to impose a
-    /// specific view on the data which might require conversion.
+    /// <para>The particle traits are mostly used if an application needs to
+    /// impose a specific view on the data which might require conversion.
+    /// </para>
+    /// <para><see cref="mmpld::particle_view" /> is the runtime equivalent of
+    /// this structure.</para>
+    /// <para>Be aware that all pointer-based operations are unchecked!</para>
     /// </remarks>
     /// <tparam name="V">The type of the positional data.</tparam>
     /// <tparam name="C">The type of the colour data.</tparam>

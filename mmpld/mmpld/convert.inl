@@ -39,8 +39,8 @@ namespace detail {
             case 4:
                 // Source is colour.
                 retval = 0.21f * static_cast<float>(colour[0])
-                    + 0.72 * static_cast<float>(colour[1])
-                    + 0.07 * static_cast<float>(colour[2]);
+                    + 0.72f * static_cast<float>(colour[1])
+                    + 0.07f * static_cast<float>(colour[2]);
                 break;
 
             default:
@@ -86,8 +86,8 @@ namespace detail {
                     auto b = static_cast<I>(0);
                     auto f = (i == 3) ? w : b;  // Alpha fallback 1, other 0.
                     auto c = (i < cnt_in) ? input[i] : f;
-                    c *= (std::numeric_limits<O>::max)();
-                    static_cast<O *>(output)[i] = c;
+                    c *= static_cast<I>((std::numeric_limits<O>::max)());
+                    static_cast<O *>(output)[i] = static_cast<O>(c);
 
                 } else if (!float_in && float_out) {
                     // Input is no floating point, but output is: Scale values
@@ -165,7 +165,7 @@ size_t mmpld::convert(const void *src, const list_header& header, void *dst,
             auto src_col = detail::apply_offset(s, src_col_offset, invalid);
 
             // Initialise the output particle with zeros.
-            ::memset(d, 0, dst_stride);
+            dst_view::clear(d);
 
             if ((dst_pos != nullptr) && (src_pos != nullptr)) {
                 // We need to write a position and we have one (this should be

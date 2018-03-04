@@ -11,6 +11,7 @@
 #include "mmpld/io.h"
 #include "mmpld/list_header.h"
 #include "mmpld/particle_traits.h"
+#include "mmpld/particle_view.h"
 
 
 namespace mmpld {

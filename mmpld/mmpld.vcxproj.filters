@@ -59,6 +59,9 @@
     <ClInclude Include="mmpld\particle_traits.h">
       <Filter>Header Files\mmpld</Filter>
     </ClInclude>
+    <ClInclude Include="mmpld\particle_view.h">
+      <Filter>Header Files\mmpld</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="mmpld\file_header.inl">
@@ -83,6 +86,9 @@
       <Filter>Header Files\mmpld</Filter>
     </None>
     <None Include="mmpld\convert.inl">
+      <Filter>Header Files\mmpld</Filter>
+    </None>
+    <None Include="mmpld\particle_view.inl">
       <Filter>Header Files\mmpld</Filter>
     </None>
   </ItemGroup>
