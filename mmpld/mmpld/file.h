@@ -61,14 +61,6 @@ namespace mmpld {
         ~file(void);
 
         /// <summary>
-        /// Gets the number of frames in the file.
-        /// </summary>
-        /// <returns>The number of frames in the file.</returns>
-        inline size_type frames(void) const {
-            return static_cast<size_type>(this->_file_header.frames);
-        }
-
-        /// <summary>
         /// Gets the file header of the MMPLD data set.
         /// </summary>
         /// <returns>The MMPLD header.</returns>
@@ -77,23 +69,38 @@ namespace mmpld {
         }
 
         /// <summary>
-        /// Reads the frame header of the given frame into
-        /// <paramref name="header" /> and returns the offsets of the particle
-        /// lists to <paramref name="oit" />.
+        /// Gets the number of the currently opened frame.
+        /// <summary>
+        /// <returns>The number of the current frame.</returns>
+        inline frame_number_type frame(void) const {
+            return this->_frame;
+        }
+
+        /// <summary>
+        /// Gets the number of frames in the file.
         /// </summary>
-        /// <tparam name="I">The type of the output iterator for the offsets,
-        /// which must be either a back inserter or designate a range that is
-        /// large enough to hold the offsets.</tparam>
-        /// <param name="frame">The number of the frame to be read.</param>
-        /// <param name="header">Receives the frame header.</param>
-        /// <param name="oit">Receives the offsets of the list headers from the
-        /// file in bytes.</param>
-        /// <returns>The number of particle lists returned to
-        /// <paramref name="oit" />.</returns>
-        /// <exception cref="std::invalid_argument">If the
-        /// <paramref name="frame" /> number is out of range.</exception>
-        template<class I> size_type read_frame(const frame_number_type frame,
-            frame_header& header, I oit);
+        /// <returns>The number of frames in the file.</returns>
+        inline size_type frames(void) const {
+            return static_cast<size_type>(this->_file_header.frames);
+        }
+
+        /// <summary>
+        /// Gets the header of the current frame.
+        /// </summary>
+        /// <returns>The header of the current frame.</returns>
+        inline const mmpld::frame_header& frame_header(void) const {
+            return this->_frame_header;
+        }
+
+        /// <summary>
+        /// Opens the frame with the given number and makes it the current
+        /// frame.
+        /// </summary>
+        /// <param name="frame">The zero-based number of the frame to open.
+        /// </param>
+        /// <exception cref="std::invalid_argument">If the given frame number is
+        /// out of range, ie <see cref="frames" /> or larger.</exception>
+        void open_frame(const frame_number_type frame);
 
         /// <summary>
         /// Gets the seek table for the MMPLD file.
@@ -103,12 +110,23 @@ namespace mmpld {
             return this->_seek_table;
         }
 
+        /// <summary>
+        /// Gets the MMPLD version from the file header.
+        /// </summary>
+        /// <param name="major"></param>
+        /// <param name="minor"></param>
+        inline void version(unsigned int& major, unsigned int& minor) const {
+            mmpld::parse_version(this->_file_header.version, major, minor);
+        }
+
     private:
 
         typedef detail::io_traits<F, C> io_traits_type;
 
         file_type _file;
         mmpld::file_header _file_header;
+        frame_number_type _frame;
+        mmpld::frame_header _frame_header;
         mmpld::seek_table _seek_table;
 
     };
