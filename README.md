@@ -140,3 +140,12 @@ auto listSize = mmpld::get_size<UINT>(listHeader);
 // variant of read_particles.
 file.read_particles(listHeader, map.pData, listSize);
 ```
+
+## test
+
+This project holds unit tests for Visual Studio's C++ unit test framework.
+
+
+## dumpmmpld
+
+This is a simple test application for dumping meta data from an MMPLD file. It serves as demo and test bed for the `mmpld::file` API.
