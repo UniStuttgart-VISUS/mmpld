@@ -13,6 +13,7 @@
 #include <cstdio>
 #include <fstream>
 
+#include <d3d11.h>
 #include <fcntl.h>
 #include <io.h>
 #include <Windows.h>
@@ -21,3 +22,5 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#define MMPLD_WITH_DIRECT3D
+#include "mmpld.h"

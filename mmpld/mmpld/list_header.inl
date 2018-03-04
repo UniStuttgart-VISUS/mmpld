@@ -5,6 +5,78 @@
 /// <author>Christoph Müller</author>
 
 
+#if defined(MMPLD_WITH_DIRECT3D)
+/*
+ * mmpld::get_input_layout
+ */
+template<class T>
+std::vector<T> mmpld::get_input_layout(const list_header& header) {
+    T element;
+    UINT offset = 0;
+    std::vector<T> retval;
+
+    detail::zero_memory(element);
+    element.SemanticName = "POSITION";
+    element.AlignedByteOffset = offset;
+    element.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+
+    switch (header.vertex_type) {
+        case vertex_type::float_xyz:
+            element.Format = DXGI_FORMAT_R32G32B32_FLOAT;
+            offset += vertex_traits<vertex_type::float_xyz>::size;
+            retval.push_back(element);
+            break;
+
+        case vertex_type::float_xyzr:
+            element.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+            offset += vertex_traits<vertex_type::float_xyzr>::size;
+            retval.push_back(element);
+            break;
+
+        case  vertex_type::short_xyz:
+            throw std::runtime_error("vertex_type::short_xyz is "
+                "incompatible with Direct3D alignment requirements.");
+    }
+
+    detail::zero_memory(element);
+    element.SemanticName = "COLOR";
+    element.AlignedByteOffset = offset;
+    element.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+
+    switch (header.colour_type) {
+        case colour_type::intensity:
+            element.Format = DXGI_FORMAT_R32_FLOAT;
+            offset += colour_traits<colour_type::intensity>::size;
+            retval.push_back(element);
+            break;
+
+        case colour_type::rgb32:
+            element.Format = DXGI_FORMAT_R32G32B32_FLOAT;
+            offset += colour_traits<colour_type::rgb32>::size;
+            retval.push_back(element);
+            break;
+
+        case colour_type::rgb8:
+            throw std::runtime_error("colour_type::rgb8 is "
+                "incompatible with Direct3D alignment requirements.");
+
+        case colour_type::rgba32:
+            element.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+            offset += colour_traits<colour_type::rgba32>::size;
+            retval.push_back(element);
+            break;
+
+        case colour_type::rgba8:
+            element.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+            offset += colour_traits<colour_type::rgba8>::size;
+            retval.push_back(element);
+            break;
+    }
+
+    return std::move(retval);
+}
+#endif /* defined(MMPLD_WITH_DIRECT3D) */
+
 /*
  * mmpld::get_offsets
  */

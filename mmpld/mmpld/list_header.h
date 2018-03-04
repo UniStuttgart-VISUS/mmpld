@@ -8,6 +8,7 @@
 
 #include <limits>
 #include <type_traits>
+#include <vector>
 
 #include "mmpld/colour_type.h"
 #include "mmpld/io.h"
@@ -64,6 +65,32 @@ namespace mmpld {
         /// </summary>
         mmpld::vertex_type vertex_type;
     };
+
+#if defined(MMPLD_WITH_DIRECT3D)
+    /// <summary>
+    /// Gets the Direct3D input layout elements for the given particle list.
+    /// </summary>
+    /// <remarks>
+    /// <para>Direct3D 10, Direct3D 11 and Direct3D 12 use a similarly layouted
+    /// structure for describing the input layout. You can use any structure
+    /// with and identical memory layout (that can be initialises with the same
+    /// initialiser list) as output parameter.</para>
+    /// </remarks>
+    /// <tparam name="T">An element in the input layout. This can be one of
+    /// <see cref="D3D10_INPUT_ELEMENT_DESC" />,
+    /// <see cref="D3D11_INPUT_ELEMENT_DESC" />,
+    /// <see cref="D3D12_INPUT_ELEMENT_DESC" /> or any compatible layout.
+    /// </tparam>
+    /// <param name="header">The list header to get the layout for.</param>
+    /// <returns>A vector describing the input layout.</returns>
+    /// <exception cref="std::runtime_error">If the particle list is not
+    /// compliant with the alignment requirements for Direct3D. As of version
+    /// 1.2 of MMPLD, incompatible layouts are the ones using
+    /// <see cref="mmpld::vertex_type::short_xyz" /> and/or
+    /// <see cref="mmpld::colour_type::rgb8" />.</exception>
+    template<class T>
+    std::vector<T> get_input_layout(const list_header& header);
+#endif /* defined(MMPLD_WITH_DIRECT3D) */
 
     /// <summary>
     /// Gets the offsets of the individual components of a particle in the

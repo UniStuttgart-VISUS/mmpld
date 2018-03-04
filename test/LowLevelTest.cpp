@@ -6,7 +6,6 @@
 #include "stdafx.h"
 #include "CppUnitTest.h"
 
-#include "mmpld.h"
 #include "util.h"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
@@ -412,6 +411,16 @@ namespace test {
                 Assert::AreEqual(dst_view::colour_value_type(128), dst_view::colour(dst.data() + dst_view::stride())[1], L"P2: Conversion to byte colour at [1]", LINE_INFO());
                 Assert::AreEqual(dst_view::colour_value_type(255), dst_view::colour(dst.data() + dst_view::stride())[2], L"P2: Conversion to byte colour at [2]", LINE_INFO());
                 Assert::AreEqual(dst_view::colour_value_type(255), dst_view::colour(dst.data() + dst_view::stride())[3], L"P2: Opaque alpha inserted at [3]", LINE_INFO());
+            }
+        }
+
+        TEST_METHOD(TestDirect3D11) {
+            {
+                mmpld::list_header header;
+                header.vertex_type = mmpld::vertex_type::float_xyz;
+                header.colour_type = mmpld::colour_type::intensity;
+
+                auto layout = mmpld::get_input_layout<D3D11_INPUT_ELEMENT_DESC>(header);
             }
         }
 
