@@ -56,7 +56,7 @@ namespace detail {
         }
 
         static inline size_type tell(file_type& file) {
-            file.tellg();
+            return file.tellg();
         }
     };
 

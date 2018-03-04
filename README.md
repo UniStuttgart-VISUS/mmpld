@@ -8,7 +8,7 @@ The library contains APIs for interacting with MMPLD files at different levels o
 
 For the particle data themselves, the library provides several methods for interpeting the content of a particle list: The `mmpld::particle_view` is a runtime-defined view for particle data, which can be wrapped around a pointer to particles. `mmpld::particle_traits` holds similar functionality, but is defined at compile-time. Note that both views do not perfom any range checks for you, but assume that you pass only valid memory holding particles to them. As a last method, you can obtain the necessary information to interpret raw particle data from the `mmpld::list_header` of each particle list. Functions like `mmpld::get_offsets` and `mmpld::get_stride` allow for extracting the offsets to do pointer arithmetics on particles.
 
-If `#define MMPLD_WITH_DIRECT3D` is added before including the library header, the library provides a method to create Direct3D input layout descriptions for a particle list. The output of the `mmpld::get_input_layout` function can be used to create an input layout for the raw data of the particle list. A versions 10, 11 and 12 use the same layout for their input layout descriptions, `mmpld::get_input_layout` can be instantiated with `D3D10_INPUT_ELEMENT_DESC`, `D3D11_INPUT_ELEMENT_DESC` or `D3D12_INPUT_ELEMENT_DESC`. 
+If `#define MMPLD_WITH_DIRECT3D` is added before including the library header, the library provides a method to create Direct3D input layout descriptions for a particle list. The output of the `mmpld::get_input_layout` function can be used to create an input layout for the raw data of the particle list. As versions 10, 11 and 12 of Direct3D use the same layout for their input layout descriptions, `mmpld::get_input_layout` can be instantiated with `D3D10_INPUT_ELEMENT_DESC`, `D3D11_INPUT_ELEMENT_DESC` or `D3D12_INPUT_ELEMENT_DESC`. 
 
 ## The low-level API
 The low-level API provides APIs for reading and interpreting the MMPLD file header, the frame header(s) and the list header(s). The user is responsible for seeking to the correct positions in the file. The templates in the API provide instantiations for several I/O methods: `std::ifstream`, `int` file handles obtained from POSIX `_open`, `FILE` pointers and on Windows for native `HANDLE`s. On Windows, `wchar_t` variants are also available. The following sample code illustrates how to use the low-level API:
@@ -143,9 +143,13 @@ file.read_particles(listHeader, map.pData, listSize);
 
 ## test
 
-This project holds unit tests for Visual Studio's C++ unit test framework.
+This project holds unit tests for Visual Studio's C++ unit test framework. It runs on Visual Studio 2017 atm.
 
 
 ## dumpmmpld
 
-This is a simple test application for dumping meta data from an MMPLD file. It serves as demo and test bed for the `mmpld::file` API.
+This is a simple test application for dumping meta data from an MMPLD file. It serves as demo and test bed for the `mmpld::file` API. The following command dumps the metadata of an MMMPLD file:
+
+```posh
+.\dumpmmpld /path .\test.mmpld
+```
