@@ -15,6 +15,9 @@
 
 #include <fcntl.h>
 #include <io.h>
+#include <Windows.h>
+#include <tchar.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
+

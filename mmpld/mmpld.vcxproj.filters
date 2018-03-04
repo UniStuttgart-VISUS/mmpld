@@ -53,10 +53,10 @@
     <ClInclude Include="mmpld\file.h">
       <Filter>Header Files\mmpld</Filter>
     </ClInclude>
-    <ClInclude Include="mmpld\particle_view.h">
+    <ClInclude Include="mmpld\convert.h">
       <Filter>Header Files\mmpld</Filter>
     </ClInclude>
-    <ClInclude Include="mmpld\convert.h">
+    <ClInclude Include="mmpld\particle_traits.h">
       <Filter>Header Files\mmpld</Filter>
     </ClInclude>
   </ItemGroup>

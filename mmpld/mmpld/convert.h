@@ -10,7 +10,7 @@
 
 #include "mmpld/io.h"
 #include "mmpld/list_header.h"
-#include "mmpld/particle_view.h"
+#include "mmpld/particle_traits.h"
 
 
 namespace mmpld {
@@ -27,7 +27,10 @@ namespace mmpld {
     /// not necessarily the begin of the list, but could be any of the particles
     /// in the list provided that at least <paramref name="cnt" /> valid
     /// particles remain.</param>
-    /// <param name="header">The header describing the source particle list.
+    /// <param name="header">The header describing the source particle list. If
+    /// the destination type requires per-vertex radii and the input does not
+    /// have such, the radius from the header is used. The same holds for
+    /// per-vertex colour data.
     /// </param>
     /// <param name="void">A pointer to the destination buffer, which must be
     /// at least <paramref name="cnt" /> * <tparamref name="T">::size bytes

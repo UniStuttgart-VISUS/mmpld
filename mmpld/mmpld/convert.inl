@@ -49,6 +49,10 @@ namespace detail {
         }
 
         if (!std::is_floating_point<O>::value) {
+            // We compute the grey-scale data as float as the formula requires
+            // us to do so. However, if the requested output is not a
+            // floating-point type, we need to scale it to the maximum valid
+            // value to prevent everything from becoming black.
             retval *= static_cast<float>((std::numeric_limits<O>::max)());
         }
 
@@ -70,20 +74,48 @@ namespace detail {
             *static_cast<O *>(output) = to_grey<O>(input, cnt_in);
 
         } else {
-            // Create colour.
+            // Create or convert colour.
+            const auto float_in = std::is_floating_point<I>::value;
+            const auto float_out = std::is_floating_point<O>::value;
+
             for (size_t i = 0; i < cnt_out; ++i) {
-                float f = (i == 4) ? 1.0f : 0.0f;   // Alpha fallback 1, other 0.
-                float c = (i < cnt_in) ? static_cast<float>(input[i]) : f;
-                if (!std::is_floating_point<O>::value) {
-                    c *= static_cast<float>((std::numeric_limits<O>::max)());
+                if (float_in && !float_out) {
+                    // Input is floating point, but output is not: Scale values
+                    // to maximum of output type.
+                    auto w = static_cast<I>(1);
+                    auto b = static_cast<I>(0);
+                    auto f = (i == 3) ? w : b;  // Alpha fallback 1, other 0.
+                    auto c = (i < cnt_in) ? input[i] : f;
+                    c *= (std::numeric_limits<O>::max)();
+                    static_cast<O *>(output)[i] = c;
+
+                } else if (!float_in && float_out) {
+                    // Input is no floating point, but output is: Scale values
+                    // to maximum of input type.
+                    auto w = static_cast<O>((std::numeric_limits<I>::max)());
+                    auto b = static_cast<O>(0);
+                    auto f = (i == 3) ? w : b;  // Alpha fallback 1, other 0.
+                    auto c = (i < cnt_in) ? static_cast<O>(input[i]) : f;
+                    c /= w;
+                    static_cast<O *>(output)[i] = c;
+
+                } else {
+                    // Input and output are of the same type (integral or
+                    // floating point): Just cast it.
+                    auto w = float_out
+                        ? static_cast<O>(1)
+                        : (std::numeric_limits<O>::max)();
+                    auto b = static_cast<O>(0);
+                    auto f = (i == 3) ? w : b;  // Alpha fallback 1, other 0.
+                    auto c = (i < cnt_in) ? static_cast<O>(input[i]) : f;
+                    static_cast<O *>(output)[i] = c;
                 }
-                static_cast<O *>(output)[i] = c;
-            }
-        }
+            } /* end for (size_t i = 0; i < cnt_out; ++i) */
+        } /* end if (cnt_out == 0) */
     }
 
     /// <summary>
-    /// Convert nothing if the output type is invalid.
+    /// Convert nothing if the output type is invalid (<c>void</c>).
     /// </summary>
     template<class O, class I>
     typename std::enable_if<std::is_void<O>::value>::type convert_colour(
@@ -94,8 +126,6 @@ namespace detail {
 } /* end namespace mmpld */
 
 
-
-
 /*
  * mmpld::convert
  */
@@ -103,7 +133,7 @@ template<class T>
 size_t mmpld::convert(const void *src, const list_header& header, void *dst,
         const size_t cnt) {
     typedef T dst_view;
-    typedef typename dst_view::vertex_type dst_vertex_scalar;
+    typedef typename dst_view::vertex_value_type dst_vertex_scalar;
 
     const auto retval = (std::min)(static_cast<size_t>(header.particles), cnt);
     const auto dst_channels = dst_view::colour_traits::channels;
@@ -179,7 +209,7 @@ size_t mmpld::convert(const void *src, const list_header& header, void *dst,
             }
 
             if (dst_col != nullptr) {
-                typedef typename dst_view::colour_type dst_type;
+                typedef typename dst_view::colour_value_type dst_type;
 
                 if (src_col == nullptr) {
                     // We have no valid offset for the source colour, so we

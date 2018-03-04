@@ -16,6 +16,8 @@ T mmpld::get_offsets(const list_header& header, T& pos, T& rad, T& col) {
 
     pos = rad = col = retval;
 
+    // Set pointers to radius and colour, assuming there is a valid colour
+    // for now.
     switch (header.vertex_type) {
         case mmpld::vertex_type::float_xyz:
             pos = 0;
@@ -25,13 +27,16 @@ T mmpld::get_offsets(const list_header& header, T& pos, T& rad, T& col) {
         case mmpld::vertex_type::float_xyzr:
             pos = 0;
             rad = 3 * sizeof(float);
+            col = vertex_traits<vertex_type::float_xyzr>::size;
             break;
 
         case mmpld::vertex_type::short_xyz:
             pos = 0;
+            col = vertex_traits<vertex_type::short_xyz>::size;
             break;
     }
 
+    // Update the offset of the colour using the actual configuration.
     switch (header.colour_type) {
         case mmpld::colour_type::rgb8:
         case mmpld::colour_type::rgba8:

@@ -11,4 +11,4 @@
 #include "mmpld/file_header.h"
 #include "mmpld/frame_header.h"
 #include "mmpld/list_header.h"
-#include "mmpld/particle_view.h"
+#include "mmpld/particle_traits.h"

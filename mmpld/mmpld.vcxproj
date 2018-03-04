@@ -164,7 +164,7 @@
     <ClInclude Include="mmpld\list_header.h" />
     <ClInclude Include="mmpld\literal.h" />
     <ClInclude Include="mmpld\particle_properties.h" />
-    <ClInclude Include="mmpld\particle_view.h" />
+    <ClInclude Include="mmpld\particle_traits.h" />
     <ClInclude Include="mmpld\vertex_type.h" />
   </ItemGroup>
   <ItemGroup>

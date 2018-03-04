@@ -24,45 +24,31 @@
     <ClInclude Include="targetver.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="util.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="MmpldTest.cpp">
+    <ClCompile Include="LowLevelTest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="test_xyzr_float_none.mmpld">
-      <Filter>Test Files</Filter>
-    </None>
-    <None Include="test_xyzr_float_rgb_float.mmpld">
-      <Filter>Test Files</Filter>
-    </None>
-    <None Include="test_xyzr_float_rgba_byte.mmpld">
-      <Filter>Test Files</Filter>
-    </None>
-    <None Include="test_xyzr_float_rgba_float.mmpld">
-      <Filter>Test Files</Filter>
-    </None>
-    <None Include="test_xyz_float_int_float.mmpld">
-      <Filter>Test Files</Filter>
-    </None>
-    <None Include="test_xyz_float_none.mmpld">
-      <Filter>Test Files</Filter>
-    </None>
-    <None Include="test_xyz_float_rgb_float.mmpld">
-      <Filter>Test Files</Filter>
-    </None>
-    <None Include="test_xyz_float_rgba_byte.mmpld">
-      <Filter>Test Files</Filter>
-    </None>
-    <None Include="test_xyz_float_rgba_float.mmpld">
-      <Filter>Test Files</Filter>
-    </None>
-    <None Include="test_xyzr_float_int_float.mmpld">
-      <Filter>Test Files</Filter>
-    </None>
+    <CustomBuild Include="test_xyzr_float_int_float.mmpld" />
+    <CustomBuild Include="test_xyzr_float_none.mmpld" />
+    <CustomBuild Include="test_xyzr_float_rgba_byte.mmpld" />
+    <CustomBuild Include="test_xyzr_float_rgba_float.mmpld" />
+    <CustomBuild Include="test_xyzr_float_rgb_float.mmpld" />
+    <CustomBuild Include="test_xyz_float_int_float.mmpld" />
+    <CustomBuild Include="test_xyz_float_none.mmpld" />
+    <CustomBuild Include="test_xyz_float_rgba_byte.mmpld" />
+    <CustomBuild Include="test_xyz_float_rgba_float.mmpld" />
+    <CustomBuild Include="test_xyz_float_rgb_float.mmpld" />
   </ItemGroup>
 </Project>
