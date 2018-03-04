@@ -76,7 +76,7 @@ typename mmpld::file<F, C>::size_type mmpld::file<F, C>::read_particles(
     auto retval = static_cast<size_type>(cnt / stride);
 
     if (retval > header.particles) {
-        retval = header.particles;
+        retval = static_cast<size_type>(header.particles);
     }
 
     if (dst != nullptr) {

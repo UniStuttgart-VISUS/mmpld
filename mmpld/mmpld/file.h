@@ -209,7 +209,6 @@ namespace mmpld {
         frame_number_type _frame;
         mmpld::frame_header _frame_header;
         mmpld::seek_table _seek_table;
-
     };
 
 } /* end namespace mmpld */

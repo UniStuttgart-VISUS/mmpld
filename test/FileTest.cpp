@@ -74,7 +74,7 @@ namespace test {
             file_type file(path);
 
             Assert::AreEqual(decltype(file.frames())(1), file.frames(), L"File contains one frame", LINE_INFO());
-            Assert::AreEqual(file.frames(), file.file_header().frames, L"Frame number and content of header matches.", LINE_INFO());
+            Assert::AreEqual(std::uint32_t(file.frames()), file.file_header().frames, L"Frame number and content of header matches.", LINE_INFO());
             Assert::AreEqual(size_t(file.frames()), file.seek_table().size(), L"Number of frames and size of seek table match.", LINE_INFO());
             Assert::AreEqual(std::int32_t(1), file.frame_header().lists, L"Frame #1 holds one particle list.", LINE_INFO());
 
