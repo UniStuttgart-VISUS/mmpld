@@ -96,3 +96,47 @@ for (mmpld::file::frame_number_type f = 0; f < file.frames; ++f) {
     }
 }
 ```
+
+Beside the one-shot `read_particles` method illustrated above, `mmpld::file` provides two other methods with user-provided output buffers. These methods must be used carefully, because a whole particle list must be consumed before the next list header can be read. Otherwise, subsequent reads will return corrupt data. The methods are mainly intended for two use cases: (i) if only the list headers should be read and the actual data are irrelevant and (ii) for reading directly into mapped GPU memory. The following sample illustrates the first application case in that it creates Direct3D 11 input layouts for all particle lists in the first frame of a file:
+
+```C++
+#include "mmpld.h"
+
+// Open the file and prepare the first frame.
+mmpld::file<HANDLE, TCHAR> file(_T("test.mmpld"));
+
+// Iterate over all particle lists in the first frame.
+for (auto l = 0; l < file.frame_header().lists; ++l)
+    mmpld::list_header listHeader;
+
+    // Read the list header and skip the data.
+    file.read_particles(true, listHeader, nullptr, 0);
+
+    // Get the input elements for the list.
+    auto desc = mmpld::get_input_layout<D3D11_INPUT_ELEMENT_DESC>(header);
+
+    // Note: device creation and shader byte code ommitted.
+    ID3D11InputLayout *layout = nullptr;
+    device->CreateInputLayout(desc.data(), static_cast<UINT>(desc.size()),
+        shaderBytes, cntShaderBytes, &layout);
+}
+```
+
+The second application case, writing into mapped memory, looks roughly like this:
+
+```C++
+#include "mmpld.h"
+
+// Open the file and prepare the first frame.
+mmpld::file<HANDLE, TCHAR> file(_T("test.mmpld"));
+
+// Retrieve the header of the first list and determine the size of the particles.
+mmpld::list_header listHeader;
+file.read_particles(false, listHeader, nullptr, 0);
+auto listSize = mmpld::get_size<UINT>(listHeader);
+
+// We assume that the GPU buffer is large enough to hold the particles and is
+// mapped to 'map'. Now read the actual particles using the continuation
+// variant of read_particles.
+file.read_particles(listHeader, map.pData, listSize);
+```
