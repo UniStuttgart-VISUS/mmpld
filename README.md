@@ -6,9 +6,9 @@ The library can be used without compiling anything. Just add the root directory 
 
 The library contains APIs for interacting with MMPLD files at different levels of abstractions: the low-level API leaves the user most control about handling the file. The `mmpld::file` abstraction handles the file I/O and the meta-data management for you.
 
-For the particle data itself, the library provides several methods for interpeting the content of a particle list: The `mmpld::particle_view` is a runtime-defined view for particle data. `mmpld::particle_traits` holds similar functionality, but is defined at compile-time. Note that both views do not perfom any range checks for you, but assume that you pass only valid memory holding particles to them.
+For the particle data themselves, the library provides several methods for interpeting the content of a particle list: The `mmpld::particle_view` is a runtime-defined view for particle data, which can be wrapped around a pointer to particles. `mmpld::particle_traits` holds similar functionality, but is defined at compile-time. Note that both views do not perfom any range checks for you, but assume that you pass only valid memory holding particles to them. As a last method, you can obtain the necessary information to interpret raw particle data from the `mmpld::list_header` of each particle list. Functions like `mmpld::get_offsets` and `mmpld::get_stride` allow for extracting the offsets to do pointer arithmetics on particles.
 
-If `#define MMPLD_WITH_DIRECT3D` is added before including the library header, the library provides a method to create the input layout description for a particle list. The output of the `mmpld::get_input_layout` function can be used to create an input layout that is compatible with the data of a particle list. A versions 10, 11 and 12 use the same layout for their input layout descriptions, `mmpld::get_input_layout` can be instantiated with `D3D10_INPUT_ELEMENT_DESC`, `D3D11_INPUT_ELEMENT_DESC` or `D3D12_INPUT_ELEMENT_DESC`. 
+If `#define MMPLD_WITH_DIRECT3D` is added before including the library header, the library provides a method to create Direct3D input layout descriptions for a particle list. The output of the `mmpld::get_input_layout` function can be used to create an input layout for the raw data of the particle list. A versions 10, 11 and 12 use the same layout for their input layout descriptions, `mmpld::get_input_layout` can be instantiated with `D3D10_INPUT_ELEMENT_DESC`, `D3D11_INPUT_ELEMENT_DESC` or `D3D12_INPUT_ELEMENT_DESC`. 
 
 ## The low-level API
 The low-level API provides APIs for reading and interpreting the MMPLD file header, the frame header(s) and the list header(s). The user is responsible for seeking to the correct positions in the file. The templates in the API provide instantiations for several I/O methods: `std::ifstream`, `int` file handles obtained from POSIX `_open`, `FILE` pointers and on Windows for native `HANDLE`s. On Windows, `wchar_t` variants are also available. The following sample code illustrates how to use the low-level API:
@@ -49,8 +49,7 @@ for (decltype(fileHeader.frames) i = 0; i < fileHeader.frames; ++i) {
         mmpld::read_list_header(hFile, listHeader);
 
         // Compute the number of bytes required for all particles.
-        auto rem = static_cast<size_t>(listHeader.particles)
-            * mmpld::get_stride<size_t>(listHeader);
+        auto rem = mmpld::get_size<size_t>(listHeader);
 
         // Allocate the buffer for all particles.
         particles.resize(rem);

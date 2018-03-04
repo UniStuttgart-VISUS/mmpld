@@ -5,12 +5,13 @@
 
 
 /*
- * mmpld::detail::read_all
+ * mmpld::detail::basic_io_traits<FILE *>::read
  */
-template<class T>
-void mmpld::detail::read_all(FILE *file, T *dst, const size_t cnt) {
+void mmpld::detail::basic_io_traits<FILE *>::read(file_type& file, void *dst,
+        const size_type cnt) {
+    assert(cnt < (std::numeric_limits<unsigned int>::max)());
     auto ptr = reinterpret_cast<std::uint8_t *>(dst);
-    auto rem = cnt * sizeof(T);
+    auto rem = static_cast<size_t>(cnt);
 
     while (rem > 0) {
         auto cnt = ::fread(ptr, 1, rem, file);
@@ -24,16 +25,17 @@ void mmpld::detail::read_all(FILE *file, T *dst, const size_t cnt) {
 
 
 /*
- * mmpld::detail::read_all
+ * mmpld::detail::basic_io_traits<int>::read
  */
-template<class T>
-void mmpld::detail::read_all(int file, T *dst, const size_t cnt) {
+void mmpld::detail::basic_io_traits<int>::read(file_type& file, void *dst,
+        const size_type cnt) {
     auto ptr = reinterpret_cast<std::uint8_t *>(dst);
-    auto rem = static_cast<unsigned int>(cnt * sizeof(T));
+    auto rem = cnt;
 
     while (rem > 0) {
 #if defined(_WIN32)
-        auto cnt = ::_read(file, ptr, rem);
+        assert(rem < (std::numeric_limits<unsigned int>::max)());
+        auto cnt = ::_read(file, ptr, static_cast<unsigned int>(rem));
 #else /* defined(_WIN32) */
         auto cnt = ::read(file, ptr, rem);
 #endif /* defined(_WIN32) */
@@ -48,12 +50,13 @@ void mmpld::detail::read_all(int file, T *dst, const size_t cnt) {
 
 #if defined(_WIN32)
 /*
- * mmpld::detail::read_all
+ * mmpld::detail::basic_io_traits<HANDLE>::read
  */
-template<class T>
-void mmpld::detail::read_all(HANDLE file, T *dst, const size_t cnt) {
+void mmpld::detail::basic_io_traits<HANDLE>::read(file_type& file, void *dst,
+        const size_type cnt) {
+    assert(cnt < (std::numeric_limits<DWORD>::max)());
     auto ptr = reinterpret_cast<std::uint8_t *>(dst);
-    auto rem = static_cast<DWORD>(cnt * sizeof(T));
+    auto rem = static_cast<DWORD>(cnt);
 
     while (rem > 0) {
         DWORD cnt = 0;

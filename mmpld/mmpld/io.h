@@ -34,42 +34,50 @@
 namespace mmpld {
 namespace detail {
 
-    template<class F, class C> struct io_traits {
-        typedef C char_type;
-        typedef F file_type;
-    };
+    template<class F> struct basic_io_traits { };
 
-    template<class T> inline void read_all(std::istream& stream, T *dst,
-            const size_t cnt) {
-        stream.read(reinterpret_cast<char *>(dst), cnt * sizeof(T));
-    }
+    template<class F, class C> struct io_traits : public basic_io_traits<F> { };
 
-    template<> struct io_traits<std::ifstream, char> {
-        typedef char char_type;
+    template<> struct basic_io_traits<std::ifstream> {
         typedef std::ifstream file_type;
+        typedef std::ifstream::streamoff size_type;
 
         static inline void close(file_type& file) {
             file.close();
         }
 
-        static inline void open(const char_type *path, file_type& file) {
-            file.open(path, std::ios::binary);
+        static inline void read(file_type& file, void *dst,
+                const size_type cnt) {
+            file.read(static_cast<std::ifstream::char_type *>(dst), cnt);
         }
 
-        static inline void read(file_type& file, void *dst, const size_t cnt) {
-            file.read(static_cast<char_type *>(dst), cnt);
-        }
-
-        static inline void seek(file_type& file, const size_t offset) {
+        static inline void seek(file_type& file, const size_type offset) {
             file.seekg(offset);
+        }
+
+        static inline size_type tell(file_type& file) {
+            file.tellg();
         }
     };
 
-    template<class T> void read_all(FILE *file, T *dst, const size_t cnt);
-
-    template<> struct io_traits<FILE *, char> {
+    template<> struct io_traits<std::ifstream, char>
+            : public basic_io_traits<std::ifstream> {
         typedef char char_type;
+        typedef basic_io_traits<std::ifstream>::file_type file_type;
+        typedef basic_io_traits<std::ifstream>::size_type size_type;
+
+        static inline void open(const char_type *path, file_type& file) {
+            file.open(path, std::ios::binary);
+        }
+    };
+
+    template<> struct basic_io_traits<FILE *> {
         typedef FILE *file_type;
+#if defined(_WIN32)
+        typedef __int64 size_type;
+#else /* defined(_WIN32) */
+        typedef long size_type;
+#endif /* defined(_WIN32) */
 
         static inline void close(file_type& file) {
             if (file != nullptr) {
@@ -77,6 +85,32 @@ namespace detail {
                 file = nullptr;
             }
         }
+
+        // Note: must be inline to prevent code generation in library.
+        static inline void read(file_type& file, void *dst,
+            const size_type cnt);
+
+        static inline void seek(file_type& file, const size_type offset) {
+#if defined(_WIN32)
+            ::_fseeki64(file, static_cast<std::int64_t>(offset), SEEK_SET);
+#else /* defined(_WIN32) */
+            ::fseek(file, static_cast<int>(offset), SEEK_SET);
+#endif /* defined(_WIN32) */
+        }
+
+        static inline size_type tell(file_type& file) {
+#if defined(_WIN32)
+            return ::_ftelli64(file);
+#else /* defined(_WIN32) */
+            return ::ftell(file);
+#endif /* defined(_WIN32) */
+        }
+    };
+
+    template<> struct io_traits<FILE *, char> : public basic_io_traits<FILE *> {
+        typedef char char_type;
+        typedef basic_io_traits<FILE *>::file_type file_type;
+        typedef basic_io_traits<FILE *>::size_type size_type;
 
         static inline void open(const char_type *path, file_type& file) {
             static const char_type *const MODE = "rb";
@@ -91,31 +125,14 @@ namespace detail {
             }
 #endif /* defined(_WIN32) */
         }
-
-        static inline void read(file_type& file, void *dst, const size_t cnt) {
-            read_all(file, static_cast<std::uint8_t *>(dst), cnt);
-        }
-
-        static inline void seek(file_type& file, const size_t offset) {
-#if defined(_WIN32)
-            ::_fseeki64(file, static_cast<std::int64_t>(offset), SEEK_SET);
-#else /* defined(_WIN32) */
-            ::fseek(file, static_cast<int>(offset), SEEK_SET);
-#endif /* defined(_WIN32) */
-        }
     };
 
 #if defined(_WIN32)
-    template<> struct io_traits<FILE *, wchar_t> {
+    template<> struct io_traits<FILE *, wchar_t>
+            : public basic_io_traits<FILE *> {
         typedef wchar_t char_type;
-        typedef FILE *file_type;
-
-        static inline void close(file_type& file) {
-            if (file != nullptr) {
-                ::fclose(file);
-                file = nullptr;
-            }
-        }
+        typedef basic_io_traits<FILE *>::file_type file_type;
+        typedef basic_io_traits<FILE *>::size_type size_type;
 
         static inline void open(const char_type *path, file_type& file) {
             static const char_type *const MODE = L"rb";
@@ -124,22 +141,16 @@ namespace detail {
                 throw std::system_error(errno, std::system_category());
             }
         }
-
-        static inline void read(file_type& file, void *dst, const size_t cnt) {
-            read_all(file, static_cast<std::uint8_t *>(dst), cnt);
-        }
-
-        static inline void seek(file_type& file, const size_t offset) {
-            ::_fseeki64(file, static_cast<std::int64_t>(offset), SEEK_SET);
-        }
     };
 #endif /* defined(_WIN32) */
 
-    template<class T> void read_all(int file, T *dst, const size_t cnt);
-
-    template<> struct io_traits<int, char> {
-        typedef char char_type;
+    template<> struct basic_io_traits<int> {
         typedef int file_type;
+#if defined(_WIN32)
+        typedef __int64 size_type;
+#else /* defined(_WIN32) */
+        typedef off_t size_type;
+#endif /* defined(_WIN32) */
 
         static inline void close(file_type& file) {
 #if defined(_WIN32)
@@ -148,6 +159,32 @@ namespace detail {
             ::close(file);
 #endif /* defined(_WIN32) */
         }
+
+        // Note: must be inline to prevent code generation in library.
+        static inline void read(file_type& file, void *dst,
+            const size_type cnt);
+
+        static inline void seek(file_type& file, const size_type offset) {
+#if defined(_WIN32)
+            ::_lseeki64(file, static_cast<std::int64_t>(offset), SEEK_SET);
+#else /* defined(_WIN32) */
+            ::lseek(file, static_cast<int>(offset), SEEK_SET);
+#endif /* defined(_WIN32) */
+        }
+
+        static inline size_type tell(file_type& file) {
+#if defined(_WIN32)
+            return ::_telli64(file);
+#else /* defined(_WIN32) */
+            return ::tell(file);
+#endif /* defined(_WIN32) */
+        }
+    };
+
+    template<> struct io_traits<int, char> : public basic_io_traits<int> {
+        typedef char char_type;
+        typedef basic_io_traits<int>::file_type file_type;
+        typedef basic_io_traits<int>::size_type size_type;
 
         static inline void open(const char_type *path, file_type& file) {
 #if defined(_WIN32)
@@ -162,28 +199,13 @@ namespace detail {
             }
 #endif /* defined(_WIN32) */
         }
-
-        static inline void read(file_type& file, void *dst, const size_t cnt) {
-            read_all(file, static_cast<std::uint8_t *>(dst), cnt);
-        }
-
-        static inline void seek(file_type& file, const size_t offset) {
-#if defined(_WIN32)
-            ::_lseeki64(file, static_cast<std::int64_t>(offset), SEEK_SET);
-#else /* defined(_WIN32) */
-            ::lseek(file, static_cast<int>(offset), SEEK_SET);
-#endif /* defined(_WIN32) */
-        }
     };
 
 #if defined(_WIN32)
-    template<> struct io_traits<int, wchar_t> {
+    template<> struct io_traits<int, wchar_t> : public basic_io_traits<int> {
         typedef wchar_t char_type;
-        typedef int file_type;
-
-        static inline void close(file_type& file) {
-            ::_close(file);
-        }
+        typedef basic_io_traits<int>::file_type file_type;
+        typedef basic_io_traits<int>::size_type size_type;
 
         static inline void open(const char_type *path, file_type& file) {
             if (::_wsopen_s(&file, path, _O_BINARY | _O_RDONLY,
@@ -192,28 +214,46 @@ namespace detail {
                 throw std::system_error(errno, std::system_category());
             }
         }
-
-        static inline void read(file_type& file, void *dst, const size_t cnt) {
-            read_all(file, static_cast<std::uint8_t *>(dst), cnt);
-        }
-        static inline void seek(file_type& file, const size_t offset) {
-            ::_lseeki64(file, static_cast<std::int64_t>(offset), SEEK_SET);
-        }
     };
 #endif /* defined(_WIN32) */
 
 #if defined(_WIN32)
-    template<class T> void read_all(HANDLE file, T *dst, const size_t cnt);
-#endif /* defined(_WIN32) */
-
-#if defined(_WIN32)
-    template<> struct io_traits<HANDLE, char> {
-        typedef char char_type;
+    template<> struct basic_io_traits<HANDLE> {
         typedef HANDLE file_type;
+        typedef decltype(LARGE_INTEGER::QuadPart) size_type;
 
         static inline void close(file_type& file) {
             ::CloseHandle(file);
         }
+
+        // Note: must be inline to prevent code generation in library.
+        static inline void read(file_type& file, void *dst,
+            const size_type cnt);
+
+        static inline void seek(file_type& file, const size_type offset) {
+            LARGE_INTEGER o;
+            o.QuadPart = offset;
+            if (!::SetFilePointerEx(file, o, nullptr, FILE_BEGIN)) {
+                throw std::system_error(::GetLastError(),
+                    std::system_category());
+            }
+        }
+
+        static inline size_type tell(file_type& file) {
+            LARGE_INTEGER o, c;
+            o.QuadPart = 0;
+            if (!::SetFilePointerEx(file, o, &c, FILE_CURRENT)) {
+                throw std::system_error(::GetLastError(),
+                    std::system_category());
+            }
+            return c.QuadPart;
+        }
+    };
+
+    template<> struct io_traits<HANDLE, char> : public basic_io_traits<HANDLE> {
+        typedef char char_type;
+        typedef basic_io_traits<HANDLE>::file_type file_type;
+        typedef basic_io_traits<HANDLE>::size_type size_type;
 
         static inline void open(const char_type *path, file_type& file) {
             if ((file = ::CreateFileA(path, GENERIC_READ, FILE_SHARE_READ,
@@ -223,30 +263,13 @@ namespace detail {
                     std::system_category());
             }
         }
-
-        static inline void read(file_type& file, void *dst, const size_t cnt) {
-            read_all(file, static_cast<std::uint8_t *>(dst), cnt);
-        }
-
-        static inline void seek(file_type& file, const size_t offset) {
-            LARGE_INTEGER o;
-            o.QuadPart = offset;
-            if (!::SetFilePointerEx(file, o, nullptr, FILE_BEGIN)) {
-                throw std::system_error(::GetLastError(),
-                    std::system_category());
-            }
-        }
     };
-#endif /* defined(_WIN32) */
-
-#if defined(_WIN32)
-    template<> struct io_traits<HANDLE, wchar_t> {
+    
+    template<> struct io_traits<HANDLE, wchar_t>
+            : public basic_io_traits<HANDLE> {
         typedef wchar_t char_type;
-        typedef HANDLE file_type;
-
-        static inline void close(file_type& file) {
-            ::CloseHandle(file);
-        }
+        typedef basic_io_traits<HANDLE>::file_type file_type;
+        typedef basic_io_traits<HANDLE>::size_type size_type;
 
         static inline void open(const char_type *path, file_type& file) {
             if ((file = ::CreateFileW(path, GENERIC_READ, FILE_SHARE_READ,
@@ -256,24 +279,11 @@ namespace detail {
                     std::system_category());
             }
         }
-
-        static inline void read(file_type& file, void *dst, const size_t cnt) {
-            read_all(file, static_cast<std::uint8_t *>(dst), cnt);
-        }
-
-        static inline void seek(file_type& file, const size_t offset) {
-            LARGE_INTEGER o;
-            o.QuadPart = offset;
-            if (!::SetFilePointerEx(file, o, nullptr, FILE_BEGIN)) {
-                throw std::system_error(::GetLastError(),
-                    std::system_category());
-            }
-        }
     };
 #endif /* defined(_WIN32) */
 
     template<class F, class T> inline T& read(F& handle, T& retval) {
-        read_all(handle, &retval, 1);
+        basic_io_traits<F>::read(handle, &retval, sizeof(retval));
         return retval;
     }
 

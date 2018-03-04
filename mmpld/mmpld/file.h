@@ -43,6 +43,12 @@ namespace mmpld {
             frame_number_type;
 
         /// <summary>
+        /// The type used to reference a particle list.
+        /// </summary>
+        typedef std::decay<decltype(mmpld::frame_header::lists)>::type
+            list_number_type;
+
+        /// <summary>
         /// The type for file sizes and counters.
         /// </summary>
         typedef size_t size_type;
@@ -101,6 +107,43 @@ namespace mmpld {
         /// <exception cref="std::invalid_argument">If the given frame number is
         /// out of range, ie <see cref="frames" /> or larger.</exception>
         void open_frame(const frame_number_type frame);
+
+        /// <summary>
+        /// Reads the begin of a particle list from the current position in the
+        /// file.
+        /// </summary>
+        /// <remarks>
+        /// <para>The method assumes that the file pointer stands on the begin
+        /// of a particle list, eg after <see cref="open_frame" /> returned. It
+        /// will read the list header in any case and return it to
+        /// <paramref name="header" />. The results of a call if the file
+        /// pointer does not stand at the begin of a particle list are
+        /// undefined!</para>
+        /// <para>If <paramref name="dst" /> is not <c>nullptr</c>, it is
+        /// assumed that <paramref name="cnt" /> bytes of data can be written
+        /// to this location. In this case, the method will read as many
+        /// particles as possible and store them to <paramref name="dst" />.
+        /// Please note that only full particles are read, ie if
+        /// <paramref name="cnt" /> is not divisible by the stride of the
+        /// particles in the list, not the whole buffer will be filled.</para>
+        /// <para>If not the whole list could be returned to
+        /// <paramref name="dst" />, the rest of the list will be skipped, ie
+        /// the file pointer is moved to the next list or frame.</para>
+        /// </remarks>
+        /// <param name="header">Receives the list header.</param>
+        /// <param name="dst">Receives at most <paramref name="cnt" /> bytes
+        /// of particle data if not <c>nullptr</c>.</param>
+        /// <param name="cnt">The number of bytes that can be written to
+        /// <paramref name="dst" />.</param>
+        /// <returns>The number of particles that has actually been read
+        /// from the file</returns>
+        size_type read_particles(list_header& header, void *dst,
+            const size_type cnt);
+
+        /// <summary>
+        /// Reads a particle list from the current position in the file.
+        /// </summary>
+        std::vector<std::uint8_t> read_particles(list_header& header);
 
         /// <summary>
         /// Gets the seek table for the MMPLD file.
