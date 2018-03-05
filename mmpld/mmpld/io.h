@@ -46,9 +46,11 @@ namespace detail {
             file.close();
         }
 
-        static inline void read(file_type& file, void *dst,
+        static inline size_type read(file_type& file, void *dst,
                 const size_type cnt) {
+            auto begin = file.tellg();
             file.read(static_cast<std::ifstream::char_type *>(dst), cnt);
+            return (file.tellg() - begin);
         }
 
         static inline void seek(file_type& file, const size_type offset) {
@@ -87,7 +89,7 @@ namespace detail {
         }
 
         // Note: must be inline to prevent code generation in library.
-        static inline void read(file_type& file, void *dst,
+        static inline size_type read(file_type& file, void *dst,
             const size_type cnt);
 
         static inline void seek(file_type& file, const size_type offset) {
@@ -161,7 +163,7 @@ namespace detail {
         }
 
         // Note: must be inline to prevent code generation in library.
-        static inline void read(file_type& file, void *dst,
+        static inline size_type read(file_type& file, void *dst,
             const size_type cnt);
 
         static inline void seek(file_type& file, const size_type offset) {
@@ -227,7 +229,7 @@ namespace detail {
         }
 
         // Note: must be inline to prevent code generation in library.
-        static inline void read(file_type& file, void *dst,
+        static inline size_type read(file_type& file, void *dst,
             const size_type cnt);
 
         static inline void seek(file_type& file, const size_type offset) {

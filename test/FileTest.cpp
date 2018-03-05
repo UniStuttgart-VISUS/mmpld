@@ -82,6 +82,11 @@ namespace test {
             file.read_particles(true, retval, nullptr, 0);
             Assert::AreEqual(std::uint64_t(4), retval.particles, L"List holds four particles.", LINE_INFO());
 
+            std::vector<std::uint8_t> buffer(mmpld::get_stride<size_t>(retval) * (retval.particles + 1));
+            Assert::ExpectException<std::runtime_error>([&]() {
+                file.read_particles(retval, buffer.data(), buffer.size());
+            }, L"Premature end of file raises exception.", LINE_INFO());
+
             return retval;
         }
     };
