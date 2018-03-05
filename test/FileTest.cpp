@@ -17,53 +17,98 @@ namespace test {
 
     public:
 
-        TEST_METHOD(TestRealFiles) {
+        TEST_METHOD(Test_test_xyz_float_int_float) {
             ::SetMmpldWorkingDirectory();
 
-            this->testFile<HANDLE>("test_xyz_float_int_float.mmpld");
-            this->testFile<HANDLE>("test_xyz_float_none.mmpld");
-            this->testFile<HANDLE>("test_xyz_float_rgb_float.mmpld");
-            this->testFile<HANDLE>("test_xyz_float_rgba_byte.mmpld");
-            this->testFile<HANDLE>("test_xyz_float_rgba_float.mmpld");
-            this->testFile<HANDLE>("test_xyzr_float_int_float.mmpld");
-            this->testFile<HANDLE>("test_xyzr_float_none.mmpld");
-            this->testFile<HANDLE>("test_xyzr_float_rgb_float.mmpld");
-            this->testFile<HANDLE>("test_xyzr_float_rgba_byte.mmpld");
-            this->testFile<HANDLE>("test_xyzr_float_rgba_float.mmpld");
+            auto r1 = this->testFile<HANDLE>("test_xyz_float_int_float.mmpld");
+            auto r2 = this->testFile<FILE *>("test_xyz_float_int_float.mmpld");
+            auto r3 = this->testFile<int>("test_xyz_float_int_float.mmpld");
+            auto r4 = this->testFile<std::ifstream>("test_xyz_float_int_float.mmpld");
 
-            this->testFile<FILE *>("test_xyz_float_int_float.mmpld");
-            this->testFile<FILE *>("test_xyz_float_none.mmpld");
-            this->testFile<FILE *>("test_xyz_float_rgb_float.mmpld");
-            this->testFile<FILE *>("test_xyz_float_rgba_byte.mmpld");
-            this->testFile<FILE *>("test_xyz_float_rgba_float.mmpld");
-            this->testFile<FILE *>("test_xyzr_float_int_float.mmpld");
-            this->testFile<FILE *>("test_xyzr_float_none.mmpld");
-            this->testFile<FILE *>("test_xyzr_float_rgb_float.mmpld");
-            this->testFile<FILE *>("test_xyzr_float_rgba_byte.mmpld");
-            this->testFile<FILE *>("test_xyzr_float_rgba_float.mmpld");
+            Assert::IsTrue(::memcmp(r1.colour, r2.colour, sizeof(r1.colour)) == 0, L"r3.colour matches reference.", LINE_INFO());
+            Assert::IsTrue(::memcmp(r1.colour, r3.colour, sizeof(r1.colour)) == 0, L"r3.colour matches reference.", LINE_INFO());
+            Assert::IsTrue(::memcmp(r1.colour, r4.colour, sizeof(r1.colour)) == 0, L"r4.colour matches reference.", LINE_INFO());
+        }
 
-            this->testFile<int>("test_xyz_float_int_float.mmpld");
-            this->testFile<int>("test_xyz_float_none.mmpld");
-            this->testFile<int>("test_xyz_float_rgb_float.mmpld");
-            this->testFile<int>("test_xyz_float_rgba_byte.mmpld");
-            this->testFile<int>("test_xyz_float_rgba_float.mmpld");
-            this->testFile<int>("test_xyzr_float_int_float.mmpld");
-            this->testFile<int>("test_xyzr_float_none.mmpld");
-            this->testFile<int>("test_xyzr_float_rgb_float.mmpld");
-            this->testFile<int>("test_xyzr_float_rgba_byte.mmpld");
-            this->testFile<int>("test_xyzr_float_rgba_float.mmpld");
+        TEST_METHOD(Test_test_xyz_float_none) {
+            ::SetMmpldWorkingDirectory();
 
-            this->testFile<std::ifstream>("test_xyz_float_int_float.mmpld");
-            this->testFile<std::ifstream>("test_xyz_float_none.mmpld");
-            this->testFile<std::ifstream>("test_xyz_float_rgb_float.mmpld");
-            this->testFile<std::ifstream>("test_xyz_float_rgba_byte.mmpld");
-            this->testFile<std::ifstream>("test_xyz_float_rgba_float.mmpld");
-            this->testFile<std::ifstream>("test_xyzr_float_int_float.mmpld");
-            this->testFile<std::ifstream>("test_xyzr_float_none.mmpld");
-            this->testFile<std::ifstream>("test_xyzr_float_rgb_float.mmpld");
-            this->testFile<std::ifstream>("test_xyzr_float_rgba_byte.mmpld");
-            this->testFile<std::ifstream>("test_xyzr_float_rgba_float.mmpld");
+            auto r1 = this->testFile<HANDLE>("test_xyz_float_none.mmpld");
+            auto r2 = this->testFile<FILE *>("test_xyz_float_none.mmpld");
+            auto r3 = this->testFile<int>("test_xyz_float_none.mmpld");
+            auto r4 = this->testFile<std::ifstream>("test_xyz_float_none.mmpld");
+        }
 
+        TEST_METHOD(Test_test_xyz_float_rgb_float) {
+            ::SetMmpldWorkingDirectory();
+
+            auto r1 = this->testFile<HANDLE>("test_xyz_float_rgb_float.mmpld");
+            auto r2 = this->testFile<FILE *>("test_xyz_float_rgb_float.mmpld");
+            auto r3 = this->testFile<int>("test_xyz_float_rgb_float.mmpld");
+            auto r4 = this->testFile<std::ifstream>("test_xyz_float_rgb_float.mmpld");
+        }
+
+        TEST_METHOD(Test_test_xyz_float_rgba_byte) {
+            ::SetMmpldWorkingDirectory();
+
+            auto r1 = this->testFile<HANDLE>("test_xyz_float_rgba_byte.mmpld");
+            auto r2 = this->testFile<FILE *>("test_xyz_float_rgba_byte.mmpld");
+            auto r3 = this->testFile<int>("test_xyz_float_rgba_byte.mmpld");
+            auto r4 = this->testFile<std::ifstream>("test_xyz_float_rgba_byte.mmpld");
+        }
+
+        TEST_METHOD(Test_test_xyz_float_rgba_float) {
+            ::SetMmpldWorkingDirectory();
+
+            auto r1 = this->testFile<HANDLE>("test_xyz_float_rgba_float.mmpld");
+            auto r2 = this->testFile<FILE *>("test_xyz_float_rgba_float.mmpld");
+            auto r3 = this->testFile<int>("test_xyz_float_rgba_float.mmpld");
+            auto r4 = this->testFile<std::ifstream>("test_xyz_float_rgba_float.mmpld");
+        }
+
+        TEST_METHOD(Test_test_xyzr_float_int_float) {
+            ::SetMmpldWorkingDirectory();
+
+            auto r1 = this->testFile<HANDLE>("test_xyzr_float_int_float.mmpld");
+            auto r2 = this->testFile<FILE *>("test_xyzr_float_int_float.mmpld");
+            auto r3 = this->testFile<int>("test_xyzr_float_int_float.mmpld");
+            auto r4 = this->testFile<std::ifstream>("test_xyzr_float_int_float.mmpld");
+        }
+
+        TEST_METHOD(Test_test_xyzr_float_none) {
+            ::SetMmpldWorkingDirectory();
+
+            auto r1 = this->testFile<HANDLE>("test_xyzr_float_none.mmpld");
+            auto r2 = this->testFile<FILE *>("test_xyzr_float_none.mmpld");
+            auto r3 = this->testFile<int>("test_xyzr_float_none.mmpld");
+            auto r4 = this->testFile<std::ifstream>("test_xyzr_float_none.mmpld");
+        }
+
+        TEST_METHOD(Test_test_xyzr_float_rgb_float) {
+            ::SetMmpldWorkingDirectory();
+
+            auto r1 = this->testFile<HANDLE>("test_xyzr_float_rgb_float.mmpld");
+            auto r2 = this->testFile<FILE *>("test_xyzr_float_rgb_float.mmpld");
+            auto r3 = this->testFile<int>("test_xyzr_float_rgb_float.mmpld");
+            auto r4 = this->testFile<std::ifstream>("test_xyzr_float_rgb_float.mmpld");
+        }
+
+        TEST_METHOD(Test_test_xyzr_float_rgba_byte) {
+            ::SetMmpldWorkingDirectory();
+
+            auto r1 = this->testFile<HANDLE>("test_xyzr_float_rgba_byte.mmpld");
+            auto r2 = this->testFile<FILE *>("test_xyzr_float_rgba_byte.mmpld");
+            auto r3 = this->testFile<int>("test_xyzr_float_rgba_byte.mmpld");
+            auto r4 = this->testFile<std::ifstream>("test_xyzr_float_rgba_byte.mmpld");
+        }
+
+        TEST_METHOD(Test_test_xyzr_float_rgba_float) {
+            ::SetMmpldWorkingDirectory();
+
+            auto r1 = this->testFile<HANDLE>("test_xyzr_float_rgba_float.mmpld");
+            auto r2 = this->testFile<FILE *>("test_xyzr_float_rgba_float.mmpld");
+            auto r3 = this->testFile<int>("test_xyzr_float_rgba_float.mmpld");
+            auto r4 = this->testFile<std::ifstream>("test_xyzr_float_rgba_float.mmpld");
         }
 
     private:
