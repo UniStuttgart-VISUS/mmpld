@@ -18,6 +18,8 @@ namespace test {
     public:
 
         TEST_METHOD(Test_test_xyz_float_int_float) {
+            typedef std::underlying_type<mmpld::colour_type>::type c_t;
+            typedef std::underlying_type<mmpld::vertex_type>::type v_t;
             ::SetMmpldWorkingDirectory();
 
             auto r1 = this->testFile<HANDLE>("test_xyz_float_int_float.mmpld");
@@ -25,90 +27,434 @@ namespace test {
             auto r3 = this->testFile<int>("test_xyz_float_int_float.mmpld");
             auto r4 = this->testFile<std::ifstream>("test_xyz_float_int_float.mmpld");
 
-            Assert::IsTrue(::memcmp(r1.colour, r2.colour, sizeof(r1.colour)) == 0, L"r3.colour matches reference.", LINE_INFO());
+            Assert::AreEqual(v_t(mmpld::vertex_type::float_xyz), v_t(r1.vertex_type), L"vertex_type of test_xyz_float_int_float.mmpld", LINE_INFO());
+            Assert::AreEqual(c_t(mmpld::colour_type::intensity), c_t(r1.colour_type), L"colour_type of test_xyz_float_int_float.mmpld", LINE_INFO());
+
+            Assert::AreEqual(decltype(r1.particles)(4), r1.particles, L"Number of particles is 4.", LINE_INFO());
+
+            Assert::IsTrue(::memcmp(r1.colour, r2.colour, sizeof(r1.colour)) == 0, L"r2.colour matches reference.", LINE_INFO());
             Assert::IsTrue(::memcmp(r1.colour, r3.colour, sizeof(r1.colour)) == 0, L"r3.colour matches reference.", LINE_INFO());
             Assert::IsTrue(::memcmp(r1.colour, r4.colour, sizeof(r1.colour)) == 0, L"r4.colour matches reference.", LINE_INFO());
+
+            Assert::AreEqual(c_t(r1.colour_type), c_t(r2.colour_type), L"r2.colour_type matches reference.", LINE_INFO());
+            Assert::AreEqual(c_t(r1.colour_type), c_t(r3.colour_type), L"r3.colour_type matches reference.", LINE_INFO());
+            Assert::AreEqual(c_t(r1.colour_type), c_t(r4.colour_type), L"r4.colour_type matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.max_intensity, r2.max_intensity, L"r2.max_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.max_intensity, r3.max_intensity, L"r3.max_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.max_intensity, r4.max_intensity, L"r4.max_intensity matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.min_intensity, r2.min_intensity, L"r2.min_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.min_intensity, r3.min_intensity, L"r3.min_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.min_intensity, r4.min_intensity, L"r4.min_intensity matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.particles, r2.particles, L"r2.particles matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.particles, r3.particles, L"r3.particles matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.particles, r4.particles, L"r4.particles matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.radius, r2.radius, L"r2.radius matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.radius, r3.radius, L"r3.radius matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.radius, r4.radius, L"r4.radius matches reference.", LINE_INFO());
+
+            Assert::AreEqual(v_t(r1.vertex_type), v_t(r2.vertex_type), L"r2.vertex_type matches reference.", LINE_INFO());
+            Assert::AreEqual(v_t(r1.vertex_type), v_t(r3.vertex_type), L"r3.vertex_type matches reference.", LINE_INFO());
+            Assert::AreEqual(v_t(r1.vertex_type), v_t(r4.vertex_type), L"r4.vertex_type matches reference.", LINE_INFO());
         }
 
         TEST_METHOD(Test_test_xyz_float_none) {
+            typedef std::underlying_type<mmpld::colour_type>::type c_t;
+            typedef std::underlying_type<mmpld::vertex_type>::type v_t;
             ::SetMmpldWorkingDirectory();
 
             auto r1 = this->testFile<HANDLE>("test_xyz_float_none.mmpld");
             auto r2 = this->testFile<FILE *>("test_xyz_float_none.mmpld");
             auto r3 = this->testFile<int>("test_xyz_float_none.mmpld");
             auto r4 = this->testFile<std::ifstream>("test_xyz_float_none.mmpld");
+
+            Assert::AreEqual(v_t(mmpld::vertex_type::float_xyz), v_t(r1.vertex_type), L"vertex_type of test_xyz_float_none.mmpld", LINE_INFO());
+            Assert::AreEqual(c_t(mmpld::colour_type::none), c_t(r1.colour_type), L"colour_type of test_xyz_float_none.mmpld", LINE_INFO());
+
+            Assert::AreEqual(decltype(r1.particles)(4), r1.particles, L"Number of particles is 4.", LINE_INFO());
+
+            Assert::IsTrue(::memcmp(r1.colour, r2.colour, sizeof(r1.colour)) == 0, L"r2.colour matches reference.", LINE_INFO());
+            Assert::IsTrue(::memcmp(r1.colour, r3.colour, sizeof(r1.colour)) == 0, L"r3.colour matches reference.", LINE_INFO());
+            Assert::IsTrue(::memcmp(r1.colour, r4.colour, sizeof(r1.colour)) == 0, L"r4.colour matches reference.", LINE_INFO());
+
+            Assert::AreEqual(c_t(r1.colour_type), c_t(r2.colour_type), L"r2.colour_type matches reference.", LINE_INFO());
+            Assert::AreEqual(c_t(r1.colour_type), c_t(r3.colour_type), L"r3.colour_type matches reference.", LINE_INFO());
+            Assert::AreEqual(c_t(r1.colour_type), c_t(r4.colour_type), L"r4.colour_type matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.max_intensity, r2.max_intensity, L"r2.max_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.max_intensity, r3.max_intensity, L"r3.max_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.max_intensity, r4.max_intensity, L"r4.max_intensity matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.min_intensity, r2.min_intensity, L"r2.min_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.min_intensity, r3.min_intensity, L"r3.min_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.min_intensity, r4.min_intensity, L"r4.min_intensity matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.particles, r2.particles, L"r2.particles matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.particles, r3.particles, L"r3.particles matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.particles, r4.particles, L"r4.particles matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.radius, r2.radius, L"r2.radius matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.radius, r3.radius, L"r3.radius matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.radius, r4.radius, L"r4.radius matches reference.", LINE_INFO());
+
+            Assert::AreEqual(v_t(r1.vertex_type), v_t(r2.vertex_type), L"r2.vertex_type matches reference.", LINE_INFO());
+            Assert::AreEqual(v_t(r1.vertex_type), v_t(r3.vertex_type), L"r3.vertex_type matches reference.", LINE_INFO());
+            Assert::AreEqual(v_t(r1.vertex_type), v_t(r4.vertex_type), L"r4.vertex_type matches reference.", LINE_INFO());
         }
 
         TEST_METHOD(Test_test_xyz_float_rgb_float) {
+            typedef std::underlying_type<mmpld::colour_type>::type c_t;
+            typedef std::underlying_type<mmpld::vertex_type>::type v_t;
             ::SetMmpldWorkingDirectory();
 
             auto r1 = this->testFile<HANDLE>("test_xyz_float_rgb_float.mmpld");
             auto r2 = this->testFile<FILE *>("test_xyz_float_rgb_float.mmpld");
             auto r3 = this->testFile<int>("test_xyz_float_rgb_float.mmpld");
             auto r4 = this->testFile<std::ifstream>("test_xyz_float_rgb_float.mmpld");
+
+            Assert::AreEqual(v_t(mmpld::vertex_type::float_xyz), v_t(r1.vertex_type), L"vertex_type of test_xyz_float_rgb_float.mmpld", LINE_INFO());
+            Assert::AreEqual(c_t(mmpld::colour_type::rgb32), c_t(r1.colour_type), L"colour_type of test_xyz_float_rgb_float.mmpld", LINE_INFO());
+
+            Assert::AreEqual(decltype(r1.particles)(4), r1.particles, L"Number of particles is 4.", LINE_INFO());
+
+            Assert::IsTrue(::memcmp(r1.colour, r2.colour, sizeof(r1.colour)) == 0, L"r2.colour matches reference.", LINE_INFO());
+            Assert::IsTrue(::memcmp(r1.colour, r3.colour, sizeof(r1.colour)) == 0, L"r3.colour matches reference.", LINE_INFO());
+            Assert::IsTrue(::memcmp(r1.colour, r4.colour, sizeof(r1.colour)) == 0, L"r4.colour matches reference.", LINE_INFO());
+
+            Assert::AreEqual(c_t(r1.colour_type), c_t(r2.colour_type), L"r2.colour_type matches reference.", LINE_INFO());
+            Assert::AreEqual(c_t(r1.colour_type), c_t(r3.colour_type), L"r3.colour_type matches reference.", LINE_INFO());
+            Assert::AreEqual(c_t(r1.colour_type), c_t(r4.colour_type), L"r4.colour_type matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.max_intensity, r2.max_intensity, L"r2.max_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.max_intensity, r3.max_intensity, L"r3.max_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.max_intensity, r4.max_intensity, L"r4.max_intensity matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.min_intensity, r2.min_intensity, L"r2.min_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.min_intensity, r3.min_intensity, L"r3.min_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.min_intensity, r4.min_intensity, L"r4.min_intensity matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.particles, r2.particles, L"r2.particles matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.particles, r3.particles, L"r3.particles matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.particles, r4.particles, L"r4.particles matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.radius, r2.radius, L"r2.radius matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.radius, r3.radius, L"r3.radius matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.radius, r4.radius, L"r4.radius matches reference.", LINE_INFO());
+
+            Assert::AreEqual(v_t(r1.vertex_type), v_t(r2.vertex_type), L"r2.vertex_type matches reference.", LINE_INFO());
+            Assert::AreEqual(v_t(r1.vertex_type), v_t(r3.vertex_type), L"r3.vertex_type matches reference.", LINE_INFO());
+            Assert::AreEqual(v_t(r1.vertex_type), v_t(r4.vertex_type), L"r4.vertex_type matches reference.", LINE_INFO());
         }
 
         TEST_METHOD(Test_test_xyz_float_rgba_byte) {
+            typedef std::underlying_type<mmpld::colour_type>::type c_t;
+            typedef std::underlying_type<mmpld::vertex_type>::type v_t;
             ::SetMmpldWorkingDirectory();
 
             auto r1 = this->testFile<HANDLE>("test_xyz_float_rgba_byte.mmpld");
             auto r2 = this->testFile<FILE *>("test_xyz_float_rgba_byte.mmpld");
             auto r3 = this->testFile<int>("test_xyz_float_rgba_byte.mmpld");
             auto r4 = this->testFile<std::ifstream>("test_xyz_float_rgba_byte.mmpld");
+
+            Assert::AreEqual(v_t(mmpld::vertex_type::float_xyz), v_t(r1.vertex_type), L"vertex_type of test_xyz_float_rgba_byte.mmpld", LINE_INFO());
+            Assert::AreEqual(c_t(mmpld::colour_type::rgba8), c_t(r1.colour_type), L"colour_type of test_xyz_float_rgba_byte.mmpld", LINE_INFO());
+
+            Assert::AreEqual(decltype(r1.particles)(4), r1.particles, L"Number of particles is 4.", LINE_INFO());
+
+            Assert::IsTrue(::memcmp(r1.colour, r2.colour, sizeof(r1.colour)) == 0, L"r2.colour matches reference.", LINE_INFO());
+            Assert::IsTrue(::memcmp(r1.colour, r3.colour, sizeof(r1.colour)) == 0, L"r3.colour matches reference.", LINE_INFO());
+            Assert::IsTrue(::memcmp(r1.colour, r4.colour, sizeof(r1.colour)) == 0, L"r4.colour matches reference.", LINE_INFO());
+
+            Assert::AreEqual(c_t(r1.colour_type), c_t(r2.colour_type), L"r2.colour_type matches reference.", LINE_INFO());
+            Assert::AreEqual(c_t(r1.colour_type), c_t(r3.colour_type), L"r3.colour_type matches reference.", LINE_INFO());
+            Assert::AreEqual(c_t(r1.colour_type), c_t(r4.colour_type), L"r4.colour_type matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.max_intensity, r2.max_intensity, L"r2.max_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.max_intensity, r3.max_intensity, L"r3.max_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.max_intensity, r4.max_intensity, L"r4.max_intensity matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.min_intensity, r2.min_intensity, L"r2.min_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.min_intensity, r3.min_intensity, L"r3.min_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.min_intensity, r4.min_intensity, L"r4.min_intensity matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.particles, r2.particles, L"r2.particles matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.particles, r3.particles, L"r3.particles matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.particles, r4.particles, L"r4.particles matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.radius, r2.radius, L"r2.radius matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.radius, r3.radius, L"r3.radius matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.radius, r4.radius, L"r4.radius matches reference.", LINE_INFO());
+
+            Assert::AreEqual(v_t(r1.vertex_type), v_t(r2.vertex_type), L"r2.vertex_type matches reference.", LINE_INFO());
+            Assert::AreEqual(v_t(r1.vertex_type), v_t(r3.vertex_type), L"r3.vertex_type matches reference.", LINE_INFO());
+            Assert::AreEqual(v_t(r1.vertex_type), v_t(r4.vertex_type), L"r4.vertex_type matches reference.", LINE_INFO());
         }
 
         TEST_METHOD(Test_test_xyz_float_rgba_float) {
+            typedef std::underlying_type<mmpld::colour_type>::type c_t;
+            typedef std::underlying_type<mmpld::vertex_type>::type v_t;
             ::SetMmpldWorkingDirectory();
 
             auto r1 = this->testFile<HANDLE>("test_xyz_float_rgba_float.mmpld");
             auto r2 = this->testFile<FILE *>("test_xyz_float_rgba_float.mmpld");
             auto r3 = this->testFile<int>("test_xyz_float_rgba_float.mmpld");
             auto r4 = this->testFile<std::ifstream>("test_xyz_float_rgba_float.mmpld");
+
+            Assert::AreEqual(v_t(mmpld::vertex_type::float_xyz), v_t(r1.vertex_type), L"vertex_type of test_xyz_float_rgba_float.mmpld", LINE_INFO());
+            Assert::AreEqual(c_t(mmpld::colour_type::rgba32), c_t(r1.colour_type), L"colour_type of test_xyz_float_rgba_float.mmpld", LINE_INFO());
+
+            Assert::AreEqual(decltype(r1.particles)(4), r1.particles, L"Number of particles is 4.", LINE_INFO());
+
+            Assert::IsTrue(::memcmp(r1.colour, r2.colour, sizeof(r1.colour)) == 0, L"r2.colour matches reference.", LINE_INFO());
+            Assert::IsTrue(::memcmp(r1.colour, r3.colour, sizeof(r1.colour)) == 0, L"r3.colour matches reference.", LINE_INFO());
+            Assert::IsTrue(::memcmp(r1.colour, r4.colour, sizeof(r1.colour)) == 0, L"r4.colour matches reference.", LINE_INFO());
+
+            Assert::AreEqual(c_t(r1.colour_type), c_t(r2.colour_type), L"r2.colour_type matches reference.", LINE_INFO());
+            Assert::AreEqual(c_t(r1.colour_type), c_t(r3.colour_type), L"r3.colour_type matches reference.", LINE_INFO());
+            Assert::AreEqual(c_t(r1.colour_type), c_t(r4.colour_type), L"r4.colour_type matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.max_intensity, r2.max_intensity, L"r2.max_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.max_intensity, r3.max_intensity, L"r3.max_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.max_intensity, r4.max_intensity, L"r4.max_intensity matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.min_intensity, r2.min_intensity, L"r2.min_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.min_intensity, r3.min_intensity, L"r3.min_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.min_intensity, r4.min_intensity, L"r4.min_intensity matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.particles, r2.particles, L"r2.particles matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.particles, r3.particles, L"r3.particles matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.particles, r4.particles, L"r4.particles matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.radius, r2.radius, L"r2.radius matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.radius, r3.radius, L"r3.radius matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.radius, r4.radius, L"r4.radius matches reference.", LINE_INFO());
+
+            Assert::AreEqual(v_t(r1.vertex_type), v_t(r2.vertex_type), L"r2.vertex_type matches reference.", LINE_INFO());
+            Assert::AreEqual(v_t(r1.vertex_type), v_t(r3.vertex_type), L"r3.vertex_type matches reference.", LINE_INFO());
+            Assert::AreEqual(v_t(r1.vertex_type), v_t(r4.vertex_type), L"r4.vertex_type matches reference.", LINE_INFO());
         }
 
         TEST_METHOD(Test_test_xyzr_float_int_float) {
+            typedef std::underlying_type<mmpld::colour_type>::type c_t;
+            typedef std::underlying_type<mmpld::vertex_type>::type v_t;
             ::SetMmpldWorkingDirectory();
 
             auto r1 = this->testFile<HANDLE>("test_xyzr_float_int_float.mmpld");
             auto r2 = this->testFile<FILE *>("test_xyzr_float_int_float.mmpld");
             auto r3 = this->testFile<int>("test_xyzr_float_int_float.mmpld");
             auto r4 = this->testFile<std::ifstream>("test_xyzr_float_int_float.mmpld");
+
+            Assert::AreEqual(v_t(mmpld::vertex_type::float_xyzr), v_t(r1.vertex_type), L"vertex_type of test_xyzr_float_int_float.mmpld", LINE_INFO());
+            Assert::AreEqual(c_t(mmpld::colour_type::intensity), c_t(r1.colour_type), L"colour_type of test_xyzr_float_int_float.mmpld", LINE_INFO());
+
+            Assert::AreEqual(decltype(r1.particles)(4), r1.particles, L"Number of particles is 4.", LINE_INFO());
+
+            Assert::IsTrue(::memcmp(r1.colour, r2.colour, sizeof(r1.colour)) == 0, L"r2.colour matches reference.", LINE_INFO());
+            Assert::IsTrue(::memcmp(r1.colour, r3.colour, sizeof(r1.colour)) == 0, L"r3.colour matches reference.", LINE_INFO());
+            Assert::IsTrue(::memcmp(r1.colour, r4.colour, sizeof(r1.colour)) == 0, L"r4.colour matches reference.", LINE_INFO());
+
+            Assert::AreEqual(c_t(r1.colour_type), c_t(r2.colour_type), L"r2.colour_type matches reference.", LINE_INFO());
+            Assert::AreEqual(c_t(r1.colour_type), c_t(r3.colour_type), L"r3.colour_type matches reference.", LINE_INFO());
+            Assert::AreEqual(c_t(r1.colour_type), c_t(r4.colour_type), L"r4.colour_type matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.max_intensity, r2.max_intensity, L"r2.max_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.max_intensity, r3.max_intensity, L"r3.max_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.max_intensity, r4.max_intensity, L"r4.max_intensity matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.min_intensity, r2.min_intensity, L"r2.min_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.min_intensity, r3.min_intensity, L"r3.min_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.min_intensity, r4.min_intensity, L"r4.min_intensity matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.particles, r2.particles, L"r2.particles matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.particles, r3.particles, L"r3.particles matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.particles, r4.particles, L"r4.particles matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.radius, r2.radius, L"r2.radius matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.radius, r3.radius, L"r3.radius matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.radius, r4.radius, L"r4.radius matches reference.", LINE_INFO());
+
+            Assert::AreEqual(v_t(r1.vertex_type), v_t(r2.vertex_type), L"r2.vertex_type matches reference.", LINE_INFO());
+            Assert::AreEqual(v_t(r1.vertex_type), v_t(r3.vertex_type), L"r3.vertex_type matches reference.", LINE_INFO());
+            Assert::AreEqual(v_t(r1.vertex_type), v_t(r4.vertex_type), L"r4.vertex_type matches reference.", LINE_INFO());
         }
 
         TEST_METHOD(Test_test_xyzr_float_none) {
+            typedef std::underlying_type<mmpld::colour_type>::type c_t;
+            typedef std::underlying_type<mmpld::vertex_type>::type v_t;
             ::SetMmpldWorkingDirectory();
 
             auto r1 = this->testFile<HANDLE>("test_xyzr_float_none.mmpld");
             auto r2 = this->testFile<FILE *>("test_xyzr_float_none.mmpld");
             auto r3 = this->testFile<int>("test_xyzr_float_none.mmpld");
             auto r4 = this->testFile<std::ifstream>("test_xyzr_float_none.mmpld");
+
+            Assert::AreEqual(v_t(mmpld::vertex_type::float_xyzr), v_t(r1.vertex_type), L"vertex_type of test_xyzr_float_none.mmpld", LINE_INFO());
+            Assert::AreEqual(c_t(mmpld::colour_type::none), c_t(r1.colour_type), L"colour_type of test_xyzr_float_none.mmpld", LINE_INFO());
+
+            Assert::AreEqual(decltype(r1.particles)(4), r1.particles, L"Number of particles is 4.", LINE_INFO());
+
+            Assert::IsTrue(::memcmp(r1.colour, r2.colour, sizeof(r1.colour)) == 0, L"r2.colour matches reference.", LINE_INFO());
+            Assert::IsTrue(::memcmp(r1.colour, r3.colour, sizeof(r1.colour)) == 0, L"r3.colour matches reference.", LINE_INFO());
+            Assert::IsTrue(::memcmp(r1.colour, r4.colour, sizeof(r1.colour)) == 0, L"r4.colour matches reference.", LINE_INFO());
+
+            Assert::AreEqual(c_t(r1.colour_type), c_t(r2.colour_type), L"r2.colour_type matches reference.", LINE_INFO());
+            Assert::AreEqual(c_t(r1.colour_type), c_t(r3.colour_type), L"r3.colour_type matches reference.", LINE_INFO());
+            Assert::AreEqual(c_t(r1.colour_type), c_t(r4.colour_type), L"r4.colour_type matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.max_intensity, r2.max_intensity, L"r2.max_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.max_intensity, r3.max_intensity, L"r3.max_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.max_intensity, r4.max_intensity, L"r4.max_intensity matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.min_intensity, r2.min_intensity, L"r2.min_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.min_intensity, r3.min_intensity, L"r3.min_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.min_intensity, r4.min_intensity, L"r4.min_intensity matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.particles, r2.particles, L"r2.particles matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.particles, r3.particles, L"r3.particles matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.particles, r4.particles, L"r4.particles matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.radius, r2.radius, L"r2.radius matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.radius, r3.radius, L"r3.radius matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.radius, r4.radius, L"r4.radius matches reference.", LINE_INFO());
+
+            Assert::AreEqual(v_t(r1.vertex_type), v_t(r2.vertex_type), L"r2.vertex_type matches reference.", LINE_INFO());
+            Assert::AreEqual(v_t(r1.vertex_type), v_t(r3.vertex_type), L"r3.vertex_type matches reference.", LINE_INFO());
+            Assert::AreEqual(v_t(r1.vertex_type), v_t(r4.vertex_type), L"r4.vertex_type matches reference.", LINE_INFO());
         }
 
         TEST_METHOD(Test_test_xyzr_float_rgb_float) {
+            typedef std::underlying_type<mmpld::colour_type>::type c_t;
+            typedef std::underlying_type<mmpld::vertex_type>::type v_t;
             ::SetMmpldWorkingDirectory();
 
             auto r1 = this->testFile<HANDLE>("test_xyzr_float_rgb_float.mmpld");
             auto r2 = this->testFile<FILE *>("test_xyzr_float_rgb_float.mmpld");
             auto r3 = this->testFile<int>("test_xyzr_float_rgb_float.mmpld");
             auto r4 = this->testFile<std::ifstream>("test_xyzr_float_rgb_float.mmpld");
+
+            Assert::AreEqual(v_t(mmpld::vertex_type::float_xyzr), v_t(r1.vertex_type), L"vertex_type of test_xyzr_float_rgb_float.mmpld", LINE_INFO());
+            Assert::AreEqual(c_t(mmpld::colour_type::rgb32), c_t(r1.colour_type), L"colour_type of test_xyzr_float_rgb_float.mmpld", LINE_INFO());
+
+            Assert::AreEqual(decltype(r1.particles)(4), r1.particles, L"Number of particles is 4.", LINE_INFO());
+
+            Assert::IsTrue(::memcmp(r1.colour, r2.colour, sizeof(r1.colour)) == 0, L"r2.colour matches reference.", LINE_INFO());
+            Assert::IsTrue(::memcmp(r1.colour, r3.colour, sizeof(r1.colour)) == 0, L"r3.colour matches reference.", LINE_INFO());
+            Assert::IsTrue(::memcmp(r1.colour, r4.colour, sizeof(r1.colour)) == 0, L"r4.colour matches reference.", LINE_INFO());
+
+            Assert::AreEqual(c_t(r1.colour_type), c_t(r2.colour_type), L"r2.colour_type matches reference.", LINE_INFO());
+            Assert::AreEqual(c_t(r1.colour_type), c_t(r3.colour_type), L"r3.colour_type matches reference.", LINE_INFO());
+            Assert::AreEqual(c_t(r1.colour_type), c_t(r4.colour_type), L"r4.colour_type matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.max_intensity, r2.max_intensity, L"r2.max_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.max_intensity, r3.max_intensity, L"r3.max_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.max_intensity, r4.max_intensity, L"r4.max_intensity matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.min_intensity, r2.min_intensity, L"r2.min_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.min_intensity, r3.min_intensity, L"r3.min_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.min_intensity, r4.min_intensity, L"r4.min_intensity matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.particles, r2.particles, L"r2.particles matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.particles, r3.particles, L"r3.particles matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.particles, r4.particles, L"r4.particles matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.radius, r2.radius, L"r2.radius matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.radius, r3.radius, L"r3.radius matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.radius, r4.radius, L"r4.radius matches reference.", LINE_INFO());
+
+            Assert::AreEqual(v_t(r1.vertex_type), v_t(r2.vertex_type), L"r2.vertex_type matches reference.", LINE_INFO());
+            Assert::AreEqual(v_t(r1.vertex_type), v_t(r3.vertex_type), L"r3.vertex_type matches reference.", LINE_INFO());
+            Assert::AreEqual(v_t(r1.vertex_type), v_t(r4.vertex_type), L"r4.vertex_type matches reference.", LINE_INFO());
         }
 
         TEST_METHOD(Test_test_xyzr_float_rgba_byte) {
+            typedef std::underlying_type<mmpld::colour_type>::type c_t;
+            typedef std::underlying_type<mmpld::vertex_type>::type v_t;
             ::SetMmpldWorkingDirectory();
 
             auto r1 = this->testFile<HANDLE>("test_xyzr_float_rgba_byte.mmpld");
             auto r2 = this->testFile<FILE *>("test_xyzr_float_rgba_byte.mmpld");
             auto r3 = this->testFile<int>("test_xyzr_float_rgba_byte.mmpld");
             auto r4 = this->testFile<std::ifstream>("test_xyzr_float_rgba_byte.mmpld");
+
+            Assert::AreEqual(v_t(mmpld::vertex_type::float_xyzr), v_t(r1.vertex_type), L"vertex_type of test_xyzr_float_rgba_byte.mmpld", LINE_INFO());
+            Assert::AreEqual(c_t(mmpld::colour_type::rgba8), c_t(r1.colour_type), L"colour_type of test_xyzr_float_rgba_byte.mmpld", LINE_INFO());
+
+            Assert::AreEqual(decltype(r1.particles)(4), r1.particles, L"Number of particles is 4.", LINE_INFO());
+
+            Assert::IsTrue(::memcmp(r1.colour, r2.colour, sizeof(r1.colour)) == 0, L"r2.colour matches reference.", LINE_INFO());
+            Assert::IsTrue(::memcmp(r1.colour, r3.colour, sizeof(r1.colour)) == 0, L"r3.colour matches reference.", LINE_INFO());
+            Assert::IsTrue(::memcmp(r1.colour, r4.colour, sizeof(r1.colour)) == 0, L"r4.colour matches reference.", LINE_INFO());
+
+            Assert::AreEqual(c_t(r1.colour_type), c_t(r2.colour_type), L"r2.colour_type matches reference.", LINE_INFO());
+            Assert::AreEqual(c_t(r1.colour_type), c_t(r3.colour_type), L"r3.colour_type matches reference.", LINE_INFO());
+            Assert::AreEqual(c_t(r1.colour_type), c_t(r4.colour_type), L"r4.colour_type matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.max_intensity, r2.max_intensity, L"r2.max_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.max_intensity, r3.max_intensity, L"r3.max_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.max_intensity, r4.max_intensity, L"r4.max_intensity matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.min_intensity, r2.min_intensity, L"r2.min_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.min_intensity, r3.min_intensity, L"r3.min_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.min_intensity, r4.min_intensity, L"r4.min_intensity matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.particles, r2.particles, L"r2.particles matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.particles, r3.particles, L"r3.particles matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.particles, r4.particles, L"r4.particles matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.radius, r2.radius, L"r2.radius matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.radius, r3.radius, L"r3.radius matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.radius, r4.radius, L"r4.radius matches reference.", LINE_INFO());
+
+            Assert::AreEqual(v_t(r1.vertex_type), v_t(r2.vertex_type), L"r2.vertex_type matches reference.", LINE_INFO());
+            Assert::AreEqual(v_t(r1.vertex_type), v_t(r3.vertex_type), L"r3.vertex_type matches reference.", LINE_INFO());
+            Assert::AreEqual(v_t(r1.vertex_type), v_t(r4.vertex_type), L"r4.vertex_type matches reference.", LINE_INFO());
         }
 
         TEST_METHOD(Test_test_xyzr_float_rgba_float) {
+            typedef std::underlying_type<mmpld::colour_type>::type c_t;
+            typedef std::underlying_type<mmpld::vertex_type>::type v_t;
             ::SetMmpldWorkingDirectory();
 
             auto r1 = this->testFile<HANDLE>("test_xyzr_float_rgba_float.mmpld");
             auto r2 = this->testFile<FILE *>("test_xyzr_float_rgba_float.mmpld");
             auto r3 = this->testFile<int>("test_xyzr_float_rgba_float.mmpld");
             auto r4 = this->testFile<std::ifstream>("test_xyzr_float_rgba_float.mmpld");
+
+            Assert::AreEqual(v_t(mmpld::vertex_type::float_xyzr), v_t(r1.vertex_type), L"vertex_type of test_xyzr_float_rgba_float.mmpld", LINE_INFO());
+            Assert::AreEqual(c_t(mmpld::colour_type::rgba32), c_t(r1.colour_type), L"colour_type of test_xyzr_float_rgba_float.mmpld", LINE_INFO());
+
+            Assert::AreEqual(decltype(r1.particles)(4), r1.particles, L"Number of particles is 4.", LINE_INFO());
+
+            Assert::IsTrue(::memcmp(r1.colour, r2.colour, sizeof(r1.colour)) == 0, L"r2.colour matches reference.", LINE_INFO());
+            Assert::IsTrue(::memcmp(r1.colour, r3.colour, sizeof(r1.colour)) == 0, L"r3.colour matches reference.", LINE_INFO());
+            Assert::IsTrue(::memcmp(r1.colour, r4.colour, sizeof(r1.colour)) == 0, L"r4.colour matches reference.", LINE_INFO());
+
+            Assert::AreEqual(c_t(r1.colour_type), c_t(r2.colour_type), L"r2.colour_type matches reference.", LINE_INFO());
+            Assert::AreEqual(c_t(r1.colour_type), c_t(r3.colour_type), L"r3.colour_type matches reference.", LINE_INFO());
+            Assert::AreEqual(c_t(r1.colour_type), c_t(r4.colour_type), L"r4.colour_type matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.max_intensity, r2.max_intensity, L"r2.max_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.max_intensity, r3.max_intensity, L"r3.max_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.max_intensity, r4.max_intensity, L"r4.max_intensity matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.min_intensity, r2.min_intensity, L"r2.min_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.min_intensity, r3.min_intensity, L"r3.min_intensity matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.min_intensity, r4.min_intensity, L"r4.min_intensity matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.particles, r2.particles, L"r2.particles matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.particles, r3.particles, L"r3.particles matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.particles, r4.particles, L"r4.particles matches reference.", LINE_INFO());
+
+            Assert::AreEqual(r1.radius, r2.radius, L"r2.radius matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.radius, r3.radius, L"r3.radius matches reference.", LINE_INFO());
+            Assert::AreEqual(r1.radius, r4.radius, L"r4.radius matches reference.", LINE_INFO());
+
+            Assert::AreEqual(v_t(r1.vertex_type), v_t(r2.vertex_type), L"r2.vertex_type matches reference.", LINE_INFO());
+            Assert::AreEqual(v_t(r1.vertex_type), v_t(r3.vertex_type), L"r3.vertex_type matches reference.", LINE_INFO());
+            Assert::AreEqual(v_t(r1.vertex_type), v_t(r4.vertex_type), L"r4.vertex_type matches reference.", LINE_INFO());
         }
 
     private:
