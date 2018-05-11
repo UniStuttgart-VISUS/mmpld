@@ -29,6 +29,9 @@ namespace test {
 
             Assert::AreEqual(v_t(mmpld::vertex_type::float_xyz), v_t(r1.vertex_type), L"vertex_type of test_xyz_float_int_float.mmpld", LINE_INFO());
             Assert::AreEqual(c_t(mmpld::colour_type::intensity), c_t(r1.colour_type), L"colour_type of test_xyz_float_int_float.mmpld", LINE_INFO());
+            Assert::AreEqual(0.1f, r1.radius, 0.0001f, L"Global radius in test_xyz_float_int_float.mmpld", LINE_INFO());
+            Assert::AreEqual(0.0f, r1.min_intensity, 0.0001f, L"Minimal intensity in test_xyz_float_int_float.mmpld", LINE_INFO());
+            Assert::AreEqual(255.0f, r1.max_intensity, 0.0001f, L"Maximal intensity in test_xyz_float_int_float.mmpld", LINE_INFO());
 
             Assert::AreEqual(decltype(r1.particles)(4), r1.particles, L"Number of particles is 4.", LINE_INFO());
 
@@ -73,6 +76,11 @@ namespace test {
 
             Assert::AreEqual(v_t(mmpld::vertex_type::float_xyz), v_t(r1.vertex_type), L"vertex_type of test_xyz_float_none.mmpld", LINE_INFO());
             Assert::AreEqual(c_t(mmpld::colour_type::none), c_t(r1.colour_type), L"colour_type of test_xyz_float_none.mmpld", LINE_INFO());
+            Assert::AreEqual(0.1f, r1.radius, 0.0001f, L"Global radius in test_xyz_float_none.mmpld", LINE_INFO());
+            Assert::AreEqual(1.0f, r1.colour[0], 0.0001f, L"Global colour[0]", LINE_INFO());
+            Assert::AreEqual(1.0f, r1.colour[1], 0.0001f, L"Global colour[1]", LINE_INFO());
+            Assert::AreEqual(0.0f, r1.colour[2], 0.0001f, L"Global colour[2]", LINE_INFO());
+            Assert::AreEqual(1.0f, r1.colour[3], 0.0001f, L"Global colour[3]", LINE_INFO());
 
             Assert::AreEqual(decltype(r1.particles)(4), r1.particles, L"Number of particles is 4.", LINE_INFO());
 
@@ -117,6 +125,7 @@ namespace test {
 
             Assert::AreEqual(v_t(mmpld::vertex_type::float_xyz), v_t(r1.vertex_type), L"vertex_type of test_xyz_float_rgb_float.mmpld", LINE_INFO());
             Assert::AreEqual(c_t(mmpld::colour_type::rgb32), c_t(r1.colour_type), L"colour_type of test_xyz_float_rgb_float.mmpld", LINE_INFO());
+            Assert::AreEqual(0.1f, r1.radius, 0.0001f, L"Global radius in test_xyz_float_rgb_float.mmpld", LINE_INFO());
 
             Assert::AreEqual(decltype(r1.particles)(4), r1.particles, L"Number of particles is 4.", LINE_INFO());
 
@@ -161,6 +170,7 @@ namespace test {
 
             Assert::AreEqual(v_t(mmpld::vertex_type::float_xyz), v_t(r1.vertex_type), L"vertex_type of test_xyz_float_rgba_byte.mmpld", LINE_INFO());
             Assert::AreEqual(c_t(mmpld::colour_type::rgba8), c_t(r1.colour_type), L"colour_type of test_xyz_float_rgba_byte.mmpld", LINE_INFO());
+            Assert::AreEqual(0.1f, r1.radius, 0.0001f, L"Global radius in test_xyz_float_rgba_byte.mmpld", LINE_INFO());
 
             Assert::AreEqual(decltype(r1.particles)(4), r1.particles, L"Number of particles is 4.", LINE_INFO());
 
@@ -205,6 +215,7 @@ namespace test {
 
             Assert::AreEqual(v_t(mmpld::vertex_type::float_xyz), v_t(r1.vertex_type), L"vertex_type of test_xyz_float_rgba_float.mmpld", LINE_INFO());
             Assert::AreEqual(c_t(mmpld::colour_type::rgba32), c_t(r1.colour_type), L"colour_type of test_xyz_float_rgba_float.mmpld", LINE_INFO());
+            Assert::AreEqual(0.1f, r1.radius, 0.0001f, L"Global radius in test_xyz_float_rgba_float.mmpld", LINE_INFO());
 
             Assert::AreEqual(decltype(r1.particles)(4), r1.particles, L"Number of particles is 4.", LINE_INFO());
 
@@ -249,6 +260,8 @@ namespace test {
 
             Assert::AreEqual(v_t(mmpld::vertex_type::float_xyzr), v_t(r1.vertex_type), L"vertex_type of test_xyzr_float_int_float.mmpld", LINE_INFO());
             Assert::AreEqual(c_t(mmpld::colour_type::intensity), c_t(r1.colour_type), L"colour_type of test_xyzr_float_int_float.mmpld", LINE_INFO());
+            Assert::AreEqual(0.0f, r1.min_intensity, 0.0001f, L"Minimal intensity in test_xyzr_float_int_float.mmpld", LINE_INFO());
+            Assert::AreEqual(255.0f, r1.max_intensity, 0.0001f, L"Maximal intensity in test_xyzr_float_int_float.mmpld", LINE_INFO());
 
             Assert::AreEqual(decltype(r1.particles)(4), r1.particles, L"Number of particles is 4.", LINE_INFO());
 
@@ -293,6 +306,10 @@ namespace test {
 
             Assert::AreEqual(v_t(mmpld::vertex_type::float_xyzr), v_t(r1.vertex_type), L"vertex_type of test_xyzr_float_none.mmpld", LINE_INFO());
             Assert::AreEqual(c_t(mmpld::colour_type::none), c_t(r1.colour_type), L"colour_type of test_xyzr_float_none.mmpld", LINE_INFO());
+            Assert::AreEqual(1.0f, r1.colour[0], 0.0001f, L"Global colour[0]", LINE_INFO());
+            Assert::AreEqual(1.0f, r1.colour[1], 0.0001f, L"Global colour[1]", LINE_INFO());
+            Assert::AreEqual(0.0f, r1.colour[2], 0.0001f, L"Global colour[2]", LINE_INFO());
+            Assert::AreEqual(1.0f, r1.colour[3], 0.0001f, L"Global colour[3]", LINE_INFO());
 
             Assert::AreEqual(decltype(r1.particles)(4), r1.particles, L"Number of particles is 4.", LINE_INFO());
 
@@ -468,6 +485,12 @@ namespace test {
             Assert::AreEqual(std::uint32_t(file.frames()), file.file_header().frames, L"Frame number and content of header matches.", LINE_INFO());
             Assert::AreEqual(size_t(file.frames()), file.seek_table().size(), L"Number of frames and size of seek table match.", LINE_INFO());
             Assert::AreEqual(std::int32_t(1), file.frame_header().lists, L"Frame #1 holds one particle list.", LINE_INFO());
+            Assert::AreEqual(-2.0f, file.file_header().bounding_box[0], 0.0001f, L"Bounding box at 0", LINE_INFO());
+            Assert::AreEqual(-2.0f, file.file_header().bounding_box[1], 0.0001f, L"Bounding box at 1", LINE_INFO());
+            Assert::AreEqual(-2.0f, file.file_header().bounding_box[2], 0.0001f, L"Bounding box at 2", LINE_INFO());
+            Assert::AreEqual(2.0f, file.file_header().bounding_box[3], 0.0001f, L"Bounding box at 3", LINE_INFO());
+            Assert::AreEqual(2.0f, file.file_header().bounding_box[4], 0.0001f, L"Bounding box at 4", LINE_INFO());
+            Assert::AreEqual(2.0f, file.file_header().bounding_box[5], 0.0001f, L"Bounding box at 5", LINE_INFO());
 
             mmpld::list_header retval;
             file.read_particles(true, retval, nullptr, 0);
