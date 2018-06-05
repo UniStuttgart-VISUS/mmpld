@@ -32,7 +32,7 @@ if (hFile == INVALID_HANDLE_VALUE) { /* Handle error. */ }
 mmpld::read_file_header(hFile, fileHeader, seekTable);
 
 // Read the frame header of each frame in the file.
-for (decltype(fileHeader.frames) i = 0; i < fileHeader.frames(); ++i) {
+for (decltype(fileHeader.frames) i = 0; i < fileHeader.frames; ++i) {
     LARGE_INTEGER offset;
     offset.QuadPart = seekTable[i];
 
