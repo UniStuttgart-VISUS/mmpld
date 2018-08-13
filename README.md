@@ -85,7 +85,7 @@ mmpld::file<HANDLE, TCHAR> file(_T("test.mmpld"));
 // Iterate over all frames in the file. Note that if you are only
 // interested in the first one, you can use it right away without calling
 // file.open_frame again, because the first frame is opened in the ctor.
-for (mmpld::file::frame_number_type f = 0; f < file.frames; ++f) {
+for (mmpld::file::frame_number_type f = 0; f < file.frames(); ++f) {
     file.open_frame(f);
 
     for (auto l = 0; l < file.frame_header().lists; ++l)
