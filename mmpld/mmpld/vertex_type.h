@@ -17,6 +17,14 @@ namespace mmpld {
     /// <summary>
     /// The type of the per-vertex data stored in an MMPLD file
     /// </summary>
+    /// <remarks>
+    /// <para>If you add a new type here, you must (i) provide a specialisation
+    /// of the traits type below to allow the software to reason about the
+    /// memory layout of the data, (ii) add a case label in the
+    /// <see cref="to_string" /> function and (iii) add the appropriate
+    /// conversion code in convert.inl. Also, you might want to update the
+    /// dumpmmpld sample application.</para>
+    /// </remarks>
     enum class vertex_type : std::uint8_t {
 
         /// <summary>
@@ -37,7 +45,12 @@ namespace mmpld {
         /// <summary>
         /// 16-bit 3D position.
         /// </summary>
-        short_xyz = 3
+        short_xyz = 3,
+
+        /// <summary>
+        /// 64-bit 3D position.
+        /// </summary>
+        double_xyz = 4
     };
 
     /// <summary>
@@ -131,6 +144,27 @@ namespace mmpld {
         /// </summary>
         static const mmpld::vertex_type vertex_type
             = mmpld::vertex_type::short_xyz;
+
+        /// <summary>
+        /// The total size of the whole positional parameters in bytes.
+        /// </summary>
+        static const size_t size = 3 * sizeof(value_type);
+    };
+
+    /// <summary>
+    /// Specialisation for <see cref="vertex_type::double_xyz" />.
+    /// </summary>
+    template<> struct vertex_traits<vertex_type::double_xyz> {
+        /// <summary>
+        /// The type of a single  component.
+        /// </summary>
+        typedef double value_type;
+
+        /// <summary>
+        /// The enumeration value being reflected.
+        /// </summary>
+        static const mmpld::vertex_type vertex_type
+            = mmpld::vertex_type::double_xyz;
 
         /// <summary>
         /// The total size of the whole positional parameters in bytes.

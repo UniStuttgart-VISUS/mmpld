@@ -22,7 +22,9 @@ namespace detail {
     /// Convert <paramref name="colour" /> to grey-scale.
     /// </summary>
     template<class O, class I> O to_grey(const I *colour, const size_t cnt) {
-        auto retval = 0.0f;
+        typedef typename std::conditional<std::is_floating_point<O>::value,
+            O, float>::type intermediate_type;
+        intermediate_type retval = 0;
 
         switch (cnt) {
             case 0:
@@ -32,15 +34,18 @@ namespace detail {
 
             case 1:
                 // Source is already grey.
-                retval = static_cast<float>(*colour);
+                retval = static_cast<intermediate_type>(*colour);
                 break;
 
             case 3:
             case 4:
                 // Source is colour.
-                retval = 0.21f * static_cast<float>(colour[0])
-                    + 0.72f * static_cast<float>(colour[1])
-                    + 0.07f * static_cast<float>(colour[2]);
+                retval = static_cast<intermediate_type>(0.21)
+                    * static_cast<intermediate_type>(colour[0])
+                    + static_cast<intermediate_type>(0.72)
+                    * static_cast<intermediate_type>(colour[1])
+                    + static_cast<intermediate_type>(0.07f)
+                    * static_cast<intermediate_type>(colour[2]);
                 break;
 
             default:
@@ -75,8 +80,8 @@ namespace detail {
 
         } else {
             // Create or convert colour.
-            const auto float_in = std::is_floating_point<I>::value;
-            const auto float_out = std::is_floating_point<O>::value;
+            constexpr const auto float_in = std::is_floating_point<I>::value;
+            constexpr const auto float_out = std::is_floating_point<O>::value;
 
             for (size_t i = 0; i < cnt_out; ++i) {
                 if (float_in && !float_out) {
@@ -190,6 +195,15 @@ size_t mmpld::convert(const void *src, const list_header& header, void *dst,
                             *(static_cast<const std::int16_t *>(src_pos) + 2));
                         break;
 
+                    case mmpld::vertex_type::double_xyz:
+                        dst_pos[0] = static_cast<dst_vertex_scalar>(
+                            *(static_cast<const double *>(src_pos) + 0));
+                        dst_pos[1] = static_cast<dst_vertex_scalar>(
+                            *(static_cast<const double *>(src_pos) + 1));
+                        dst_pos[2] = static_cast<dst_vertex_scalar>(
+                            *(static_cast<const double *>(src_pos) + 2));
+                        break;
+
                     default:
                         throw std::logic_error("An invalid source vertex type "
                             "which cannot be converted was specified.");
@@ -247,6 +261,18 @@ size_t mmpld::convert(const void *src, const list_header& header, void *dst,
                         case mmpld::colour_type::rgba8:
                             detail::convert_colour<dst_type>(
                                 static_cast<const std::uint8_t *>(src_col), 4,
+                                dst_col, dst_channels);
+                            break;
+
+                        case mmpld::colour_type::rgba16:
+                            detail::convert_colour<dst_type>(
+                                static_cast<const std::uint16_t *>(src_col), 4,
+                                dst_col, dst_channels);
+                            break;
+
+                        case mmpld::colour_type::intensity64:
+                            detail::convert_colour<dst_type>(
+                                static_cast<const double *>(src_col), 1,
                                 dst_col, dst_channels);
                             break;
 

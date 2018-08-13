@@ -17,6 +17,7 @@ std::basic_string<C> mmpld::to_string(const vertex_type value) {
         __MMPLD_TO_STRING_CASE(float_xyz);
         __MMPLD_TO_STRING_CASE(float_xyzr);
         __MMPLD_TO_STRING_CASE(short_xyz);
+        __MMPLD_TO_STRING_CASE(double_xyz);
 
         default:
             return MMPLD_TPL_LITERAL(C, "unknown");

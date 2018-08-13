@@ -19,6 +19,8 @@ std::basic_string<C> mmpld::to_string(const colour_type value) {
         __MMPLD_TO_STRING_CASE(intensity);
         __MMPLD_TO_STRING_CASE(rgb32);
         __MMPLD_TO_STRING_CASE(rgba32);
+        __MMPLD_TO_STRING_CASE(rgba16);
+        __MMPLD_TO_STRING_CASE(intensity64);
 
         default:
             return MMPLD_TPL_LITERAL(C, "unknown");

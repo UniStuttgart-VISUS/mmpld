@@ -17,6 +17,14 @@ namespace mmpld {
     /// <summary>
     /// The type of the colour data stored in an MMPLD file.
     /// </summary>
+    /// <remarks>
+    /// <para>If you add a new type here, you must (i) provide a specialisation
+    /// of the traits type below to allow the software to reason about the
+    /// memory layout of the data, (ii) add a case label in the
+    /// <see cref="to_string" /> function and (iii) add the appropriate
+    /// conversion code in convert.inl. Also, you might want to update the
+    /// dumpmmpld sample application.</para>
+    /// </remarks>
     enum class colour_type : std::uint8_t {
 
         /// <summary>
@@ -47,7 +55,17 @@ namespace mmpld {
         /// <summary>
         /// Colour in four 32-bit channels.
         /// </summary>
-        rgba32 = 5
+        rgba32 = 5,
+
+        /// <summary>
+        /// Colour in four 16-bit channels.
+        /// </summary>
+        rgba16 = 6,
+
+        /// <summary>
+        /// A single 64-bit floating-point intensity value.
+        /// </summary>
+        intensity64 = 7,
     };
 
     /// <summary>
@@ -211,6 +229,58 @@ namespace mmpld {
         /// </summary>
         static const mmpld::colour_type colour_type
             = mmpld::colour_type::rgba32;
+
+        /// <summary>
+        /// The total size of the colour components in bytes.
+        /// </summary>
+        static const size_t size = channels * sizeof(value_type);
+    };
+
+    /// <summary>
+    /// Specialisation for <see cref="colour_type::rgba16" />.
+    /// </summary>
+    template<> struct colour_traits<colour_type::rgba16> {
+        /// <summary>
+        /// The type of a single colour component.
+        /// </summary>
+        typedef std::uint16_t value_type;
+
+        /// <summary>
+        /// The number of colour channels.
+        /// </summary>
+        static const size_t channels = 4;
+
+        /// <summary>
+        /// The enumeration value being reflected.
+        /// </summary>
+        static const mmpld::colour_type colour_type
+            = mmpld::colour_type::rgba16;
+
+        /// <summary>
+        /// The total size of the colour components in bytes.
+        /// </summary>
+        static const size_t size = channels * sizeof(value_type);
+    };
+
+    /// <summary>
+    /// Specialisation for <see cref="colour_type::intensity64" />.
+    /// </summary>
+    template<> struct colour_traits<colour_type::intensity64> {
+        /// <summary>
+        /// The type of a single colour component.
+        /// </summary>
+        typedef double value_type;
+
+        /// <summary>
+        /// The number of colour channels.
+        /// </summary>
+        static const size_t channels = 1;
+
+        /// <summary>
+        /// The enumeration value being reflected.
+        /// </summary>
+        static const mmpld::colour_type colour_type
+            = mmpld::colour_type::intensity64;
 
         /// <summary>
         /// The total size of the colour components in bytes.
