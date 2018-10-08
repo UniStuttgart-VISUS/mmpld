@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+    <metadata>
+        <id>mmpld.visus.uni-stuttgart.de</id>
+        <version>$version$</version>
+        <title>MMPLD</title>
+        <authors>Christoph Müller</authors>
+        <owners>mueller</owners>
+        <licenseUrl>https://github.com/UniStuttgart-VISUS/mmpld/blob/master/LICENSE</licenseUrl>
+        <projectUrl>https://github.com/UniStuttgart-VISUS/mmpld</projectUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>This library allows for processing and converting binary particle files used by the MegaMol framework.</description>
+        <summary>A C++ header-only library for loading MegaMol's MMPLD particle files.</summary>
+        <releaseNotes>Initial release.</releaseNotes>
+        <copyright>Copyright © 2018 Visualisierungsinstitut der Universität Stuttgart</copyright>
+        <tags>native mmpld particles</tags>
+    </metadata>
+    <files>
+        <file src="mmpld.h" target="build\native\include" />
+        <file src="mmpld\**" target="build\native\include\mmpld" />
+        <file src="mmpld.targets" target="build\native\mmpld.targets" />
+    </files>
+</package>
