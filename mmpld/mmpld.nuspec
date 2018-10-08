@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
     <metadata>
-        <id>mmpld.visus.uni-stuttgart.de</id>
+        <id>mmpld</id>
         <version>$version$</version>
         <title>MMPLD</title>
         <authors>Christoph Müller</authors>
