@@ -91,6 +91,9 @@ T mmpld::get_offsets(const list_header& header, T& pos, T& rad, T& col) {
     // Set pointers to radius and colour, assuming there is a valid colour
     // for now.
     switch (header.vertex_type) {
+        case mmpld::vertex_type::none:
+            break;
+
         case mmpld::vertex_type::float_xyz:
             pos = 0;
             col = vertex_traits<vertex_type::float_xyz>::size;
@@ -106,6 +109,16 @@ T mmpld::get_offsets(const list_header& header, T& pos, T& rad, T& col) {
             pos = 0;
             col = vertex_traits<vertex_type::short_xyz>::size;
             break;
+
+        case mmpld::vertex_type::double_xyz:
+            pos = 0;
+            col = vertex_traits<vertex_type::double_xyz>::size;
+            break;
+
+        default:
+            throw std::runtime_error("An unexpected vertex type was "
+                "encountered. Make sure to update mmpld::get_offsets if "
+                "you add new vertex types.");
     }
 
     // Update the offset of the colour using the actual configuration.
@@ -115,6 +128,7 @@ T mmpld::get_offsets(const list_header& header, T& pos, T& rad, T& col) {
         case mmpld::colour_type::intensity:
         case mmpld::colour_type::rgb32:
         case mmpld::colour_type::rgba32:
+        case mmpld::colour_type::intensity64:
             if (pos == retval) {
                 col = 0;
             }
@@ -150,6 +164,7 @@ template<class T> T mmpld::get_properties(const list_header& header) {
 
     switch (header.colour_type) {
         case mmpld::colour_type::intensity:
+        case mmpld::colour_type::intensity64:
             retval |= mmpld::particle_properties::per_particle_intensity;
             break;
 
@@ -176,6 +191,9 @@ template<class T> T mmpld::get_stride(const list_header& header) {
     std::size_t retval = 0;
 
     switch (header.vertex_type) {
+        case mmpld::vertex_type::none:
+            break;
+
         case mmpld::vertex_type::float_xyz:
             retval += vertex_traits<vertex_type::float_xyz>::size;
             break;
@@ -187,9 +205,20 @@ template<class T> T mmpld::get_stride(const list_header& header) {
         case mmpld::vertex_type::short_xyz:
             retval += vertex_traits<vertex_type::short_xyz>::size;
             break;
+
+        case mmpld::vertex_type::double_xyz:
+            retval += vertex_traits<vertex_type::double_xyz>::size;
+
+        default:
+            throw std::runtime_error("An unexpected vertex type was "
+                "encountered. Make sure to update mmpld::get_offsets if "
+                "you add new vertex types.");
     }
 
     switch (header.colour_type) {
+        case mmpld::colour_type::none:
+            break;
+
         case mmpld::colour_type::rgb8:
             retval += colour_traits<colour_type::rgb8>::size;
             break;
@@ -209,6 +238,15 @@ template<class T> T mmpld::get_stride(const list_header& header) {
         case mmpld::colour_type::rgba32:
             retval += colour_traits<colour_type::rgba32>::size;
             break;
+
+        case mmpld::colour_type::intensity64:
+            retval += colour_traits<colour_type::intensity64>::size;
+            break;
+
+        default:
+            throw std::runtime_error("An unexpected colour type was "
+                "encountered. Make sure to update mmpld::get_offsets if "
+                "you add new vertex types.");
     }
 
     return static_cast<T>(retval);

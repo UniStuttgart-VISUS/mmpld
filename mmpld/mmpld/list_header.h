@@ -117,6 +117,17 @@ namespace mmpld {
     template<class T> T get_properties(const list_header& header);
 
     /// <summary>
+    /// Compute the stride of the particles in the list described by the given
+    /// header.
+    /// </summary>
+    /// <tparam name="T">The scalar type to express the stride in. This is
+    /// usually <c>size_t</c> when working on the CPU or <c>UINT</c> when
+    /// working with Direct3D.</tparam>
+    /// <param name="header">The list header to get the stride for.</param>
+    /// <returns>The stide of the particles in bytes.</returns>
+    template<class T> T get_stride(const list_header& header);
+
+    /// <summary>
     /// Compute the size of the raw particle data in the list.
     /// </summary>
     /// <tparam name="T">The scalar type to express the size in. This is
@@ -127,17 +138,6 @@ namespace mmpld {
     template<class T> inline T get_size(const list_header& header) {
         return static_cast<T>(header.particles) * get_stride<T>(header);
     }
-
-    /// <summary>
-    /// Compute the stride of the particles in the list described by the given
-    /// header.
-    /// </summary>
-    /// <tparam name="T">The scalar type to express the stride in. This is
-    /// usually <c>size_t</c> when working on the CPU or <c>UINT</c> when
-    /// working with Direct3D.</tparam>
-    /// <param name="header">The list header to get the stride for.</param>
-    /// <returns>The stide of the particles in bytes.</returns>
-    template<class T> T get_stride(const list_header& header);
 
     /// <summary>
     /// Reads an MMPLD list header fromt he current location in the stream.

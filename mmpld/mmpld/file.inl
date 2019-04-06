@@ -81,8 +81,8 @@ typename mmpld::file<F, C>::size_type mmpld::file<F, C>::read_particles(
 
     if (dst != nullptr) {
         auto read = io_traits_type::read(this->_file, dst, retval * stride);
-        
-        if (read < retval * stride) {
+
+        if (read < static_cast<decltype(read)>(retval * stride)) {
             throw std::runtime_error("The end of file was reached before the "
                 "requested number of particles could be read.");
         }
