@@ -24,6 +24,18 @@ namespace mmpld {
     struct list_header {
 
         /// <summary>
+        /// The bounding box of the data in the list.
+        /// </summary>
+        /// <remarks>
+        /// <para>This member is only set for file version 1.3 or above.
+        /// Otherwise, all members will be zero.</para>
+        /// <para>The order is: x-, y- and z-component of the begin of the
+        /// bounding box followed by x-, y- and z-component of the end position.
+        /// </para>
+        /// </remarks>
+        float bounding_box[6];
+
+        /// <summary>
         /// The constant colour of the particles if
         /// <see cref="list_header::colour_type" /> is
         /// <see cref="colour_type::none" />.
@@ -146,9 +158,13 @@ namespace mmpld {
     /// file descriptor or <see cref="FILE" /> handle.</tparam>
     /// <param name="stream">The stream to read the header from. The stream must
     /// be open and in binary mode.</param>
+    /// <param name="fileVersion">The version of the MMPLD file, which is
+    /// required to handle different formats of the list header.</param>
     /// <param name="header">Receives the header.</param>
     /// <returns><paramref name="stream" />.</returns>
-    template<class T> T& read_list_header(T& stream, list_header& header);
+    template<class T>
+    T& read_list_header(T& stream, const std::uint16_t fileVersion,
+        list_header& header);
 
 } /* end namespace mmpld */
 

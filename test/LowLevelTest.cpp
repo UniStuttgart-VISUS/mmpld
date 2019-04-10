@@ -1108,7 +1108,7 @@ namespace test {
             mmpld::read_frame_header(hFile, fileHeader.version, frameHeader);
             Assert::AreEqual(std::int32_t(1), frameHeader.lists, L"Frame #1 holds one particle list.", LINE_INFO());
 
-            mmpld::read_list_header(hFile, listHeader);
+            mmpld::read_list_header(hFile, fileHeader.version, listHeader);
             Assert::AreEqual(std::uint64_t(4), listHeader.particles, L"List holds four particles.", LINE_INFO());
 
             return listHeader;
