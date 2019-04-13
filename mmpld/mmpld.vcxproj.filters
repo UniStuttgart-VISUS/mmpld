@@ -62,6 +62,12 @@
     <ClInclude Include="mmpld\particle_view.h">
       <Filter>Header Files\mmpld</Filter>
     </ClInclude>
+    <ClInclude Include="mmpld\enum_dispatch_list.h">
+      <Filter>Header Files\mmpld</Filter>
+    </ClInclude>
+    <ClInclude Include="mmpld\enum_dispatch.h">
+      <Filter>Header Files\mmpld</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="mmpld\file_header.inl">

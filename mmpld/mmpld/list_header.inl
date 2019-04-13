@@ -1,5 +1,5 @@
 /// <copyright file="list_header.inl" company="Visualisierungsinstitut der Universität Stuttgart">
-/// Copyright © 2018 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+/// Copyright © 2018 - 2019 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
 /// Copyright © 2017 SFB-TRR 161. Alle Rechte vorbehalten.
 /// </copyright>
 /// <author>Christoph Müller</author>
@@ -33,8 +33,8 @@ std::vector<T> mmpld::get_input_layout(const list_header& header) {
             retval.push_back(element);
             break;
 
-        case  vertex_type::short_xyz:
-            throw std::runtime_error("vertex_type::short_xyz is "
+        default:
+            throw std::runtime_error("The given vertex type is "
                 "incompatible with Direct3D alignment requirements.");
     }
 
@@ -56,10 +56,6 @@ std::vector<T> mmpld::get_input_layout(const list_header& header) {
             retval.push_back(element);
             break;
 
-        case colour_type::rgb8:
-            throw std::runtime_error("colour_type::rgb8 is "
-                "incompatible with Direct3D alignment requirements.");
-
         case colour_type::rgba32:
             element.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
             offset += colour_traits<colour_type::rgba32>::size;
@@ -71,11 +67,25 @@ std::vector<T> mmpld::get_input_layout(const list_header& header) {
             offset += colour_traits<colour_type::rgba8>::size;
             retval.push_back(element);
             break;
+
+        default:
+            throw std::runtime_error("The given colour type is "
+                "incompatible with Direct3D alignment requirements.");
     }
 
     return std::move(retval);
 }
 #endif /* defined(MMPLD_WITH_DIRECT3D) */
+
+
+namespace mmpld {
+namespace detail {
+
+    //template<vertex_type V>
+
+} /* end namespace detail */
+} /* end namespace mmpld */
+
 
 /*
  * mmpld::get_offsets
@@ -90,6 +100,11 @@ T mmpld::get_offsets(const list_header& header, T& pos, T& rad, T& col) {
 
     // Set pointers to radius and colour, assuming there is a valid colour
     // for now.
+    detail::enum_dispatch(detail::vertex_dispatch_list(), header.vertex_type,
+        [&pos, &rad, &col](void) {
+
+    });
+
     switch (header.vertex_type) {
         case mmpld::vertex_type::none:
             break;
@@ -287,6 +302,7 @@ template<class T> T& mmpld::read_list_header(T& stream, list_header& header) {
             } break;
 
         case mmpld::colour_type::intensity:
+            // TODO: How does intensity64 behave here?!
             detail::zero_memory(header.colour);
             detail::read(stream, header.min_intensity);
             detail::read(stream, header.max_intensity);

@@ -1,5 +1,5 @@
 /// <copyright file="vertex_type.h" company="Visualisierungsinstitut der Universität Stuttgart">
-/// Copyright © 2018 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+/// Copyright © 2018 - 2019 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
 /// Copyright © 2017 SFB-TRR 161. Alle Rechte vorbehalten.
 /// </copyright>
 /// <author>Christoph Müller</author>
@@ -9,6 +9,7 @@
 #include <cinttypes>
 #include <string>
 
+#include "mmpld/enum_dispatch_list.h"
 #include "mmpld/literal.h"
 
 
@@ -20,11 +21,11 @@ namespace mmpld {
     /// <remarks>
     /// <para>If you add a new type here, you must (i) provide a specialisation
     /// of the traits type below to allow the software to reason about the
-    /// memory layout of the data, (ii) add a case label in the
-    /// <see cref="to_string" /> function, (iii) add the appropriate
-    /// conversion code in convert.inl and (iv) update the switches in
-    /// list_header.inl. Also, you might want to update the dumpmmpld sample
-    /// application.</para>
+    /// memory layout of the data, (ii) add the new member to the 
+    /// <see cref="vertex_dispatch_list" /> declared below, (iii) add a case
+    /// label in the <see cref="to_string" /> function and (iv) add the
+    /// appropriate conversion code in convert.inl. Also, you might want to
+    /// update the dumpmmpld sample application.</para>
     /// </remarks>
     enum class vertex_type : std::uint8_t {
 
@@ -54,6 +55,19 @@ namespace mmpld {
         double_xyz = 4
     };
 
+namespace detail {
+
+    /// <summary>
+    /// A list that allows for enumerating over all vertex types at compile
+    /// time.
+    /// </summary>
+    typedef detail::enum_dispatch_list<vertex_type, vertex_type::none,
+        vertex_type::float_xyz, vertex_type::float_xyzr, vertex_type::short_xyz,
+        vertex_type::double_xyz>
+        vertex_dispatch_list;
+
+} /* end namespace detail */
+
     /// <summary>
     /// Convert the given vertex format to a human-readable representation.
     /// </summary>
@@ -79,6 +93,12 @@ namespace mmpld {
         typedef void value_type;
 
         /// <summary>
+        /// Indicates that the vertices do not contain radius information.
+        /// </summary>
+        static constexpr const std::size_t radius_offset
+            = (std::numeric_limits<std::size_t>::max)();
+
+        /// <summary>
         /// The enumeration value being reflected.
         /// </summary>
         static const mmpld::vertex_type vertex_type = mmpld::vertex_type::none;
@@ -86,7 +106,7 @@ namespace mmpld {
         /// <summary>
         /// The total size of the whole positional parameters in bytes.
         /// </summary>
-        static const size_t size = 0;
+        static constexpr const std::size_t size = 0;
     };
 
     /// <summary>
@@ -99,6 +119,12 @@ namespace mmpld {
         typedef float value_type;
 
         /// <summary>
+        /// Indicates that the vertices do not contain radius information.
+        /// </summary>
+        static constexpr const std::size_t radius_offset
+            = (std::numeric_limits<std::size_t>::max)();
+
+        /// <summary>
         /// The enumeration value being reflected.
         /// </summary>
         static const mmpld::vertex_type vertex_type
@@ -107,7 +133,7 @@ namespace mmpld {
         /// <summary>
         /// The total size of the whole positional parameters in bytes.
         /// </summary>
-        static const size_t size = 3 * sizeof(value_type);
+        static constexpr const std::size_t size = 3 * sizeof(value_type);
     };
 
     /// <summary>
@@ -120,6 +146,13 @@ namespace mmpld {
         typedef float value_type;
 
         /// <summary>
+        /// Indicates the offset (in bytes) of the radius from the begin of the
+        /// vertex data.
+        /// </summary>
+        static constexpr const std::size_t radius_offset
+            = 3 * sizeof(value_type);
+
+        /// <summary>
         /// The enumeration value being reflected.
         /// </summary>
         static const mmpld::vertex_type vertex_type
@@ -128,7 +161,7 @@ namespace mmpld {
         /// <summary>
         /// The total size of the whole positional parameters in bytes.
         /// </summary>
-        static const size_t size = 4 * sizeof(value_type);
+        static constexpr const std::size_t size = 4 * sizeof(value_type);
     };
 
     /// <summary>
@@ -141,6 +174,12 @@ namespace mmpld {
         typedef std::int16_t value_type;
 
         /// <summary>
+        /// Indicates that the vertices do not contain radius information.
+        /// </summary>
+        static constexpr const std::size_t radius_offset
+            = (std::numeric_limits<std::size_t>::max)();
+
+        /// <summary>
         /// The enumeration value being reflected.
         /// </summary>
         static const mmpld::vertex_type vertex_type
@@ -149,7 +188,7 @@ namespace mmpld {
         /// <summary>
         /// The total size of the whole positional parameters in bytes.
         /// </summary>
-        static const size_t size = 3 * sizeof(value_type);
+        static constexpr const std::size_t size = 3 * sizeof(value_type);
     };
 
     /// <summary>
@@ -162,6 +201,12 @@ namespace mmpld {
         typedef double value_type;
 
         /// <summary>
+        /// Indicates that the vertices do not contain radius information.
+        /// </summary>
+        static constexpr const std::size_t radius_offset
+            = (std::numeric_limits<std::size_t>::max)();
+
+        /// <summary>
         /// The enumeration value being reflected.
         /// </summary>
         static const mmpld::vertex_type vertex_type
@@ -170,8 +215,21 @@ namespace mmpld {
         /// <summary>
         /// The total size of the whole positional parameters in bytes.
         /// </summary>
-        static const size_t size = 3 * sizeof(value_type);
+        static constexpr const std::size_t size = 3 * sizeof(value_type);
     };
+
+    /// <summary>
+    /// Answer whether the <see cref="vertex_type" /> <typeparamref name="V" />
+    /// holds per-vertex radii or not.
+    /// </summary>
+    /// <typeparam name="V">The type of the vertex to get the information for.
+    /// </typeparam>
+    /// <returns><c>true</c> if vertices of type <typeparamref name="V" /> hold
+    /// per-vertex radii, <c>false/c> otherwise.</returns>
+    template<vertex_type V> constexpr bool has_radius(void) {
+        typedef vertex_traits<V> traits_type;
+        return (traits_type::radius_offset < traits_type::size);
+    }
 
 } /* end namespace mmpld */
 

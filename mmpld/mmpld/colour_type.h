@@ -1,5 +1,5 @@
 /// <copyright file="colour_type.h" company="Visualisierungsinstitut der Universität Stuttgart">
-/// Copyright © 2018 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+/// Copyright © 2018 - 2019 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
 /// Copyright © 2017 SFB-TRR 161. Alle Rechte vorbehalten.
 /// </copyright>
 /// <author>Christoph Müller</author>
@@ -9,6 +9,7 @@
 #include <cinttypes>
 #include <string>
 
+#include "mmpld/enum_dispatch_list.h"
 #include "mmpld/literal.h"
 
 
@@ -20,11 +21,11 @@ namespace mmpld {
     /// <remarks>
     /// <para>If you add a new type here, you must (i) provide a specialisation
     /// of the traits type below to allow the software to reason about the
-    /// memory layout of the data, (ii) add a case label in the
-    /// <see cref="to_string" /> function, (iii) add the appropriate
-    /// conversion code in convert.inl and (iv) update the switches in
-    /// list_header.inl. Also, you might want to update the dumpmmpld sample
-    /// application.</para>
+    /// memory layout of the data, (ii) add the new member to the 
+    /// <see cref="colour_dispatch_list" /> declared below, (iii) add a case
+    /// label in the <see cref="to_string" /> function and (iv) add the
+    /// appropriate conversion code in convert.inl. Also, you might want to
+    /// update the dumpmmpld sample application.</para>
     /// </remarks>
     enum class colour_type : std::uint8_t {
 
@@ -49,6 +50,11 @@ namespace mmpld {
         intensity = 3,
 
         /// <summary>
+        /// An alias for <see cref="colour_type::intensity" />.
+        /// </summary>
+        intensity32 = 3,
+
+        /// <summary>
         /// Colour in three 32-bit channels.
         /// </summary>
         rgb32 = 4,
@@ -68,6 +74,20 @@ namespace mmpld {
         /// </summary>
         intensity64 = 7,
     };
+
+namespace detail {
+
+    /// <summary>
+    /// A list that allows for enumerating over all colour types at compile
+    /// time.
+    /// </summary>
+    typedef detail::enum_dispatch_list<colour_type, colour_type::none,
+        colour_type::rgb8, colour_type::rgba8, colour_type::intensity,
+        colour_type::rgb32, colour_type::rgba32, colour_type::rgba16,
+        colour_type::intensity64>
+        colour_dispatch_list;
+
+} /* end namespace detail */
 
     /// <summary>
     /// Convert the given colour type to a human-readable representation.
@@ -96,17 +116,18 @@ namespace mmpld {
         /// <summary>
         /// The number of colour channels.
         /// </summary>
-        static const size_t channels = 0;
+        static constexpr const std::size_t channels = 0;
 
         /// <summary>
         /// The enumeration value being reflected.
         /// </summary>
-        static const mmpld::colour_type colour_type = mmpld::colour_type::none;
+        static constexpr const mmpld::colour_type colour_type
+            = mmpld::colour_type::none;
 
         /// <summary>
         /// The total size of the colour components in bytes.
         /// </summary>
-        static const size_t size = 0;
+        static constexpr const std::size_t size = 0;
     };
 
     /// <summary>
@@ -121,17 +142,18 @@ namespace mmpld {
         /// <summary>
         /// The number of colour channels.
         /// </summary>
-        static const size_t channels = 3;
+        static constexpr const std::size_t channels = 3;
 
         /// <summary>
         /// The enumeration value being reflected.
         /// </summary>
-        static const mmpld::colour_type colour_type = mmpld::colour_type::rgb8;
+        static constexpr const mmpld::colour_type colour_type
+            = mmpld::colour_type::rgb8;
 
         /// <summary>
         /// The total size of the colour components in bytes.
         /// </summary>
-        static const size_t size = channels * sizeof(value_type);
+        static constexpr const std::size_t size = channels * sizeof(value_type);
     };
 
     /// <summary>
@@ -146,17 +168,18 @@ namespace mmpld {
         /// <summary>
         /// The number of colour channels.
         /// </summary>
-        static const size_t channels = 4;
+        static constexpr const std::size_t channels = 4;
 
         /// <summary>
         /// The enumeration value being reflected.
         /// </summary>
-        static const mmpld::colour_type colour_type = mmpld::colour_type::rgba8;
+        static constexpr const mmpld::colour_type colour_type
+            = mmpld::colour_type::rgba8;
 
         /// <summary>
         /// The total size of the colour components in bytes.
         /// </summary>
-        static const size_t size = channels * sizeof(value_type);
+        static constexpr const std::size_t size = channels * sizeof(value_type);
     };
 
     /// <summary>
@@ -171,18 +194,18 @@ namespace mmpld {
         /// <summary>
         /// The number of colour channels.
         /// </summary>
-        static const size_t channels = 1;
+        static constexpr const std::size_t channels = 1;
 
         /// <summary>
         /// The enumeration value being reflected.
         /// </summary>
-        static const mmpld::colour_type colour_type
+        static constexpr const mmpld::colour_type colour_type
             = mmpld::colour_type::intensity;
 
         /// <summary>
         /// The total size of the colour components in bytes.
         /// </summary>
-        static const size_t size = channels * sizeof(value_type);
+        static constexpr const std::size_t size = channels * sizeof(value_type);
     };
 
     /// <summary>
@@ -197,18 +220,18 @@ namespace mmpld {
         /// <summary>
         /// The number of colour channels.
         /// </summary>
-        static const size_t channels = 3;
+        static constexpr const std::size_t channels = 3;
 
         /// <summary>
         /// The enumeration value being reflected.
         /// </summary>
-        static const mmpld::colour_type colour_type
+        static constexpr const mmpld::colour_type colour_type
             = mmpld::colour_type::rgb32;
 
         /// <summary>
         /// The total size of the colour components in bytes.
         /// </summary>
-        static const size_t size = channels * sizeof(value_type);
+        static constexpr const std::size_t size = channels * sizeof(value_type);
     };
 
     /// <summary>
@@ -223,18 +246,18 @@ namespace mmpld {
         /// <summary>
         /// The number of colour channels.
         /// </summary>
-        static const size_t channels = 4;
+        static constexpr const std::size_t channels = 4;
 
         /// <summary>
         /// The enumeration value being reflected.
         /// </summary>
-        static const mmpld::colour_type colour_type
+        static constexpr const mmpld::colour_type colour_type
             = mmpld::colour_type::rgba32;
 
         /// <summary>
         /// The total size of the colour components in bytes.
         /// </summary>
-        static const size_t size = channels * sizeof(value_type);
+        static constexpr const std::size_t size = channels * sizeof(value_type);
     };
 
     /// <summary>
@@ -249,18 +272,18 @@ namespace mmpld {
         /// <summary>
         /// The number of colour channels.
         /// </summary>
-        static const size_t channels = 4;
+        static constexpr const std::size_t channels = 4;
 
         /// <summary>
         /// The enumeration value being reflected.
         /// </summary>
-        static const mmpld::colour_type colour_type
+        static constexpr const mmpld::colour_type colour_type
             = mmpld::colour_type::rgba16;
 
         /// <summary>
         /// The total size of the colour components in bytes.
         /// </summary>
-        static const size_t size = channels * sizeof(value_type);
+        static const std::size_t size = channels * sizeof(value_type);
     };
 
     /// <summary>
@@ -275,18 +298,18 @@ namespace mmpld {
         /// <summary>
         /// The number of colour channels.
         /// </summary>
-        static const size_t channels = 1;
+        static constexpr const std::size_t channels = 1;
 
         /// <summary>
         /// The enumeration value being reflected.
         /// </summary>
-        static const mmpld::colour_type colour_type
+        static constexpr const mmpld::colour_type colour_type
             = mmpld::colour_type::intensity64;
 
         /// <summary>
         /// The total size of the colour components in bytes.
         /// </summary>
-        static const size_t size = channels * sizeof(value_type);
+        static constexpr const std::size_t size = channels * sizeof(value_type);
     };
 
 } /* end namespace mmpld */

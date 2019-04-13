@@ -1,5 +1,5 @@
 /// <copyright file="list_header.h" company="Visualisierungsinstitut der Universität Stuttgart">
-/// Copyright © 2018 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+/// Copyright © 2018 - 2019 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
 /// Copyright © 2017 SFB-TRR 161. Alle Rechte vorbehalten.
 /// </copyright>
 /// <author>Christoph Müller</author>
@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "mmpld/colour_type.h"
+#include "mmpld/enum_dispatch.h"
 #include "mmpld/io.h"
 #include "mmpld/particle_properties.h"
 #include "mmpld/vertex_type.h"
@@ -111,7 +112,10 @@ namespace mmpld {
     /// header.
     /// </summary>
     /// <tparam name="T">The type to return the bitmask as. This type must be
-    /// at least as wide as <see cref="mmpld::particle_properties" />.</tparam>
+    /// at least as wide as <see cref="mmpld::particle_properties" />. Using a
+    /// template here allows the caller to decide whether the return value
+    /// should by the <c>enum class</c> used by the library or another type
+    /// which can be used to perform computations.</tparam>
     /// <param name="header">The list header to get the properties for.</param>
     /// <returns>A bitmask holding the particle properties.</returns>
     template<class T> T get_properties(const list_header& header);

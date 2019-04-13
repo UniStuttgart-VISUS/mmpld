@@ -157,6 +157,8 @@
     <ClInclude Include="mmpld.h" />
     <ClInclude Include="mmpld\colour_type.h" />
     <ClInclude Include="mmpld\convert.h" />
+    <ClInclude Include="mmpld\enum_dispatch.h" />
+    <ClInclude Include="mmpld\enum_dispatch_list.h" />
     <ClInclude Include="mmpld\file.h" />
     <ClInclude Include="mmpld\file_header.h" />
     <ClInclude Include="mmpld\frame_header.h" />
