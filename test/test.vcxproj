@@ -334,6 +334,120 @@
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)</Outputs>
     </CustomBuild>
   </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="test_xyz_double_int_double.mmpld">
+      <DeploymentContent>true</DeploymentContent>
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">XCOPY /Q /Y "%(FullPath)" "$(OutDir)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">XCOPY /Q /Y "%(FullPath)" "$(OutDir)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">XCOPY /Q /Y "%(FullPath)" "$(OutDir)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">XCOPY /Q /Y "%(FullPath)" "$(OutDir)"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="test_xyz_double_int_float.mmpld">
+      <DeploymentContent>true</DeploymentContent>
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">XCOPY /Q /Y "%(FullPath)" "$(OutDir)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">XCOPY /Q /Y "%(FullPath)" "$(OutDir)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">XCOPY /Q /Y "%(FullPath)" "$(OutDir)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">XCOPY /Q /Y "%(FullPath)" "$(OutDir)"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="test_xyz_double_none.mmpld">
+      <DeploymentContent>true</DeploymentContent>
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">XCOPY /Q /Y "%(FullPath)" "$(OutDir)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">XCOPY /Q /Y "%(FullPath)" "$(OutDir)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">XCOPY /Q /Y "%(FullPath)" "$(OutDir)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">XCOPY /Q /Y "%(FullPath)" "$(OutDir)"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="test_xyz_double_rgba_byte.mmpld">
+      <DeploymentContent>true</DeploymentContent>
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">XCOPY /Q /Y "%(FullPath)" "$(OutDir)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">XCOPY /Q /Y "%(FullPath)" "$(OutDir)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">XCOPY /Q /Y "%(FullPath)" "$(OutDir)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">XCOPY /Q /Y "%(FullPath)" "$(OutDir)"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="test_xyz_double_rgba_float.mmpld">
+      <DeploymentContent>true</DeploymentContent>
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">XCOPY /Q /Y "%(FullPath)" "$(OutDir)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">XCOPY /Q /Y "%(FullPath)" "$(OutDir)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">XCOPY /Q /Y "%(FullPath)" "$(OutDir)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">XCOPY /Q /Y "%(FullPath)" "$(OutDir)"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="test_xyz_double_rgba_short.mmpld">
+      <DeploymentContent>true</DeploymentContent>
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">XCOPY /Q /Y "%(FullPath)" "$(OutDir)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">XCOPY /Q /Y "%(FullPath)" "$(OutDir)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">XCOPY /Q /Y "%(FullPath)" "$(OutDir)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">XCOPY /Q /Y "%(FullPath)" "$(OutDir)"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="test_xyz_double_rgb_float.mmpld">
+      <DeploymentContent>true</DeploymentContent>
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">XCOPY /Q /Y "%(FullPath)" "$(OutDir)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">XCOPY /Q /Y "%(FullPath)" "$(OutDir)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">XCOPY /Q /Y "%(FullPath)" "$(OutDir)"</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">XCOPY /Q /Y "%(FullPath)" "$(OutDir)"</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)</Outputs>
+    </CustomBuild>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
