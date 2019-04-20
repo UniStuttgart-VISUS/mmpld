@@ -153,3 +153,13 @@ This is a simple test application for dumping meta data from an MMPLD file. It s
 ```posh
 .\dumpmmpld /path .\test.mmpld
 ```
+
+## Nuget package
+
+The project contains a nuspec to create a Nuget package using the tools from https://www.nuget.org/downloads with the following command line:
+
+```posh
+nuget.exe pack mmpld.nuspec -properties version=x.x.x
+```
+
+Replace `x.x.x` with the current version and do not forget to update the release notes in the nuspec.
