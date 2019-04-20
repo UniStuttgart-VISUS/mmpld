@@ -65,6 +65,12 @@ for (decltype(fileHeader.frames) i = 0; i < fileHeader.frames; ++i) {
             rem -= cnt;
         }
 
+        // In MMPLD 1.1, a block of cluster information follows here. We need to
+        // skip this, because otherwise, the next list would be bogus.
+        if (fileHeader.version == mmpld::make_version(1, 1)) {
+            mmpld::skip_cluster_info(hFile);
+        }
+
         /* Do something with the content of 'particles'. */
     } /* end for (decltype(frameHeader.lists) j = 0; ... */
 } /* end for (decltype(fileHeader.frames) i = 0; ... */
@@ -109,7 +115,7 @@ mmpld::file<HANDLE, TCHAR> file(_T("test.mmpld"));
 for (auto l = 0; l < file.frame_header().lists; ++l)
     mmpld::list_header listHeader;
 
-    // Read the list header and skip the data.
+    // Read the list header and skip the data (and potential cluster info).
     file.read_particles(true, listHeader, nullptr, 0);
 
     // Get the input elements for the list.
@@ -139,6 +145,12 @@ auto listSize = mmpld::get_size<UINT>(listHeader);
 // mapped to 'map'. Now read the actual particles using the continuation
 // variant of read_particles.
 file.read_particles(listHeader, map.pData, listSize);
+
+// As we read manually, we need to skip cluster infos now. It is safe to call
+// this method on all file versions. It has no effect if the file is not
+// MMPLD 1.1. Please note that this method must not be called if the particle
+// list has not been completely consumed!
+file.skip_cluster_info();
 ```
 
 ## test

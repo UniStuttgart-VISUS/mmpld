@@ -46,6 +46,20 @@ void mmpld::file<F, C>::open_frame(const frame_number_type frame) {
 
 
 /*
+ * mmpld::file<F, C>::read_cluster_info
+ */
+template<class F, class C>
+mmpld::cluster_info mmpld::file<F, C>::read_cluster_info(void) {
+    if (this->_file_header.version == mmpld::make_version(1, 1)) {
+        return std::move(mmpld::read_cluster_info(this->_file));
+    } else {
+        static const cluster_info empty;
+        return empty;
+    }
+}
+
+
+/*
  * mmpld::file<F, C>::read_particles
  */
 template<class F, class C>
@@ -109,13 +123,23 @@ std::vector<std::uint8_t> mmpld::file<F, C>::read_particles(
     std::vector<std::uint8_t> retval(size);
     this->read_particles(header, retval.data(), size);
 
-    if (this->_file_header.version == mmpld::make_version(1, 1)) {
-        if (clusters != nullptr) {
-            *clusters = std::move(mmpld::read_cluster_info(this->_file));
-        } else {
-            mmpld::skip_cluster_info(this->_file);
-        }
+    if (clusters != nullptr) {
+        *clusters = this->read_cluster_info();
+    } else {
+        this->skip_cluster_info();
     }
 
     return retval;
 }
+
+
+/*
+ * mmpld::file<F, C>::skip_cluster_info
+ */
+template<class F, class C>
+void mmpld::file<F, C>::skip_cluster_info(void) {
+    if (this->_file_header.version == mmpld::make_version(1, 1)) {
+        return mmpld::skip_cluster_info(this->_file);
+    }
+}
+

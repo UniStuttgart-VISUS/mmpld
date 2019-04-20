@@ -110,6 +110,21 @@ namespace mmpld {
         void open_frame(const frame_number_type frame);
 
         /// <summary>
+        /// Reads cluster information from the current position in the file.
+        /// </summary>
+        /// <remarks>
+        /// <para>This method has no effect on files having a version other than
+        /// 1.1. The method does nothing in this case and the returned cluster
+        /// information object is empty.</para>
+        /// <para>The caller is responsible to call this method only if the file
+        /// pointer is pointing to a cluster information block at the end of a
+        /// particle list.</para>
+        /// </remarks>
+        /// <returns>The cluster information that has been read from the file.
+        /// </returns>
+        cluster_info read_cluster_info(void);
+
+        /// <summary>
         /// Reads the begin of a particle list from the current position in the
         /// file.
         /// </summary>
@@ -131,7 +146,9 @@ namespace mmpld {
         /// <para>If the file is MMPLD 1.1 and
         /// <paramref name="skip_remaining" /> is set <c>true</c>, the cluster
         /// information block will be skipped as well. Otherwise, the caller
-        /// needs to process or skip the cluster information manually.
+        /// needs to process or skip the cluster information manually using
+        /// <see cref="read_cluster_info" /> or
+        /// <see cref="skip_cluster_info" />.</para>
         /// </remarks>
         /// <param name="skip_remaining">If <c>true</c>, skip all particle data
         /// that could not be returned to <paramref name="dst" />. This includes
@@ -174,7 +191,9 @@ namespace mmpld {
         /// instead of this method.</para>
         /// <para>Please also note that this variant of the method does not
         /// skip or read the cluster information at the end of a particle list
-        /// in MMPLD 1.1 files. The caller needs to do this manually.</para>
+        /// in MMPLD 1.1 files. The caller needs to do this manually using
+        /// <see cref="read_cluster_info" /> or
+        /// <see cref="skip_cluster_info" />.</para>
         /// </remarks>
         /// <param name="header">The list header describing the particles.
         /// </param>
@@ -207,6 +226,18 @@ namespace mmpld {
         inline const mmpld::seek_table& seek_table(void) const {
             return this->_seek_table;
         }
+
+        /// <summary>
+        /// Skips cluster information from the current position in the file.
+        /// </summary>
+        /// <remarks>
+        /// <para>This method has no effect on files having a version other than
+        /// 1.1. The method does nothing in this case.</para>
+        /// <para>The caller is responsible to call this method only if the file
+        /// pointer is pointing to a cluster information block at the end of a
+        /// particle list.</para>
+        /// </remarks>
+        void skip_cluster_info(void);
 
         /// <summary>
         /// Gets the MMPLD version from the file header.
