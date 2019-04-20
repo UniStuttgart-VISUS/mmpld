@@ -271,7 +271,9 @@ template<class T> T mmpld::get_stride(const list_header& header) {
 /*
  * mmpld::read_list_header
  */
-template<class T> T& mmpld::read_list_header(T& stream, list_header& header) {
+template<class T>
+T& mmpld::read_list_header(T& stream, const std::uint16_t fileVersion,
+        list_header& header) {
     static const auto MAX_COLOUR = static_cast<float>(
         (std::numeric_limits<std::uint8_t>::max)());
     detail::zero_memory(header);
@@ -301,8 +303,11 @@ template<class T> T& mmpld::read_list_header(T& stream, list_header& header) {
             header.max_intensity = -1.0f;
             } break;
 
-        case mmpld::colour_type::intensity:
-            // TODO: How does intensity64 behave here?!
+        case mmpld::colour_type::intensity32:
+        case mmpld::colour_type::intensity64:
+            // TODO: I think this is a specification bug. It does not make sense
+            // that the range is defined as 32-bit float if the values are 64
+            // bit.
             detail::zero_memory(header.colour);
             detail::read(stream, header.min_intensity);
             detail::read(stream, header.max_intensity);
@@ -316,6 +321,14 @@ template<class T> T& mmpld::read_list_header(T& stream, list_header& header) {
     }
 
     detail::read(stream, header.particles);
+
+    if (fileVersion == 103) {
+        // TODO: I think it does not make sense testing for equality here, but
+        // this should be forward-compatible (>= 103).
+        detail::read(stream, header.bounding_box);
+    } else {
+        ::memset(header.bounding_box, sizeof(header.bounding_box), 0);
+    }
 
     return stream;
 }

@@ -52,7 +52,7 @@ template<class F, class C>
 typename mmpld::file<F, C>::size_type mmpld::file<F, C>::read_particles(
         const bool skip_remaining, list_header& header, void *dst,
         const size_type cnt) {
-    mmpld::read_list_header(this->_file, header);
+    mmpld::read_list_header(this->_file, this->_file_header.version, header);
     auto retval =  this->read_particles(header, dst, cnt);
 
     if (skip_remaining && (retval < header.particles)) {

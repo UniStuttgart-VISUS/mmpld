@@ -46,7 +46,7 @@ for (decltype(fileHeader.frames) i = 0; i < fileHeader.frames; ++i) {
     // header. Each particle list has its own header which allows for finding
     // out about its format and size.
     for (decltype(frameHeader.lists) j = 0; j < frameHeader.lists; ++j) {
-        mmpld::read_list_header(hFile, listHeader);
+        mmpld::read_list_header(hFile, fileHeader.version, listHeader);
 
         // Compute the number of bytes required for all particles.
         auto rem = mmpld::get_size<size_t>(listHeader);
