@@ -64,6 +64,18 @@ namespace mmpld {
     typedef std::vector<std::uint64_t> seek_table;
 
     /// <summary>
+    /// Creates a a file version from the given major and minor version.
+    /// </summary>
+    /// <param name="major">The major version.</param>
+    /// <param name="minor">The minor version.</param>
+    /// <returns>The version number as it appears in an MMPLD file.</returns>
+    inline std::uint16_t make_version(const std::uint16_t major,
+            const std::uint16_t minor) {
+        assert(minor < 100);
+        return (major * 100) + minor;
+    }
+
+    /// <summary>
     /// Reads the MMPLD header and the seek table from the given stream (at its
     /// current location).
     /// </summary>
@@ -78,7 +90,7 @@ namespace mmpld {
     T& read_file_header(T& stream, file_header& header, seek_table& seek_table);
 
     /// <summary>
-    /// Split a file version of an MMPLD file into major and minor version
+    /// Split a file version of an MMPLD file into major and minor version.
     /// </summary>
     /// <param name="version">The version number to be split into their parts.
     /// </param>
