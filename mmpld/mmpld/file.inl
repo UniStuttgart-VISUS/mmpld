@@ -55,11 +55,16 @@ typename mmpld::file<F, C>::size_type mmpld::file<F, C>::read_particles(
     mmpld::read_list_header(this->_file, this->_file_header.version, header);
     auto retval =  this->read_particles(header, dst, cnt);
 
-    if (skip_remaining && (retval < header.particles)) {
+    if (skip_remaining && (retval <= header.particles)) {
         auto stride = mmpld::get_stride<size_t>(header);
         auto cur = io_traits_type::tell(this->_file);
         auto rem = (header.particles - retval) * stride;
         io_traits_type::seek(this->_file, cur + rem);
+
+        if (this->_file_header.version == mmpld::make_version(1, 1)) {
+            // MMPLD 1.1 needs to skip the cluster information block as well.
+            mmpld::skip_cluster_info(this->_file);
+        }
     }
 
     return retval;
@@ -97,12 +102,20 @@ typename mmpld::file<F, C>::size_type mmpld::file<F, C>::read_particles(
  */
 template<class F, class C>
 std::vector<std::uint8_t> mmpld::file<F, C>::read_particles(
-        list_header& header) {
+        list_header& header, cluster_info *clusters) {
     this->read_particles(false, header, nullptr, 0);
     auto size = mmpld::get_size(header);
 
     std::vector<std::uint8_t> retval(size);
     this->read_particles(header, retval.data(), size);
+
+    if (this->_file_header.version == mmpld::make_version(1, 1)) {
+        if (clusters != nullptr) {
+            *clusters = std::move(mmpld::read_cluster_info(this->_file));
+        } else {
+            mmpld::skip_cluster_info(this->_file);
+        }
+    }
 
     return retval;
 }

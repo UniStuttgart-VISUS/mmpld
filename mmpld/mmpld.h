@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "mmpld/cluster_info.h"
 #include "mmpld/colour_properties.h"
 #include "mmpld/convert.h"
 #include "mmpld/file.h"

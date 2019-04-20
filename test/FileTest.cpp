@@ -13,7 +13,7 @@ using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 namespace test {
 
-    TEST_CLASS(FileTEst) {
+    TEST_CLASS(FileTest) {
 
     public:
 

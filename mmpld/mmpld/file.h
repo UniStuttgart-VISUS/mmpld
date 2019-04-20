@@ -7,6 +7,7 @@
 
 #include <stdexcept>
 
+#include "mmpld/cluster_info.h"
 #include "mmpld/file_header.h"
 #include "mmpld/frame_header.h"
 #include "mmpld/list_header.h"
@@ -127,9 +128,16 @@ namespace mmpld {
         /// subsequent operations might lead corrupt results! It is strongly
         /// recommended to use other overloads allocating the memory themselves
         /// instead of this method.</para>
+        /// <para>If the file is MMPLD 1.1 and
+        /// <paramref name="skip_remaining" /> is set <c>true</c>, the cluster
+        /// information block will be skipped as well. Otherwise, the caller
+        /// needs to process or skip the cluster information manually.
         /// </remarks>
         /// <param name="skip_remaining">If <c>true</c>, skip all particle data
-        /// that could not be returned to <paramref name="dst" />.</param>
+        /// that could not be returned to <paramref name="dst" />. This includes
+        /// the cluster information at the end of the file. Cluster information
+        /// will be skipped also in the case that all particles have been read.
+        /// </param>
         /// <param name="header">Receives the list header.</param>
         /// <param name="dst">Receives at most <paramref name="cnt" /> bytes
         /// of particle data if not <c>nullptr</c>.</param>
@@ -159,11 +167,14 @@ namespace mmpld {
         /// particles in the list, not the whole buffer will be filled. You
         /// can make subsequent calls this this method to read the rest
         /// of the list.</para>
-        /// <para>Please not that it is important to consume the whole
+        /// <para>Please note that it is important to consume the whole
         /// particle list or reset the file to a new frame as otherwise,
         /// subsequent operations might lead corrupt results! It is strongly
         /// recommended to use other overloads allocating the memory themselves
         /// instead of this method.</para>
+        /// <para>Please also note that this variant of the method does not
+        /// skip or read the cluster information at the end of a particle list
+        /// in MMPLD 1.1 files. The caller needs to do this manually.</para>
         /// </remarks>
         /// <param name="header">The list header describing the particles.
         /// </param>
@@ -180,8 +191,14 @@ namespace mmpld {
         /// Reads a particle list from the current position in the file.
         /// </summary>
         /// <param name="header">Receives the list header.</param>
+        /// <param name="cluster">If not <c>nullptr</c>, receives the cluster
+        /// information if the file version is 1.1. If <c>nullptr</c> and the
+        /// file version is 1.1, the cluster information block will be
+        /// discarded. If the file version is not 1.1, this parameter has no
+        /// effect.</param>
         /// <returns>All particle data in the frame</returns>
-        std::vector<std::uint8_t> read_particles(list_header& header);
+        std::vector<std::uint8_t> read_particles(list_header& header,
+            cluster_info *clusters = nullptr);
 
         /// <summary>
         /// Gets the seek table for the MMPLD file.

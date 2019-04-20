@@ -853,7 +853,7 @@ namespace test {
             Assert::AreEqual(p_t(0), (props & p_t(pp_t::per_particle_radius)), L"per_particle_radius of float_xyz + intensity", LINE_INFO());
             Assert::AreEqual(p_t(0), (props & p_t(pp_t::per_particle_colour)), L"per_particle_colour of float_xyz + intensity", LINE_INFO());
             Assert::AreEqual(p_t(pp_t::per_particle_intensity), (props & p_t(pp_t::per_particle_intensity)), L"per_particle_intensity of float_xyz + intensity", LINE_INFO());
-            Assert::AreEqual(p_t(0), (props & p_t(pp_t::float_colour)), L"float_colour of float_xyz + intensity", LINE_INFO());
+            Assert::AreEqual(p_t(pp_t::float_colour), (props & p_t(pp_t::float_colour)), L"float_colour of float_xyz + intensity", LINE_INFO());
 
             header.colour_type = mmpld::colour_type::intensity;
             header.vertex_type = mmpld::vertex_type::float_xyzr;
@@ -861,7 +861,7 @@ namespace test {
             Assert::AreEqual(p_t(pp_t::per_particle_radius), (props & p_t(pp_t::per_particle_radius)), L"per_particle_radius of float_xyzr + intensity", LINE_INFO());
             Assert::AreEqual(p_t(0), (props & p_t(pp_t::per_particle_colour)), L"per_particle_colour of float_xyzr + intensity", LINE_INFO());
             Assert::AreEqual(p_t(pp_t::per_particle_intensity), (props & p_t(pp_t::per_particle_intensity)), L"per_particle_intensity of float_xyzr + intensity", LINE_INFO());
-            Assert::AreEqual(p_t(0), (props & p_t(pp_t::float_colour)), L"float_colour of float_xyzr + intensity", LINE_INFO());
+            Assert::AreEqual(p_t(pp_t::float_colour), (props & p_t(pp_t::float_colour)), L"float_colour of float_xyzr + intensity", LINE_INFO());
 
             header.colour_type = mmpld::colour_type::intensity;
             header.vertex_type = mmpld::vertex_type::short_xyz;
@@ -869,7 +869,7 @@ namespace test {
             Assert::AreEqual(p_t(0), (props & p_t(pp_t::per_particle_radius)), L"per_particle_radius of short_xyz + intensity", LINE_INFO());
             Assert::AreEqual(p_t(0), (props & p_t(pp_t::per_particle_colour)), L"per_particle_colour of short_xyz + intensity", LINE_INFO());
             Assert::AreEqual(p_t(pp_t::per_particle_intensity), (props & p_t(pp_t::per_particle_intensity)), L"per_particle_intensity of short_xyz + intensity", LINE_INFO());
-            Assert::AreEqual(p_t(0), (props & p_t(pp_t::float_colour)), L"float_colour of short_xyz + intensity", LINE_INFO());
+            Assert::AreEqual(p_t(pp_t::float_colour), (props & p_t(pp_t::float_colour)), L"float_colour of short_xyz + intensity", LINE_INFO());
 
             header.colour_type = mmpld::colour_type::rgb8;
             header.vertex_type = mmpld::vertex_type::float_xyz;

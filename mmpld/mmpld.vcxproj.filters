@@ -74,6 +74,9 @@
     <ClInclude Include="mmpld\vertex_properties.h">
       <Filter>Header Files\mmpld</Filter>
     </ClInclude>
+    <ClInclude Include="mmpld\cluster_info.h">
+      <Filter>Header Files\mmpld</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="mmpld\file_header.inl">
@@ -101,6 +104,9 @@
       <Filter>Header Files\mmpld</Filter>
     </None>
     <None Include="mmpld\particle_view.inl">
+      <Filter>Header Files\mmpld</Filter>
+    </None>
+    <None Include="mmpld\cluster_info.inl">
       <Filter>Header Files\mmpld</Filter>
     </None>
   </ItemGroup>
