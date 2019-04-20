@@ -10,10 +10,12 @@
 #include <type_traits>
 #include <vector>
 
+#include "mmpld/colour_properties.h"
 #include "mmpld/colour_type.h"
 #include "mmpld/enum_dispatch.h"
 #include "mmpld/io.h"
 #include "mmpld/particle_properties.h"
+#include "mmpld/vertex_properties.h"
 #include "mmpld/vertex_type.h"
 
 

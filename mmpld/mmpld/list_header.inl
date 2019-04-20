@@ -78,15 +78,6 @@ std::vector<T> mmpld::get_input_layout(const list_header& header) {
 #endif /* defined(MMPLD_WITH_DIRECT3D) */
 
 
-namespace mmpld {
-namespace detail {
-
-    //template<vertex_type V>
-
-} /* end namespace detail */
-} /* end namespace mmpld */
-
-
 /*
  * mmpld::get_offsets
  */
@@ -95,64 +86,27 @@ T mmpld::get_offsets(const list_header& header, T& pos, T& rad, T& col) {
     const auto retval = std::is_signed<T>::value
         ? std::numeric_limits<T>::lowest()
         : (std::numeric_limits<T>::max)();
+    colour_properties colourProps;
+    vertex_properties vertexProps;
 
     pos = rad = col = retval;
 
-    // Set pointers to radius and colour, assuming there is a valid colour
-    // for now.
-    detail::enum_dispatch(detail::vertex_dispatch_list(), header.vertex_type,
-        [&pos, &rad, &col](void) {
+    auto hasPosition = get_properties(header.vertex_type, vertexProps);
+    auto hasColour = get_properties(header.colour_type, colourProps);
 
-    });
-
-    switch (header.vertex_type) {
-        case mmpld::vertex_type::none:
-            break;
-
-        case mmpld::vertex_type::float_xyz:
-            pos = 0;
-            col = vertex_traits<vertex_type::float_xyz>::size;
-            break;
-
-        case mmpld::vertex_type::float_xyzr:
-            pos = 0;
-            rad = 3 * sizeof(float);
-            col = vertex_traits<vertex_type::float_xyzr>::size;
-            break;
-
-        case mmpld::vertex_type::short_xyz:
-            pos = 0;
-            col = vertex_traits<vertex_type::short_xyz>::size;
-            break;
-
-        case mmpld::vertex_type::double_xyz:
-            pos = 0;
-            col = vertex_traits<vertex_type::double_xyz>::size;
-            break;
-
-        default:
-            throw std::runtime_error("An unexpected vertex type was "
-                "encountered. Make sure to update mmpld::get_offsets if "
-                "you add new vertex types.");
+    if (hasPosition) {
+        // Position is always first.
+        pos = 0;
     }
 
-    // Update the offset of the colour using the actual configuration.
-    switch (header.colour_type) {
-        case mmpld::colour_type::rgb8:
-        case mmpld::colour_type::rgba8:
-        case mmpld::colour_type::intensity:
-        case mmpld::colour_type::rgb32:
-        case mmpld::colour_type::rgba32:
-        case mmpld::colour_type::intensity64:
-            if (pos == retval) {
-                col = 0;
-            }
-            break;
+    if (hasPosition && vertexProps.has_radius) {
+        // Add offset of radius if we have per-vertex radii.
+        rad = vertexProps.radius_offset;
+    }
 
-        case mmpld::colour_type::none:
-        default:
-            col = retval;
-            break;
+    if (hasColour) {
+        // Colour offset depends on previous position.
+        col = hasPosition ? vertexProps.size : 0;
     }
 
     return retval;
@@ -166,33 +120,25 @@ template<class T> T mmpld::get_properties(const list_header& header) {
     static_assert(sizeof(T) >= sizeof(mmpld::particle_properties), "Output "
         "type for particle properties is too small.");
     auto retval = mmpld::particle_properties::none;
+    colour_properties colourProps;
+    vertex_properties vertexProps;
 
-    switch (header.vertex_type) {
-        case mmpld::vertex_type::float_xyzr:
+    if (get_properties(header.vertex_type, vertexProps)) {
+        if (vertexProps.has_radius) {
             retval |= mmpld::particle_properties::per_particle_radius;
-            break;
-
-        default:
-            // Nothing to do.
-            break;
+        }
     }
 
-    switch (header.colour_type) {
-        case mmpld::colour_type::intensity:
-        case mmpld::colour_type::intensity64:
+    if (get_properties(header.colour_type, colourProps)) {
+        if (colourProps.channels == 1) {
             retval |= mmpld::particle_properties::per_particle_intensity;
-            break;
-
-        case mmpld::colour_type::none:
-            // Nothing to do.
-            break;
-
-        case mmpld::colour_type::rgb32:
-        case mmpld::colour_type::rgba32:
-            retval |= mmpld::particle_properties::float_colour;
-        default:
+        } else if (colourProps.channels > 1) {
             retval |= mmpld::particle_properties::per_particle_colour;
-            break;
+        }
+
+        if (colourProps.is_float) {
+            retval |= mmpld::particle_properties::float_colour;
+        }
     }
 
     return static_cast<T>(retval);
@@ -204,64 +150,15 @@ template<class T> T mmpld::get_properties(const list_header& header) {
  */
 template<class T> T mmpld::get_stride(const list_header& header) {
     std::size_t retval = 0;
+    colour_properties colourProps;
+    vertex_properties vertexProps;
 
-    switch (header.vertex_type) {
-        case mmpld::vertex_type::none:
-            break;
-
-        case mmpld::vertex_type::float_xyz:
-            retval += vertex_traits<vertex_type::float_xyz>::size;
-            break;
-
-        case mmpld::vertex_type::float_xyzr:
-            retval += vertex_traits<vertex_type::float_xyzr>::size;
-            break;
-
-        case mmpld::vertex_type::short_xyz:
-            retval += vertex_traits<vertex_type::short_xyz>::size;
-            break;
-
-        case mmpld::vertex_type::double_xyz:
-            retval += vertex_traits<vertex_type::double_xyz>::size;
-
-        default:
-            throw std::runtime_error("An unexpected vertex type was "
-                "encountered. Make sure to update mmpld::get_offsets if "
-                "you add new vertex types.");
+    if (get_properties(header.vertex_type, vertexProps)) {
+        retval += vertexProps.size;
     }
 
-    switch (header.colour_type) {
-        case mmpld::colour_type::none:
-            break;
-
-        case mmpld::colour_type::rgb8:
-            retval += colour_traits<colour_type::rgb8>::size;
-            break;
-
-        case mmpld::colour_type::rgba8:
-            retval += colour_traits<colour_type::rgba8>::size;
-            break;
-
-        case mmpld::colour_type::intensity:
-            retval += colour_traits<colour_type::intensity>::size;
-            break;
-
-        case mmpld::colour_type::rgb32:
-            retval += colour_traits<colour_type::rgb32>::size;
-            break;
-
-        case mmpld::colour_type::rgba32:
-            retval += colour_traits<colour_type::rgba32>::size;
-            break;
-
-        case mmpld::colour_type::intensity64:
-            retval += colour_traits<colour_type::intensity64>::size;
-            break;
-
-        default:
-            throw std::runtime_error("An unexpected colour type was "
-                "encountered. Make sure to update mmpld::get_offsets if "
-                "you add new vertex types.");
+    if (get_properties(header.colour_type, colourProps)) {
+        retval += colourProps.size;
     }
 
     return static_cast<T>(retval);
@@ -284,6 +181,7 @@ T& mmpld::read_list_header(T& stream, const std::uint16_t fileVersion,
     switch (header.vertex_type) {
         case vertex_type::float_xyz:
         case vertex_type::short_xyz:
+        case vertex_type::double_xyz:
             detail::read(stream, header.radius);
         break;
 
@@ -305,9 +203,9 @@ T& mmpld::read_list_header(T& stream, const std::uint16_t fileVersion,
 
         case mmpld::colour_type::intensity32:
         case mmpld::colour_type::intensity64:
-            // TODO: I think this is a specification bug. It does not make sense
-            // that the range is defined as 32-bit float if the values are 64
-            // bit.
+            // 32-bit and 64-bit intensity values both use 32-bit ranges. This
+            // is a specification bug of MMPLD 1.3, which we need to keep for
+            // compatibility with existing files.
             detail::zero_memory(header.colour);
             detail::read(stream, header.min_intensity);
             detail::read(stream, header.max_intensity);

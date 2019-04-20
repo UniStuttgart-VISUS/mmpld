@@ -218,19 +218,6 @@ namespace detail {
         static constexpr const std::size_t size = 3 * sizeof(value_type);
     };
 
-    /// <summary>
-    /// Answer whether the <see cref="vertex_type" /> <typeparamref name="V" />
-    /// holds per-vertex radii or not.
-    /// </summary>
-    /// <typeparam name="V">The type of the vertex to get the information for.
-    /// </typeparam>
-    /// <returns><c>true</c> if vertices of type <typeparamref name="V" /> hold
-    /// per-vertex radii, <c>false/c> otherwise.</returns>
-    template<vertex_type V> constexpr bool has_radius(void) {
-        typedef vertex_traits<V> traits_type;
-        return (traits_type::radius_offset < traits_type::size);
-    }
-
 } /* end namespace mmpld */
 
 #include "mmpld/vertex_type.inl"

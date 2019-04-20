@@ -21,11 +21,12 @@ namespace mmpld {
     /// <remarks>
     /// <para>If you add a new type here, you must (i) provide a specialisation
     /// of the traits type below to allow the software to reason about the
-    /// memory layout of the data, (ii) add the new member to the 
+    /// memory layout of the data, (ii) add the new member to the
     /// <see cref="colour_dispatch_list" /> declared below, (iii) add a case
     /// label in the <see cref="to_string" /> function and (iv) add the
-    /// appropriate conversion code in convert.inl. Also, you might want to
-    /// update the dumpmmpld sample application.</para>
+    /// appropriate conversion code in convert.inl. Please also check the code
+    /// processing the <see cref="list_header" /> for compatibility. Also, you
+    /// might want to update the dumpmmpld sample application.</para>
     /// </remarks>
     enum class colour_type : std::uint8_t {
 

@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include "mmpld/colour_properties.h"
 #include "mmpld/convert.h"
 #include "mmpld/file.h"
 #include "mmpld/file_header.h"
@@ -13,3 +14,4 @@
 #include "mmpld/list_header.h"
 #include "mmpld/particle_traits.h"
 #include "mmpld/particle_view.h"
+#include "mmpld/vertex_properties.h"

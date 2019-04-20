@@ -68,6 +68,12 @@
     <ClInclude Include="mmpld\enum_dispatch.h">
       <Filter>Header Files\mmpld</Filter>
     </ClInclude>
+    <ClInclude Include="mmpld\colour_properties.h">
+      <Filter>Header Files\mmpld</Filter>
+    </ClInclude>
+    <ClInclude Include="mmpld\vertex_properties.h">
+      <Filter>Header Files\mmpld</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="mmpld\file_header.inl">

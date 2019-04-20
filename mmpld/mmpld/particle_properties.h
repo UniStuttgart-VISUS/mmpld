@@ -44,7 +44,9 @@ namespace mmpld {
         /// </summary>
         /// <remarks>
         /// This flag can only be set if
-        /// <see cref="particle_properties::per_particle_colour" /> is also set.
+        /// <see cref="particle_properties::per_particle_colour" /> or
+        /// <see cref="particle_properties::per_particle_intensity" /> or
+        /// are also set. Note that all intensities are floats atm.
         /// </remarks>
         float_colour = 0x00000008
     };
