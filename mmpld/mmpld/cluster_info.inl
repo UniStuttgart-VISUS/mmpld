@@ -10,7 +10,12 @@
 template<class F> mmpld::cluster_info mmpld::read_cluster_info(F& file) {
     typedef detail::basic_io_traits<F> io_traits_type;
     std::uint32_t cnt = 0;
-    std::uint32_t size = 0; // HAZARD: Original impl. uses size_t!
+    std::uint64_t size = 0; // HAZARD: This is just a guess. The original code
+                            // uses size_t, which has different sizes in 32-bit
+                            // and 64-bit builds. However, we assume the author
+                            // used 64-bit builds, because otherwise, it would
+                            // have not made sense using different types for
+                            // the list counter and the data size.
     cluster_info retval;
 
     detail::read(file, cnt);
@@ -31,7 +36,8 @@ template<class F> mmpld::cluster_info mmpld::read_cluster_info(F& file) {
 template<class F> void mmpld::skip_cluster_info(F& file) {
     typedef detail::basic_io_traits<F> io_traits_type;
     std::uint32_t cnt = 0;
-    std::uint32_t size = 0; // HAZARD: Original impl. uses size_t!
+    std::uint64_t size = 0; // HAZARD: This is just a guess.
+                            // Cf. read_cluster_info().
 
     detail::read(file, cnt);
     detail::read(file, size);
