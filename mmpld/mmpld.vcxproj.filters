@@ -109,5 +109,6 @@
     <None Include="mmpld\cluster_info.inl">
       <Filter>Header Files\mmpld</Filter>
     </None>
+    <None Include="mmpld.nuspec" />
   </ItemGroup>
 </Project>
