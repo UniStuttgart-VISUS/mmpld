@@ -148,16 +148,18 @@ template<class T> T mmpld::get_properties(const list_header& header) {
 /*
  * mmpld::get_stride
  */
-template<class T> T mmpld::get_stride(const list_header& header) {
+template<class T>
+T mmpld::get_stride(const vertex_type vertexType,
+        const colour_type colourType) {
     std::size_t retval = 0;
     colour_properties colourProps;
     vertex_properties vertexProps;
 
-    if (get_properties(header.vertex_type, vertexProps)) {
+    if (get_properties(vertexType, vertexProps)) {
         retval += vertexProps.size;
     }
 
-    if (get_properties(header.colour_type, colourProps)) {
+    if (get_properties(colourType, colourProps)) {
         retval += colourProps.size;
     }
 
