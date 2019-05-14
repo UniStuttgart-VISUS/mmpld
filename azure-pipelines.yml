@@ -53,3 +53,9 @@ steps:
     minorVersion: '3'
     patchVersion: '$(Build.BuildNumber)'
     basePath: '$(Build.SourcesDirectory)\mmpld'
+
+- task: PowerShell@2
+  inputs:
+    targetType: 'inline'
+    script: 'gci -r "$(System.DefaultWorkingDirectory)"'
+    errorActionPreference: 'silentlyContinue'
