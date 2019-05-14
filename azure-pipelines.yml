@@ -10,12 +10,33 @@ trigger:
 pool:
   vmImage: 'windows-latest'
 
+variables:
+  solutions: '**/*.sln'
+  buildPlatform: 'x64'
+  buildConfiguration: 'Release'
+
 steps:
+- task: VisualStudioTestPlatformInstaller@1
+  inputs:
+    packageFeedSelector: 'nugetOrg'
+    versionSelector: 'latestStable'
 
 - task: VSBuild@1
   inputs:
-    solution: '**\*.sln'
-    platform: 'x64'
-    configuration: 'Release'
+    solution: '$(solutions)'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
     clean: true
     msbuildArchitecture: 'x64'
+
+- task: VSTest@2
+  inputs:
+    testSelector: 'testAssemblies'
+    testAssemblyVer2: '**\*test*.dll
+      !**\*TestAdapter.dll
+      !**\obj\**'
+    searchFolder: '$(System.DefaultWorkingDirectory)'
+    testRunTitle: 'mmpld library test'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
