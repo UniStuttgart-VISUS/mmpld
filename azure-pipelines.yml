@@ -8,13 +8,13 @@ trigger:
 - master
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'vs2017-win2016'
 
 variables:
   solutions: '**/*.sln'
   buildPlatform: 'x64'
   buildConfiguration: 'Release'
-  vsVersion: '15.0'
+  #vsVersion: '15.0'
 
 steps:
 - task: VisualStudioTestPlatformInstaller@1
@@ -29,7 +29,7 @@ steps:
     configuration: '$(buildConfiguration)'
     clean: true
     msbuildArchitecture: 'x64'
-    vsVersion: '$(vsVersion)'
+    #vsVersion: '$(vsVersion)'
 
 - task: VSTest@2
   inputs:
