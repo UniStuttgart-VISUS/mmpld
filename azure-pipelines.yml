@@ -11,3 +11,11 @@ pool:
   vmImage: 'windows-latest'
 
 steps:
+
+- task: VSBuild@1
+  inputs:
+    solution: '**\*.sln'
+    platform: 'x64'
+    configuration: 'Release'
+    clean: true
+    msbuildArchitecture: 'x64'
