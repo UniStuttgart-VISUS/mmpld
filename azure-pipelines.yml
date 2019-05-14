@@ -1,0 +1,13 @@
+#
+# azure-pipelines.yml
+#
+#  Copyright © 2019 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+#
+
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-latest'
+
+steps:
