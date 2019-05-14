@@ -1,7 +1,7 @@
 #
 # azure-pipelines.yml
 #
-#  Copyright © 2019 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+# Copyright © 2019 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
 #
 
 trigger:
@@ -37,7 +37,8 @@ steps:
     testAssemblyVer2: '**\*test*.dll
       !**\*TestAdapter.dll
       !**\obj\**'
-    searchFolder: '$(System.DefaultWorkingDirectory)'
+    #searchFolder: '$(System.DefaultWorkingDirectory)'
+    searchFolder: '$(Agent.BuildDirectory)'
     testRunTitle: 'mmpld library test'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
