@@ -40,4 +40,4 @@ steps:
     searchFolder: '$(System.DefaultWorkingDirectory)'
     testRunTitle: 'mmpld library test'
     platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration
+    configuration: '$(buildConfiguration)'
