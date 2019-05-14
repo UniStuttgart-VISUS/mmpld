@@ -101,12 +101,12 @@ T mmpld::get_offsets(const list_header& header, T& pos, T& rad, T& col) {
 
     if (hasPosition && vertexProps.has_radius) {
         // Add offset of radius if we have per-vertex radii.
-        rad = vertexProps.radius_offset;
+        rad = static_cast<T>(vertexProps.radius_offset);
     }
 
     if (hasColour) {
         // Colour offset depends on previous position.
-        col = hasPosition ? vertexProps.size : 0;
+        col = static_cast<T>(hasPosition ? vertexProps.size : 0);
     }
 
     return retval;
