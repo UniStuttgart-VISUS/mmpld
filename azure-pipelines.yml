@@ -42,3 +42,12 @@ steps:
     testRunTitle: 'mmpld library test'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
+
+- task: NuGetCommand@2
+  inputs:
+    command: 'pack'
+    feedsToUse: 'select'
+    packagesToPack: 'mmpld.nuspec'
+    configuration: '$(buildConfiguration)'
+    versioningScheme: 'byBuildNumber'
+    basePath: '$(System.DefaultWorkingDirectory)\mmpld'
