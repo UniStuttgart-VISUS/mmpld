@@ -77,28 +77,26 @@
     <CustomBuild Include="test_xyzr_float_rgba_float.mmpld">
       <Filter>Test Files</Filter>
     </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="test_xyz_double_int_double.mmpld">
+    <CustomBuild Include="test_xyz_double_int_double.mmpld">
       <Filter>Test Files</Filter>
-    </None>
-    <None Include="test_xyz_double_int_float.mmpld">
+    </CustomBuild>
+    <CustomBuild Include="test_xyz_double_int_float.mmpld">
       <Filter>Test Files</Filter>
-    </None>
-    <None Include="test_xyz_double_none.mmpld">
+    </CustomBuild>
+    <CustomBuild Include="test_xyz_double_none.mmpld">
       <Filter>Test Files</Filter>
-    </None>
-    <None Include="test_xyz_double_rgb_float.mmpld">
+    </CustomBuild>
+    <CustomBuild Include="test_xyz_double_rgba_byte.mmpld">
       <Filter>Test Files</Filter>
-    </None>
-    <None Include="test_xyz_double_rgba_byte.mmpld">
+    </CustomBuild>
+    <CustomBuild Include="test_xyz_double_rgba_float.mmpld">
       <Filter>Test Files</Filter>
-    </None>
-    <None Include="test_xyz_double_rgba_float.mmpld">
+    </CustomBuild>
+    <CustomBuild Include="test_xyz_double_rgba_short.mmpld">
       <Filter>Test Files</Filter>
-    </None>
-    <None Include="test_xyz_double_rgba_short.mmpld">
+    </CustomBuild>
+    <CustomBuild Include="test_xyz_double_rgb_float.mmpld">
       <Filter>Test Files</Filter>
-    </None>
+    </CustomBuild>
   </ItemGroup>
 </Project>
