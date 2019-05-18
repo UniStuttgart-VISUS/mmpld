@@ -41,10 +41,10 @@ steps:
     command: 'pack'
     packagesToPack: '**\mmpld.nuspec'
     configuration: '$(buildConfiguration)'
-    versioningScheme: 'byBuildNumber'
+    versioningScheme: 'byPrereleaseNumber'
     majorVersion: '1'
-    minorVersion: '3'
-    patchVersion: '$(Build.BuildNumber)'
+    minorVersion: '4'
+    patchVersion: '0'
     verbosityPack: 'Detailed'
 
 - task: PowerShell@2
