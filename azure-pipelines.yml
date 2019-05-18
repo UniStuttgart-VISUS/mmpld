@@ -11,7 +11,7 @@ pool:
   vmImage: 'vs2017-win2016'
 
 variables:
-  solutions: '**/*.sln'
+  solution: '**/*.sln'
   buildPlatform: 'x64'
   buildConfiguration: 'Release'
   #vsVersion: '15.0'
@@ -24,7 +24,7 @@ steps:
 
 - task: VSBuild@1
   inputs:
-    solution: '$(solutions)'
+    solution: '$(solution)'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
     clean: true
@@ -33,29 +33,22 @@ steps:
 
 - task: VSTest@2
   inputs:
-    #testSelector: 'testAssemblies'
-    #testAssemblyVer2: '**\*test*.dll
-    #  !**\*TestAdapter.dll
-    #  !**\obj\**'
-    ##searchFolder: '$(System.DefaultWorkingDirectory)'
-    #searchFolder: '$(Agent.BuildDirectory)'
-    #testRunTitle: 'mmpld library test'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
 - task: NuGetCommand@2
   inputs:
     command: 'pack'
-    feedsToUse: 'select'
-    packagesToPack: 'mmpld.nuspec'
+    packagesToPack: '**\mmpld.nuspec'
     configuration: '$(buildConfiguration)'
+    versioningScheme: 'byBuildNumber'
     majorVersion: '1'
     minorVersion: '3'
     patchVersion: '$(Build.BuildNumber)'
-    basePath: '$(Build.SourcesDirectory)\mmpld'
+    verbosityPack: 'Detailed'
 
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
-    script: 'gci -r "$(System.DefaultWorkingDirectory)"'
+    script: 'gci -r "$(Pipeline.Workspace)"'
     errorActionPreference: 'silentlyContinue'
