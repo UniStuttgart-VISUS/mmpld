@@ -45,7 +45,14 @@ steps:
     majorVersion: '1'
     minorVersion: '4'
     patchVersion: '0'
-    verbosityPack: 'Detailed'
+    verbosityPack: 'Detailed
+    
+- task: CopyFiles@2
+  inputs:
+    sourceFolder: '$(Build.SourcesDirectory)\$(buildPlatform)\$(buildConfiguration)'
+    contents: '*.exe' 
+    targetFolder: '$(Build.ArtifactStagingDirectory)'
+    cleanTargetFolder: false
 
 - task: PowerShell@2
   inputs:
