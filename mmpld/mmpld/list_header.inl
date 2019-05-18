@@ -101,12 +101,12 @@ T mmpld::get_offsets(const list_header& header, T& pos, T& rad, T& col) {
 
     if (hasPosition && vertexProps.has_radius) {
         // Add offset of radius if we have per-vertex radii.
-        rad = vertexProps.radius_offset;
+        rad = static_cast<T>(vertexProps.radius_offset);
     }
 
     if (hasColour) {
         // Colour offset depends on previous position.
-        col = hasPosition ? vertexProps.size : 0;
+        col = static_cast<T>(hasPosition ? vertexProps.size : 0);
     }
 
     return retval;
@@ -148,16 +148,18 @@ template<class T> T mmpld::get_properties(const list_header& header) {
 /*
  * mmpld::get_stride
  */
-template<class T> T mmpld::get_stride(const list_header& header) {
+template<class T>
+T mmpld::get_stride(const vertex_type vertexType,
+        const colour_type colourType) {
     std::size_t retval = 0;
     colour_properties colourProps;
     vertex_properties vertexProps;
 
-    if (get_properties(header.vertex_type, vertexProps)) {
+    if (get_properties(vertexType, vertexProps)) {
         retval += vertexProps.size;
     }
 
-    if (get_properties(header.colour_type, colourProps)) {
+    if (get_properties(colourType, colourProps)) {
         retval += colourProps.size;
     }
 
