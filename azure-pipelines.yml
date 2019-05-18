@@ -46,7 +46,7 @@ steps:
     minorVersion: '4'
     patchVersion: '0'
     verbosityPack: 'Detailed
-    
+
 - task: CopyFiles@2
   inputs:
     sourceFolder: '$(Build.SourcesDirectory)\$(buildPlatform)\$(buildConfiguration)'
