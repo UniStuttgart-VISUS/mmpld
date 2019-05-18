@@ -33,13 +33,13 @@ steps:
 
 - task: VSTest@2
   inputs:
-    testSelector: 'testAssemblies'
-    testAssemblyVer2: '**\*test*.dll
-      !**\*TestAdapter.dll
-      !**\obj\**'
-    #searchFolder: '$(System.DefaultWorkingDirectory)'
-    searchFolder: '$(Agent.BuildDirectory)'
-    testRunTitle: 'mmpld library test'
+    #testSelector: 'testAssemblies'
+    #testAssemblyVer2: '**\*test*.dll
+    #  !**\*TestAdapter.dll
+    #  !**\obj\**'
+    ##searchFolder: '$(System.DefaultWorkingDirectory)'
+    #searchFolder: '$(Agent.BuildDirectory)'
+    #testRunTitle: 'mmpld library test'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
