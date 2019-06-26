@@ -24,6 +24,7 @@ namespace test {
                 std::vector<std::uint8_t> src(2 * src_view::stride());
                 std::vector<std::uint8_t> dst(2 * dst_view::stride());
                 mmpld::list_header src_header;
+				src_header.particles = 2;
                 src_header.vertex_type = src_view::vertex_traits::vertex_type;
                 src_header.colour_type = src_view::colour_traits::colour_type;
                 src_header.radius = 12.0f;
@@ -56,6 +57,7 @@ namespace test {
                 std::vector<std::uint8_t> src(2 * src_view::stride());
                 std::vector<std::uint8_t> dst(2 * dst_view::stride());
                 mmpld::list_header src_header;
+				src_header.particles = 2;
                 src_header.vertex_type = src_view::vertex_traits::vertex_type;
                 src_header.colour_type = src_view::colour_traits::colour_type;
                 src_header.radius = 12.0f;
@@ -94,6 +96,7 @@ namespace test {
                 std::vector<std::uint8_t> src(2 * src_view::stride());
                 std::vector<std::uint8_t> dst(2 * dst_view::stride());
                 mmpld::list_header src_header;
+				src_header.particles = 2;
                 src_header.vertex_type = src_view::vertex_traits::vertex_type;
                 src_header.colour_type = src_view::colour_traits::colour_type;
                 src_header.radius = 12.0f;
@@ -132,6 +135,7 @@ namespace test {
                 std::vector<std::uint8_t> src(2 * src_view::stride());
                 std::vector<std::uint8_t> dst(2 * dst_view::stride());
                 mmpld::list_header src_header;
+				src_header.particles = 2;
                 src_header.vertex_type = src_view::vertex_traits::vertex_type;
                 src_header.colour_type = src_view::colour_traits::colour_type;
                 src_header.radius = 12.0f;
@@ -176,6 +180,7 @@ namespace test {
                 std::vector<std::uint8_t> src(2 * src_view::stride());
                 std::vector<std::uint8_t> dst(2 * dst_view::stride());
                 mmpld::list_header src_header;
+				src_header.particles = 2;
                 src_header.vertex_type = src_view::vertex_traits::vertex_type;
                 src_header.colour_type = src_view::colour_traits::colour_type;
                 src_header.radius = 12.0f;
@@ -224,6 +229,7 @@ namespace test {
                 std::vector<std::uint8_t> src(2 * src_view::stride());
                 std::vector<std::uint8_t> dst(2 * dst_view::stride());
                 mmpld::list_header src_header;
+				src_header.particles = 2;
                 src_header.vertex_type = src_view::vertex_traits::vertex_type;
                 src_header.colour_type = src_view::colour_traits::colour_type;
                 src_header.radius = 12.0f;
@@ -273,6 +279,7 @@ namespace test {
                 std::vector<std::uint8_t> src(2 * src_view::stride());
                 std::vector<std::uint8_t> dst(2 * dst_view::stride());
                 mmpld::list_header src_header;
+				src_header.particles = 2;
                 src_header.vertex_type = src_view::vertex_traits::vertex_type;
                 src_header.colour_type = src_view::colour_traits::colour_type;
                 src_header.radius = 12.0f;
@@ -321,6 +328,7 @@ namespace test {
                 std::vector<std::uint8_t> src(2 * src_view::stride());
                 std::vector<std::uint8_t> dst(2 * dst_view::stride());
                 mmpld::list_header src_header;
+				src_header.particles = 2;
                 src_header.vertex_type = src_view::vertex_traits::vertex_type;
                 src_header.colour_type = src_view::colour_traits::colour_type;
                 src_header.radius = 12.0f;
@@ -371,6 +379,7 @@ namespace test {
                 std::vector<std::uint8_t> src(2 * src_view::stride());
                 std::vector<std::uint8_t> dst(2 * dst_view::stride());
                 mmpld::list_header src_header;
+				src_header.particles = 2;
                 src_header.vertex_type = src_view::vertex_traits::vertex_type;
                 src_header.colour_type = src_view::colour_traits::colour_type;
                 src_header.radius = 12.0f;
@@ -419,6 +428,7 @@ namespace test {
                 std::vector<std::uint8_t> src(2 * src_view::stride());
                 std::vector<std::uint8_t> dst(2 * dst_view::stride());
                 mmpld::list_header src_header;
+				src_header.particles = 2;
                 src_header.vertex_type = src_view::vertex_traits::vertex_type;
                 src_header.colour_type = src_view::colour_traits::colour_type;
                 src_header.radius = 12.0f;
