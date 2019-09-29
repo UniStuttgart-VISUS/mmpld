@@ -173,7 +173,7 @@ namespace mmpld {
     }
 
     /// <summary>
-    /// Reads an MMPLD list header fromt he current location in the stream.
+    /// Reads an MMPLD list header from the current location in the stream.
     /// </summary>
     /// <tparam name="T">The type of stream, which can be an STL stream or a
     /// file descriptor or <see cref="FILE" /> handle.</tparam>
@@ -186,6 +186,20 @@ namespace mmpld {
     template<class T>
     T& read_list_header(T& stream, const std::uint16_t fileVersion,
         list_header& header);
+
+    /// <summary>
+    /// Writes and MMPLD list header to the current location in the stream.
+    /// </summary>
+    /// <typeparam name="T">The character type used by the stream.</typeparam>
+    /// <param name="header">The header to be written.</param>
+    /// <param name="fileVersion">The MMPLD file version that is being written,
+    /// which causes the header to being layouted differently in the file.
+    /// </param>
+    /// <param name="stream">The stream to write to.</param>
+    /// <returns><paramref name="stream" />.</returns>
+    template<class T>
+    std::basic_ostream<T>& write_list_header(const list_header& header,
+        const std::uint16_t fileVersion, std::basic_ostream<T>& stream);
 
 } /* end namespace mmpld */
 
