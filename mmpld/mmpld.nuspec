@@ -7,7 +7,8 @@
     <authors>Christoph Müller</authors>
     <owners>mueller</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <license type="expression">MIT</license>
+    <!--<license type="expression">MIT</license>-->
+    <licenseUrl>https://github.com/UniStuttgart-VISUS/mmpld/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/UniStuttgart-VISUS/mmpld</projectUrl>
     <description>This library allows for processing and converting binary particle files used by the MegaMol framework.</description>
     <summary>A C++ header-only library for loading MegaMol's MMPLD particle files.</summary>

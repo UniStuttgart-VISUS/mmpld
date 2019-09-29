@@ -97,7 +97,7 @@ mmpld::file<HANDLE, TCHAR> file(_T("test.mmpld"));
 for (mmpld::file::frame_number_type f = 0; f < file.frames(); ++f) {
     file.open_frame(f);
 
-    for (auto l = 0; l < file.frame_header().lists; ++l)
+    for (auto l = 0; l < file.frame_header().lists; ++l) {
         mmpld::list_header listHeader;
         auto particles = file.read_particles(listHeader);
 
