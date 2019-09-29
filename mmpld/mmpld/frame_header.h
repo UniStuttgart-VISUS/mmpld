@@ -33,8 +33,8 @@ namespace mmpld {
     /// Reads the frame header (of the specified file version) from the current
     /// position in the file.
     /// </summary>
-    /// <tparam name="T">The type of stream, which can be an STL stream or a
-    /// file descriptor or <see cref="FILE" /> handle.</tparam>
+    /// <typeparam name="T">The type of stream, which can be an STL stream or a
+    /// file descriptor or <see cref="FILE" /> handle.</typeparam>
     /// <param name="stream">The stream to read from. The stream must be open
     /// and in binary mode and must point to the frame header.</param>
     /// <param name="header">Receives the frame header.</param>

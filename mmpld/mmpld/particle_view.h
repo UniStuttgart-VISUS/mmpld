@@ -24,8 +24,8 @@ namespace mmpld {
     /// equivalent of this class.</para>
     /// <para>Be aware that all pointer-based operations are unchecked!</para>
     /// </remarks>
-    /// <tparam name="T">The value type of the pointer to be used. This
-    /// parameter allows for controlling the const-ness of the view.</tparam>
+    /// <typeparam name="T">The value type of the pointer to be used. This
+    /// parameter allows for controlling the const-ness of the view.</typeparam>
     template<class T = const void> class particle_view {
 
     public:
@@ -119,8 +119,8 @@ namespace mmpld {
         /// <summary>
         /// Provide access to the first colour component if any.
         /// </summary>
-        /// <tparam name="Tp">The type to which the returned pointer should be
-        /// casted.</tparam>
+        /// <typeparam name="Tp">The type to which the returned pointer should be
+        /// casted.</typeparam>
         /// <returns>The first colour component or <c>nullptr</c>.</returns>
         template<class Tp> inline Tp *colour(void) {
             return reinterpret_cast<Tp *>(this->colour());
@@ -129,8 +129,8 @@ namespace mmpld {
         /// <summary>
         /// Provide access to the first colour component if any.
         /// </summary>
-        /// <tparam name="Tp">The <see cref="mmpld::colour_type" /> which
-        /// determines the type of the pointer being returned.</tparam>
+        /// <typeparam name="Tp">The <see cref="mmpld::colour_type" /> which
+        /// determines the type of the pointer being returned.</typeparam>
         /// <returns>The first colour component or <c>nullptr</c>.</returns>
         template<mmpld::colour_type Tp>
         const_compatible_type<typename mmpld::colour_traits<Tp>::value_type> *
@@ -174,8 +174,8 @@ namespace mmpld {
         /// <summary>
         /// Provide access to the first position component if any.
         /// </summary>
-        /// <tparam name="Tp">The type to which the returned pointer should be
-        /// casted.</tparam>
+        /// <typeparam name="Tp">The type to which the returned pointer should be
+        /// casted.</typeparam>
         /// <returns>The first position component or <c>nullptr</c>.</returns>
         template<class Tp> inline Tp *position(void) {
             return reinterpret_cast<Tp *>(this->position());
@@ -184,8 +184,8 @@ namespace mmpld {
         /// <summary>
         /// Provide access to the first position component if any.
         /// </summary>
-        /// <tparam name="Tp">The <see cref="mmpld::vertex_type" /> which
-        /// determines the type of the pointer being returned.</tparam>
+        /// <typeparam name="Tp">The <see cref="mmpld::vertex_type" /> which
+        /// determines the type of the pointer being returned.</typeparam>
         /// <returns>The first position component or <c>nullptr</c>.</returns>
         template<mmpld::vertex_type Tp>
         const_compatible_type<typename mmpld::vertex_traits<Tp>::value_type> *
@@ -212,8 +212,8 @@ namespace mmpld {
         /// <summary>
         /// Provide access to the radius if any.
         /// </summary>
-        /// <tparam name="Tp">The type to which the returned pointer should be
-        /// casted.</tparam>
+        /// <typeparam name="Tp">The type to which the returned pointer should be
+        /// casted.</typeparam>
         /// <returns>The radius or <c>nullptr</c>.</returns>
         template<class Tp> inline Tp *radius(void) {
             return reinterpret_cast<Tp *>(this->radius());
@@ -222,8 +222,8 @@ namespace mmpld {
         /// <summary>
         /// Provide access to the radius if any.
         /// </summary>
-        /// <tparam name="Tp">The <see cref="mmpld::vertex_type" /> which
-        /// determines the type of the pointer being returned.</tparam>
+        /// <typeparam name="Tp">The <see cref="mmpld::vertex_type" /> which
+        /// determines the type of the pointer being returned.</typeparam>
         /// <returns>The radius or <c>nullptr</c>.</returns>
         template<mmpld::vertex_type Tp>
         const_compatible_type<typename mmpld::vertex_traits<Tp>::value_type> *

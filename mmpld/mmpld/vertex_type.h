@@ -71,7 +71,7 @@ namespace detail {
     /// <summary>
     /// Convert the given vertex format to a human-readable representation.
     /// </summary>
-    /// <tparam name="C>The character type of the string to create.</tparam>
+    /// <typeparam name="C>The character type of the string to create.</typeparam>
     /// <param name="value">The value to be converted.</param>
     /// <returns>A string representation of <paramref name="value" />.</returns>
     template<class C> std::basic_string<C> to_string(const vertex_type value);
@@ -79,8 +79,8 @@ namespace detail {
     /// <summary>
     /// The vertex traits allow for compile-time reflection on the vertex type.
     /// </summary>
-    /// <tparam name="C">The <see cref="vertex_type" /> to be reflected.
-    /// </tparam>
+    /// <typeparam name="C">The <see cref="vertex_type" /> to be reflected.
+    /// </typeparam>
     template<vertex_type V> struct vertex_traits { };
 
     /// <summary>

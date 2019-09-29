@@ -26,8 +26,8 @@ namespace mmpld {
     /// this structure.</para>
     /// <para>Be aware that all pointer-based operations are unchecked!</para>
     /// </remarks>
-    /// <tparam name="V">The type of the positional data.</tparam>
-    /// <tparam name="C">The type of the colour data.</tparam>
+    /// <typeparam name="V">The type of the positional data.</typeparam>
+    /// <typeparam name="C">The type of the colour data.</typeparam>
     template<vertex_type V, colour_type C> struct particle_traits {
 
         /// <summary>

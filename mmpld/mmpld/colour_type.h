@@ -93,7 +93,8 @@ namespace detail {
     /// <summary>
     /// Convert the given colour type to a human-readable representation.
     /// </summary>
-    /// <tparam name="C>The character type of the string to create.</tparam>
+    /// <typeparam name="C>The character type of the string to create.
+    /// </typeparam>
     /// <param name="value">The value to be converted.</param>
     /// <returns>A string representation of <paramref name="value" />.</returns>
     template<class C> std::basic_string<C> to_string(const colour_type value);
@@ -101,8 +102,8 @@ namespace detail {
     /// <summary>
     /// The colour traits allow for compile-time reflection on the colour type.
     /// </summary>
-    /// <tparam name="C">The <see cref="colour_type" /> to be reflected.
-    /// </tparam>
+    /// <typeparam name="C">The <see cref="colour_type" /> to be reflected.
+    /// </typeparam>
     template<colour_type C> struct colour_traits { };
 
     /// <summary>

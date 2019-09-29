@@ -91,11 +91,11 @@ namespace mmpld {
     /// with and identical memory layout (that can be initialises with the same
     /// initialiser list) as output parameter.</para>
     /// </remarks>
-    /// <tparam name="T">An element in the input layout. This can be one of
+    /// <typeparam name="T">An element in the input layout. This can be one of
     /// <see cref="D3D10_INPUT_ELEMENT_DESC" />,
     /// <see cref="D3D11_INPUT_ELEMENT_DESC" />,
     /// <see cref="D3D12_INPUT_ELEMENT_DESC" /> or any compatible layout.
-    /// </tparam>
+    /// </typeparam>
     /// <param name="header">The list header to get the layout for.</param>
     /// <returns>A vector describing the input layout.</returns>
     /// <exception cref="std::runtime_error">If the particle list is not
@@ -111,9 +111,9 @@ namespace mmpld {
     /// Gets the offsets of the individual components of a particle in the
     /// given list.
     /// </summary>
-    /// <tparam name="T">The scalar type to express the offsets in. If this is
+    /// <typeparam name="T">The scalar type to express the offsets in. If this is
     /// a signed type, invalid offsets will be negative. Otherwise, the maximum
-    /// value of the type is used to express invalid offsets.</tparam>
+    /// value of the type is used to express invalid offsets.</typeparam>
     /// <param name="pos">Receives the offset of the position in bytes.</param>
     /// <param name="rad">Receives the offset of the radius in bytes.</param>
     /// <param name="col">Receives the offset of the colour in bytes.</param>
@@ -125,11 +125,11 @@ namespace mmpld {
     /// Retrieve the particle properties of the list described by the given
     /// header.
     /// </summary>
-    /// <tparam name="T">The type to return the bitmask as. This type must be
+    /// <typeparam name="T">The type to return the bitmask as. This type must be
     /// at least as wide as <see cref="mmpld::particle_properties" />. Using a
     /// template here allows the caller to decide whether the return value
     /// should by the <c>enum class</c> used by the library or another type
-    /// which can be used to perform computations.</tparam>
+    /// which can be used to perform computations.</typeparam>
     /// <param name="header">The list header to get the properties for.</param>
     /// <returns>A bitmask holding the particle properties.</returns>
     template<class T> T get_properties(const list_header& header);
@@ -138,9 +138,9 @@ namespace mmpld {
     /// Compute the stride of the particles with the specified vertex and colour
     /// types.
     /// </summary>
-    /// <tparam name="T">The scalar type to express the stride in. This is
+    /// <typeparam name="T">The scalar type to express the stride in. This is
     /// usually <c>size_t</c> when working on the CPU or <c>UINT</c> when
-    /// working with Direct3D.</tparam>
+    /// working with Direct3D.</typeparam>
     /// <param name="vertexType">The type of the positional data.</param>
     /// <param name="colourType">The type of the colour data.</param>
     /// <returns>The stide of the particles in bytes.</returns>
@@ -151,9 +151,9 @@ namespace mmpld {
     /// Compute the stride of the particles in the list described by the given
     /// header.
     /// </summary>
-    /// <tparam name="T">The scalar type to express the stride in. This is
+    /// <typeparam name="T">The scalar type to express the stride in. This is
     /// usually <c>size_t</c> when working on the CPU or <c>UINT</c> when
-    /// working with Direct3D.</tparam>
+    /// working with Direct3D.</typeparam>
     /// <param name="header">The list header to get the stride for.</param>
     /// <returns>The stide of the particles in bytes.</returns>
     template<class T> inline T get_stride(const list_header& header) {
@@ -163,9 +163,9 @@ namespace mmpld {
     /// <summary>
     /// Compute the size of the raw particle data in the list.
     /// </summary>
-    /// <tparam name="T">The scalar type to express the size in. This is
+    /// <typeparam name="T">The scalar type to express the size in. This is
     /// usually <c>size_t</c> when working on the CPU or <c>UINT</c> when
-    /// working with Direct3D.</tparam>
+    /// working with Direct3D.</typeparam>
     /// <param name="header">The list header to get the size for.</param>
     /// <returns>The total size of the particles in bytes.</returns>
     template<class T> inline T get_size(const list_header& header) {
@@ -175,8 +175,8 @@ namespace mmpld {
     /// <summary>
     /// Reads an MMPLD list header from the current location in the stream.
     /// </summary>
-    /// <tparam name="T">The type of stream, which can be an STL stream or a
-    /// file descriptor or <see cref="FILE" /> handle.</tparam>
+    /// <typeparam name="T">The type of stream, which can be an STL stream or a
+    /// file descriptor or <see cref="FILE" /> handle.</typeparam>
     /// <param name="stream">The stream to read the header from. The stream must
     /// be open and in binary mode.</param>
     /// <param name="fileVersion">The version of the MMPLD file, which is

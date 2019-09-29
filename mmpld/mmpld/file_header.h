@@ -79,8 +79,8 @@ namespace mmpld {
     /// Reads the MMPLD header and the seek table from the given stream (at its
     /// current location).
     /// </summary>
-    /// <tparam name="T">The type of stream, which can be an STL stream or a
-    /// file descriptor or <see cref="FILE" /> handle.</tparam>
+    /// <typeparam name="T">The type of stream, which can be an STL stream or a
+    /// file descriptor or <see cref="FILE" /> handle.</typeparam>
     /// <param name="stream">The stream to read the header from. The stream must
     /// be open and in binary mode.</param>
     /// <param name="header">Receives the header.</param>
