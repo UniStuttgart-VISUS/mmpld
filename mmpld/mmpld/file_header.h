@@ -103,6 +103,35 @@ namespace mmpld {
         minor = v.rem;
     }
 
+    /// <summary>
+    /// Writes the given MMPLD file header to the current location in the given
+    /// stream.
+    /// </summary>
+    /// <typeparam name="T">The type of stream, which can be an STL stream or a
+    /// file descriptor or <see cref="FILE" /> handle.</typeparam>
+    /// <param name="header">The file header to be written.</param>
+    /// <param name="stream">The stream to read the header from. The stream must
+    /// be open and in binary mode.</param>
+    /// <returns><paramref name="stream" />.</returns>
+    template<class T>
+    T& write_file_header(const file_header& header, T& stream);
+
+    /// <summary>
+    /// Writes the given MMPLD file header and seek table to the current
+    /// location in the given stream.
+    /// </summary>
+    /// <typeparam name="T">The type of stream, which can be an STL stream or a
+    /// file descriptor or <see cref="FILE" /> handle.</typeparam>
+    /// <param name="header">The file header to be written.</param>
+    /// <param name="seek_table">The seek table to be added after the header.
+    /// </param>
+    /// <param name="stream">The stream to read the header from. The stream must
+    /// be open and in binary mode.</param>
+    /// <returns><paramref name="stream" />.</returns>
+    template<class T>
+    T& write_file_header(const file_header& header,
+        const seek_table& seek_table, T& stream);
+
 } /* end namespace mmpld */
 
 #include "mmpld/file_header.inl"

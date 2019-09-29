@@ -239,20 +239,20 @@ T& mmpld::read_list_header(T& stream, const std::uint16_t fileVersion,
  * mmpld::write_list_header
  */
 template<class T>
-std::basic_ostream<T>& mmpld::write_list_header(const list_header& header,
-        const std::uint16_t fileVersion, std::basic_ostream<T>& stream) {
+T& mmpld::write_list_header(const list_header& header,
+        const std::uint16_t fileVersion, T& stream) {
     typedef typename std::basic_ostream<T>::char_type char_type;
     static const auto MAX_COLOUR = static_cast<float>(
         (std::numeric_limits<std::uint8_t>::max)());
 
-    stream << header.vertex_type;
-    stream << header.colour_type;
+    detail::write(header.vertex_type, stream);
+    detail::write(header.colour_type, stream);
 
     switch (header.vertex_type) {
         case vertex_type::float_xyz:
         case vertex_type::short_xyz:
         case vertex_type::double_xyz:
-            stream << header.radius;
+            detail::write(header.radius, stream);
             break;
 
         default:
@@ -263,8 +263,8 @@ std::basic_ostream<T>& mmpld::write_list_header(const list_header& header,
     switch (header.colour_type) {
         case mmpld::colour_type::none:
             for (size_t i = 0; i < 4; ++i) {
-                stream << static_cast<std::uint8_t>(header.colour[i]
-                    * MAX_COLOUR);
+                detail::write(static_cast<std::uint8_t>(
+                    header.colour[i] * MAX_COLOUR), stream);
             }
             break;
 
@@ -273,8 +273,8 @@ std::basic_ostream<T>& mmpld::write_list_header(const list_header& header,
             // 32-bit and 64-bit intensity values both use 32-bit ranges. This
             // is a specification bug of MMPLD 1.3, which we need to keep for
             // compatibility with existing files.
-            stream << header.min_intensity;
-            stream << header.max_intensity;
+            detail::write(header.min_intensity, stream);
+            detail::write(header.max_intensity, stream);
             break;
 
         default:
@@ -282,14 +282,13 @@ std::basic_ostream<T>& mmpld::write_list_header(const list_header& header,
             break;
     }
 
-    stream.write(reinterpret_cast<const char_type *>(&header + 1),
-        header.particles / sizeof(char_type));
+    detail::write(header.particles, stream);
 
     if (fileVersion == 103) {
         // TODO: I think it does not make sense testing for equality here, but
         // this should be forward-compatible (>= 103).
         for (auto b : header.bounding_box) {
-            stream << b;
+            detail::write(b, stream);
         }
     }
 
