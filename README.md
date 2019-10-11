@@ -81,6 +81,46 @@ for (decltype(fileHeader.frames) i = 0; i < fileHeader.frames; ++i) {
 ::CloseHandle(hFile);
 ```
 
+Starting with release 1.3 of the library, the low-level API also includes support for writing certain parts of an MMPLD file, which is illustrated by the following sample:
+
+```C++
+#include "mmpld.h"
+
+std::ofstream file("out.mmpld", std::ios::binary | std::ios::trunc);
+
+/* Describe the file and write its header. */
+mmpld::file_header fileHeader;
+mmpld::seek_table seekTable;
+// Fill the file header and the seek table. If you do not know the size of the
+// particle lists in advance, there is another variant of write_file_header
+// that writes only the header. You need to reserve the size of the seek table
+// (number of frames * sizeof(seek_table::value_type) after the header though
+// and write it at the end.
+
+mmpld::write_file_header(fileHeader, seekTable, file);
+
+/* Prepare each frame and write it to the file. */
+for (std::size_t f = 0; f < seekTable.size(); ++f) {
+    mmpld::frame_header frameHeader;
+    // Fill the frame header.
+    
+    file.seekp(seekTable[f], std::ios::beg);
+    mmpld::write_frame_header(frameHeader, fileHeader.version, file);
+    
+    /* Write all particle lists of the frame. */
+    for (decltype(frameHeader.lists) l = 0; l < frameHeader.lists; ++l) {
+         mmpld::list_header listHeader;
+         // Fill the list header.
+                    
+         mmpld::write_list_header(listHeader, fileHeader.version, file);
+         // Append the actual particles here.
+    }
+}
+
+file.close();
+```
+
+
 ## The mmpld::file class
 
 The `mmpld::file` class is a stateful wrapper around the low-level API, which allows you to parse through an MMPLD file one frame after another. The `mmpld::file` class is responsible for all I/O operations and keeps track of the seek table and the file pointer for you. The following code, which does roughly the same as the low-level API sample above, illustrates how to iterate over all particles in a file using this abstraction layer:
