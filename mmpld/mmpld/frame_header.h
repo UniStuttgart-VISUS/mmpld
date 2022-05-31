@@ -33,8 +33,8 @@ namespace mmpld {
     /// Reads the frame header (of the specified file version) from the current
     /// position in the file.
     /// </summary>
-    /// <tparam name="T">The type of stream, which can be an STL stream or a
-    /// file descriptor or <see cref="FILE" /> handle.</tparam>
+    /// <typeparam name="T">The type of stream, which can be an STL stream or a
+    /// file descriptor or <see cref="FILE" /> handle.</typeparam>
     /// <param name="stream">The stream to read from. The stream must be open
     /// and in binary mode and must point to the frame header.</param>
     /// <param name="header">Receives the frame header.</param>
@@ -43,6 +43,21 @@ namespace mmpld {
     /// <returns><paramref name="stream" />.</returns>
     template<class T> T& read_frame_header(T& stream, const std::uint16_t version,
         frame_header& header);
+
+    /// <summary>
+    /// Writes the given frame header assuming the given file format version to
+    /// the current position in the file.
+    /// </summary>
+    /// <typeparam name="T">The type of stream, which can be an STL stream or a
+    /// file descriptor or <see cref="FILE" /> handle.</typeparam>
+    /// <param name="header">The frame header to be written.</param>
+    /// <param name="version">The file format version obtained from the
+    /// <see cref="mmpld::file_header" />.</param>
+    /// <param name="stream">The stream to read from. The stream must be open
+    /// and in binary mode and must point to the frame header.</param>
+    /// <returns><paramref name="stream" />.</returns>
+    template<class T> T& write_frame_header(const frame_header& header,
+        const std::uint16_t version, T& stream);
 
 } /* end namespace mmpld */
 

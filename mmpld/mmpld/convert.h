@@ -20,10 +20,10 @@ namespace mmpld {
     /// Convert <paramref name="cnt" /> particles of the type described in
     /// <paramref name="header" /> starting at <paramref name="src" /> into the
     /// type defined by the <see cref="mmpld::particle_view" />
-    /// <tparamref name="T" />.
+    /// <typeparamref name="T" />.
     /// </summary>
-    /// <tparam name="T">A particle view describing the desired output type.
-    /// </tparam>
+    /// <typeparam name="T">A particle view describing the desired output type.
+    /// </typeparam>
     /// <param name="src">A pointer to the source particles. Note that this must
     /// not necessarily the begin of the list, but could be any of the particles
     /// in the list provided that at least <paramref name="cnt" /> valid
@@ -34,7 +34,7 @@ namespace mmpld {
     /// per-vertex colour data.
     /// </param>
     /// <param name="void">A pointer to the destination buffer, which must be
-    /// at least <paramref name="cnt" /> * <tparamref name="T">::size bytes
+    /// at least <paramref name="cnt" /> * <typeparamref name="T">::size bytes
     /// wide.</param>
     /// <param name="cnt">The number of particles to be converted. If this is
     /// larger than the list size in <paramref name="header" />, the conversion

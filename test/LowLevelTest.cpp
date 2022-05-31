@@ -24,7 +24,7 @@ namespace test {
                 std::vector<std::uint8_t> src(2 * src_view::stride());
                 std::vector<std::uint8_t> dst(2 * dst_view::stride());
                 mmpld::list_header src_header;
-				src_header.particles = 2;
+                src_header.particles = 2;
                 src_header.vertex_type = src_view::vertex_traits::vertex_type;
                 src_header.colour_type = src_view::colour_traits::colour_type;
                 src_header.radius = 12.0f;
@@ -57,7 +57,7 @@ namespace test {
                 std::vector<std::uint8_t> src(2 * src_view::stride());
                 std::vector<std::uint8_t> dst(2 * dst_view::stride());
                 mmpld::list_header src_header;
-				src_header.particles = 2;
+                src_header.particles = 2;
                 src_header.vertex_type = src_view::vertex_traits::vertex_type;
                 src_header.colour_type = src_view::colour_traits::colour_type;
                 src_header.radius = 12.0f;
@@ -96,7 +96,7 @@ namespace test {
                 std::vector<std::uint8_t> src(2 * src_view::stride());
                 std::vector<std::uint8_t> dst(2 * dst_view::stride());
                 mmpld::list_header src_header;
-				src_header.particles = 2;
+                src_header.particles = 2;
                 src_header.vertex_type = src_view::vertex_traits::vertex_type;
                 src_header.colour_type = src_view::colour_traits::colour_type;
                 src_header.radius = 12.0f;
@@ -135,7 +135,7 @@ namespace test {
                 std::vector<std::uint8_t> src(2 * src_view::stride());
                 std::vector<std::uint8_t> dst(2 * dst_view::stride());
                 mmpld::list_header src_header;
-				src_header.particles = 2;
+                src_header.particles = 2;
                 src_header.vertex_type = src_view::vertex_traits::vertex_type;
                 src_header.colour_type = src_view::colour_traits::colour_type;
                 src_header.radius = 12.0f;
@@ -180,7 +180,7 @@ namespace test {
                 std::vector<std::uint8_t> src(2 * src_view::stride());
                 std::vector<std::uint8_t> dst(2 * dst_view::stride());
                 mmpld::list_header src_header;
-				src_header.particles = 2;
+                src_header.particles = 2;
                 src_header.vertex_type = src_view::vertex_traits::vertex_type;
                 src_header.colour_type = src_view::colour_traits::colour_type;
                 src_header.radius = 12.0f;
@@ -229,7 +229,7 @@ namespace test {
                 std::vector<std::uint8_t> src(2 * src_view::stride());
                 std::vector<std::uint8_t> dst(2 * dst_view::stride());
                 mmpld::list_header src_header;
-				src_header.particles = 2;
+                src_header.particles = 2;
                 src_header.vertex_type = src_view::vertex_traits::vertex_type;
                 src_header.colour_type = src_view::colour_traits::colour_type;
                 src_header.radius = 12.0f;
@@ -279,7 +279,7 @@ namespace test {
                 std::vector<std::uint8_t> src(2 * src_view::stride());
                 std::vector<std::uint8_t> dst(2 * dst_view::stride());
                 mmpld::list_header src_header;
-				src_header.particles = 2;
+                src_header.particles = 2;
                 src_header.vertex_type = src_view::vertex_traits::vertex_type;
                 src_header.colour_type = src_view::colour_traits::colour_type;
                 src_header.radius = 12.0f;
@@ -328,7 +328,7 @@ namespace test {
                 std::vector<std::uint8_t> src(2 * src_view::stride());
                 std::vector<std::uint8_t> dst(2 * dst_view::stride());
                 mmpld::list_header src_header;
-				src_header.particles = 2;
+                src_header.particles = 2;
                 src_header.vertex_type = src_view::vertex_traits::vertex_type;
                 src_header.colour_type = src_view::colour_traits::colour_type;
                 src_header.radius = 12.0f;
@@ -379,7 +379,7 @@ namespace test {
                 std::vector<std::uint8_t> src(2 * src_view::stride());
                 std::vector<std::uint8_t> dst(2 * dst_view::stride());
                 mmpld::list_header src_header;
-				src_header.particles = 2;
+                src_header.particles = 2;
                 src_header.vertex_type = src_view::vertex_traits::vertex_type;
                 src_header.colour_type = src_view::colour_traits::colour_type;
                 src_header.radius = 12.0f;
@@ -428,7 +428,7 @@ namespace test {
                 std::vector<std::uint8_t> src(2 * src_view::stride());
                 std::vector<std::uint8_t> dst(2 * dst_view::stride());
                 mmpld::list_header src_header;
-				src_header.particles = 2;
+                src_header.particles = 2;
                 src_header.vertex_type = src_view::vertex_traits::vertex_type;
                 src_header.colour_type = src_view::colour_traits::colour_type;
                 src_header.radius = 12.0f;
@@ -1332,7 +1332,99 @@ namespace test {
             Assert::AreEqual(size_t(24), mmpld::vertex_traits<mmpld::vertex_type::double_xyz>::size, L"Size of vertex_type::double_xyz", LINE_INFO());
         }
 
+        TEST_METHOD(TestWriteRoundtrip) {
+            this->testRoundTrip<std::ifstream, std::ofstream>("test_xyz_float_int_float.mmpld");
+            this->testRoundTrip<FILE *, FILE *>("test_xyz_float_none.mmpld");
+            this->testRoundTrip<int, int>("test_xyz_float_rgb_float.mmpld");
+            this->testRoundTrip<HANDLE, HANDLE>("test_xyz_float_rgba_byte.mmpld");
+            this->testRoundTrip<FILE *, FILE *>("test_xyz_float_rgba_float.mmpld");
+            this->testRoundTrip<int, int>("test_xyzr_float_int_float.mmpld");
+            this->testRoundTrip<HANDLE, FILE *>("test_xyzr_float_none.mmpld");
+            this->testRoundTrip<HANDLE, int>("test_xyzr_float_rgb_float.mmpld");
+            this->testRoundTrip<HANDLE, int>("test_xyzr_float_rgba_byte.mmpld");
+            this->testRoundTrip<HANDLE, HANDLE>("test_xyzr_float_rgba_float.mmpld");
+            this->testRoundTrip<HANDLE, FILE *>("test_xyz_double_int_double.mmpld");
+            this->testRoundTrip<HANDLE, std::ofstream>("test_xyz_double_int_float.mmpld");
+            this->testRoundTrip<HANDLE, int>("test_xyz_double_none.mmpld");
+            this->testRoundTrip<HANDLE, HANDLE>("test_xyz_double_rgb_float.mmpld");
+            this->testRoundTrip<HANDLE, HANDLE>("test_xyz_double_rgba_byte.mmpld");
+            this->testRoundTrip<HANDLE, FILE *>("test_xyz_double_rgba_float.mmpld");
+            this->testRoundTrip<HANDLE, int>("test_xyz_double_rgba_short.mmpld");
+        }
+
     private:
+
+        template<class F, class G> void testRoundTrip(const char *path) {
+            typedef F ifile_type;
+            typedef G ofile_type;
+            typedef mmpld::detail::io_traits<F, char> iio_type;
+            typedef mmpld::detail::io_traits<G, char> oio_type;
+
+            static const auto TEST_FILE = "_test_roundtrip.mmpld";
+
+            mmpld::file_header expectedFileHeader, roundtripFileHeader;
+            std::vector<mmpld::frame_header> expectedFrameHeader;
+            mmpld::frame_header roundtripFrameHeader;
+            std::vector<mmpld::list_header> expectedListHeader;
+            mmpld::list_header roundtripListHeader;
+            mmpld::seek_table expectedSeekTable, roundtripSeekTable;
+
+            {
+                ifile_type inFile;
+                iio_type::open_read(path, inFile);
+
+                ofile_type outFile;
+                oio_type::open_write(TEST_FILE, outFile);
+
+                mmpld::read_file_header(inFile, expectedFileHeader, expectedSeekTable);
+                Assert::AreEqual(std::uint32_t(1), expectedFileHeader.frames, L"Test file has one frame.", LINE_INFO());
+                mmpld::write_file_header(expectedFileHeader, expectedSeekTable, outFile);
+
+                for (decltype(expectedFileHeader.frames) f = 0; f < expectedFileHeader.frames; ++f) {
+                    iio_type::seek(inFile, static_cast<std::size_t>(expectedSeekTable[f]));
+                    expectedFrameHeader.emplace_back();
+                    mmpld::read_frame_header(inFile, expectedFileHeader.version, expectedFrameHeader.back());
+
+                    oio_type::seek(outFile, static_cast<std::size_t>(expectedSeekTable[f]));
+                    mmpld::write_frame_header(expectedFrameHeader.back(), expectedFileHeader.version, outFile);
+
+                    for (decltype(expectedFrameHeader.back().lists) l = 0; l < expectedFrameHeader.back().lists; ++l) {
+                        expectedListHeader.emplace_back();
+                        mmpld::read_list_header(inFile, expectedFileHeader.version, expectedListHeader.back());
+                        iio_type::seek(inFile, iio_type::tell(inFile) + mmpld::get_size<iio_type::size_type>(expectedListHeader.back()));
+                        mmpld::write_list_header(expectedListHeader.back(), expectedFileHeader.version, outFile);
+                        oio_type::seek(outFile, oio_type::tell(outFile) + mmpld::get_size<oio_type::size_type>(expectedListHeader.back()));
+                    }
+                }
+
+                iio_type::close(inFile);
+                oio_type::close(outFile);
+            }
+
+            {
+                ifile_type hFile;
+                iio_type::open_read(TEST_FILE, hFile);
+
+                mmpld::read_file_header(hFile, roundtripFileHeader, roundtripSeekTable);
+                Assert::AreEqual(0, ::memcmp(&expectedFileHeader, &roundtripFileHeader, sizeof(expectedFileHeader)), L"File headers are identical", LINE_INFO());
+
+                auto el = 0;
+                for (decltype(expectedFileHeader.frames) f = 0; f < expectedFileHeader.frames; ++f) {
+                    iio_type::seek(hFile, static_cast<std::size_t>(roundtripSeekTable[f]));
+                    mmpld::read_frame_header(hFile, roundtripFileHeader.version, roundtripFrameHeader);
+                    Assert::AreEqual(0, ::memcmp(&expectedFrameHeader[f], &roundtripFrameHeader, sizeof(roundtripFrameHeader)), L"Frame headers are identical", LINE_INFO());
+
+                    for (decltype(roundtripFrameHeader.lists) l = 0; l < roundtripFrameHeader.lists; ++l) {
+                        mmpld::read_list_header(hFile, roundtripFileHeader.version, roundtripListHeader);
+                        iio_type::seek(hFile, iio_type::tell(hFile) + mmpld::get_size<iio_type::size_type>(expectedListHeader[el]));
+                        Assert::AreEqual(0, ::memcmp(&expectedListHeader[el], &roundtripListHeader, sizeof(roundtripListHeader)), L"List headers are identical", LINE_INFO());
+                        ++el;
+                    }
+                }
+
+                iio_type::close(hFile);
+            }
+        }
 
         template<class F, class C> mmpld::list_header testLowLevelSingleList(const C *path) {
             // Test for old format with only one particle list.
@@ -1347,7 +1439,7 @@ namespace test {
 
             //Assert::ExpectException([&hFile]() { io_type::open(nullptr, hFile); }, L"Opening nullptr raises exception.");
 
-            io_type::open(path, hFile);
+            io_type::open_read(path, hFile);
 
             mmpld::read_file_header(hFile, fileHeader, seekTable);
             Assert::AreNotEqual(int(mmpld::make_version(1, 1)), int(fileHeader.version), L"MMPLD version is not 1.1.", LINE_INFO());
@@ -1360,6 +1452,8 @@ namespace test {
 
             mmpld::read_list_header(hFile, fileHeader.version, listHeader);
             Assert::AreEqual(std::uint64_t(4), listHeader.particles, L"List holds four particles.", LINE_INFO());
+
+            io_type::close(hFile);
 
             return listHeader;
         }
@@ -1376,7 +1470,7 @@ namespace test {
             mmpld::list_header retval;
             mmpld::seek_table seekTable;
 
-            io_type::open(path, hFile);
+            io_type::open_read(path, hFile);
 
             mmpld::read_file_header(hFile, fileHeader, seekTable);
             Assert::AreNotEqual(int(mmpld::make_version(1, 1)), int(fileHeader.version), L"MMPLD version is not 1.1.", LINE_INFO());
@@ -1403,6 +1497,8 @@ namespace test {
             mmpld::read_list_header(hFile, fileHeader.version, listHeader);
             Assert::AreEqual(std::uint64_t(5), listHeader.particles, L"Fourth list holds five particles.", LINE_INFO());
             io_type::seek(hFile, io_type::tell(hFile) + mmpld::get_size<io_type::size_type>(listHeader));
+
+            io_type::close(hFile);
 
             return retval;
         }

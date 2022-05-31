@@ -19,8 +19,8 @@ namespace detail {
     /// for an enumeration type <c>et</c> like this
     /// <c>template<et... V> using et_list_t = enum_dispatch_list<et, V...>;</c>
     /// </remarks>
-    /// <tparam name="E">The type of the enumeration.</tparam>
-    /// <tparam name="V">The enumeration values.</tparam>
+    /// <typeparam name="E">The type of the enumeration.</typeparam>
+    /// <typeparam name="V">The enumeration values.</typeparam>
     template<class E, E... V> struct enum_dispatch_list { };
 
 } /* end namespace detail */

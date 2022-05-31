@@ -12,7 +12,7 @@ template<class F, class C> mmpld::file<F, C>::file(const char_type *path) {
     detail::zero_memory(this->_frame_header);
 
     // Open the file and read the header.
-    io_traits_type::open(path, this->_file);
+    io_traits_type::open_read(path, this->_file);
     read_file_header(this->_file, this->_file_header, this->_seek_table);
 
     // Read the first frame.

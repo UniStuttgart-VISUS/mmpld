@@ -18,11 +18,11 @@ namespace mmpld {
     /// <summary>
     /// Representation of an MMPLD file.
     /// </summary>
-    /// <tparam name="F">The type of the file stream to read. This can be either
+    /// <typeparam name="F">The type of the file stream to read. This can be either
     /// an <c>std::istream</c>, a file descriptor or a <c>FILE</c> handle.
-    /// </tparam>
-    /// <tparam name="C">The character type for strings, which defaults to
-    /// <c>char</c>.</tparam>
+    /// </typeparam>
+    /// <typeparam name="C">The character type for strings, which defaults to
+    /// <c>char</c>.</typeparam>
     template<class F, class C = char> class file {
 
     public:

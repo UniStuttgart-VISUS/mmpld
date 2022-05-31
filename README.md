@@ -1,6 +1,7 @@
 # mmpld
 
 [![Build Status](https://visualisierungsinstitut.visualstudio.com/mmpld/_apis/build/status/UniStuttgart-VISUS.mmpld?branchName=master)](https://visualisierungsinstitut.visualstudio.com/mmpld/_build/latest?definitionId=1&branchName=master)
+[![MMPLD Version](https://buildstats.info/nuget/mmpld)](https://www.nuget.org/packages/mmpld)
 
 This is a C++ header-only library for loading MegaMol's MMPLD particle files.
 
@@ -80,6 +81,46 @@ for (decltype(fileHeader.frames) i = 0; i < fileHeader.frames; ++i) {
 
 ::CloseHandle(hFile);
 ```
+
+Starting with release 1.3 of the library, the low-level API also includes support for writing certain parts of an MMPLD file, which is illustrated by the following sample:
+
+```C++
+#include "mmpld.h"
+
+std::ofstream file("out.mmpld", std::ios::binary | std::ios::trunc);
+
+/* Describe the file and write its header. */
+mmpld::file_header fileHeader;
+mmpld::seek_table seekTable;
+// Fill the file header and the seek table. If you do not know the size of the
+// particle lists in advance, there is another variant of write_file_header
+// that writes only the header. You need to reserve the size of the seek table
+// (number of frames * sizeof(seek_table::value_type) after the header though
+// and write it at the end.
+
+mmpld::write_file_header(fileHeader, seekTable, file);
+
+/* Prepare each frame and write it to the file. */
+for (std::size_t f = 0; f < seekTable.size(); ++f) {
+    mmpld::frame_header frameHeader;
+    // Fill the frame header.
+    
+    file.seekp(seekTable[f], std::ios::beg);
+    mmpld::write_frame_header(frameHeader, fileHeader.version, file);
+    
+    /* Write all particle lists of the frame. */
+    for (decltype(frameHeader.lists) l = 0; l < frameHeader.lists; ++l) {
+         mmpld::list_header listHeader;
+         // Fill the list header.
+                    
+         mmpld::write_list_header(listHeader, fileHeader.version, file);
+         // Append the actual particles here.
+    }
+}
+
+file.close();
+```
+
 
 ## The mmpld::file class
 

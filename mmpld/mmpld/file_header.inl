@@ -29,3 +29,29 @@ template<class T> T& mmpld::read_file_header(T& stream, file_header& header,
 
     return stream;
 }
+
+
+/*
+ * mmpld::write_file_header
+ */
+template<class T>
+T& mmpld::write_file_header(const file_header& header, T& stream) {
+    detail::write(header, stream);
+    return stream;
+}
+
+/*
+ * mmpld::write_file_header
+ */
+template<class T>
+T& mmpld::write_file_header(const file_header& header,
+        const seek_table& seek_table, T& stream) {
+    write_file_header(header, stream);
+
+    for (decltype(header.frames) i = 0; i < header.frames; ++i) {
+        detail::write(seek_table[i], stream);
+    }
+
+    return stream;
+}
+
