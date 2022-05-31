@@ -1,8 +1,8 @@
-/// <copyright file="enum_dispatch_list.h" company="Visualisierungsinstitut der Universität Stuttgart">
-/// Copyright © 2018 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
-/// Copyright © 2016 - 2018 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
-/// </copyright>
-/// <author>Christoph Müller</author>
+// <copyright file="enum_dispatch_list.h" company="Visualisierungsinstitut der Universität Stuttgart">
+// Copyright © 2018 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+// Copyright © 2016 - 2018 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+// </copyright>
+// <author>Christoph Müller</author>
 
 #pragma once
 

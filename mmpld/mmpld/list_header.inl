@@ -1,8 +1,8 @@
-/// <copyright file="list_header.inl" company="Visualisierungsinstitut der Universität Stuttgart">
-/// Copyright © 2018 - 2019 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
-/// Copyright © 2017 SFB-TRR 161. Alle Rechte vorbehalten.
-/// </copyright>
-/// <author>Christoph Müller</author>
+// <copyright file="list_header.inl" company="Visualisierungsinstitut der Universität Stuttgart">
+// Copyright © 2018 - 2022 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+// Copyright © 2017 SFB-TRR 161. Alle Rechte vorbehalten.
+// </copyright>
+// <author>Christoph Müller</author>
 
 
 #if defined(MMPLD_WITH_DIRECT3D)
@@ -18,7 +18,8 @@ std::vector<T> mmpld::get_input_layout(const list_header& header) {
     detail::zero_memory(element);
     element.SemanticName = "POSITION";
     element.AlignedByteOffset = offset;
-    element.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+    // Note: D3D1{0, 1, 2}_INPUT_PER_VERTEX_DATA is zero.
+    //element.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 
     switch (header.vertex_type) {
         case vertex_type::float_xyz:
@@ -41,7 +42,8 @@ std::vector<T> mmpld::get_input_layout(const list_header& header) {
     detail::zero_memory(element);
     element.SemanticName = "COLOR";
     element.AlignedByteOffset = offset;
-    element.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
+    // Note: D3D1{0, 1, 2}_INPUT_PER_VERTEX_DATA is zero.
+    //element.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
 
     switch (header.colour_type) {
         case colour_type::intensity:
@@ -73,7 +75,7 @@ std::vector<T> mmpld::get_input_layout(const list_header& header) {
                 "incompatible with Direct3D alignment requirements.");
     }
 
-    return std::move(retval);
+    return retval;
 }
 #endif /* defined(MMPLD_WITH_DIRECT3D) */
 

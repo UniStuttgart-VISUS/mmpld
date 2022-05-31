@@ -1,7 +1,7 @@
-/// <copyright file="file.inl" company="Visualisierungsinstitut der Universität Stuttgart">
-/// Copyright © 2018 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
-/// </copyright>
-/// <author>Christoph Müller</author>
+// <copyright file="file.inl" company="Visualisierungsinstitut der Universität Stuttgart">
+// Copyright © 2018 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+// </copyright>
+// <author>Christoph Müller</author>
 
 
 /*
@@ -51,7 +51,7 @@ void mmpld::file<F, C>::open_frame(const frame_number_type frame) {
 template<class F, class C>
 mmpld::cluster_info mmpld::file<F, C>::read_cluster_info(void) {
     if (this->_file_header.version == mmpld::make_version(1, 1)) {
-        return std::move(mmpld::read_cluster_info(this->_file));
+        return mmpld::read_cluster_info(this->_file);
     } else {
         static const cluster_info empty;
         return empty;

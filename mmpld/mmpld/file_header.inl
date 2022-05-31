@@ -1,8 +1,8 @@
-/// <copyright file="file_header.inl" company="Visualisierungsinstitut der Universität Stuttgart">
-/// Copyright © 2018 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
-/// Copyright © 2017 SFB-TRR 161. Alle Rechte vorbehalten.
-/// </copyright>
-/// <author>Christoph Müller</author>
+// <copyright file="file_header.inl" company="Visualisierungsinstitut der Universität Stuttgart">
+// Copyright © 2018 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+// Copyright © 2017 SFB-TRR 161. Alle Rechte vorbehalten.
+// </copyright>
+// <author>Christoph Müller</author>
 
 
 /*
