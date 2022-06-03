@@ -1204,17 +1204,430 @@ namespace test {
                 src_view::position(src.data() + src_view::stride())[2] = 6.0f;
                 *src_view::colour(src.data() + src_view::stride()) = 1.0f;
 
-
-
-
-
-
-                auto cnt = mmpld::convert<dst_view>(src.data(), src_header, dst.data(), 2);
-                Assert::AreEqual(size_t(2), cnt, L"All particles have been converted.", LINE_INFO());
+                auto destination = mmpld::make_particle_view(dst_view::vertex_type(), dst_view::colour_type(), dst.data());
+                auto cnt = mmpld::convert(src.data(), src_header, destination, 2);
+                Assert::AreEqual(std::size_t(2), cnt, L"All particles have been converted.", LINE_INFO());
 
                 for (size_t i = 0, end = src.size(); i < end; ++i) {
                     Assert::AreEqual(src[i], dst[i], L"Particle byte has been copied.", LINE_INFO());
                 }
+            }
+
+            {
+                typedef mmpld::particle_traits<mmpld::vertex_type::float_xyz, mmpld::colour_type::intensity> src_view;
+                typedef mmpld::particle_traits<mmpld::vertex_type::short_xyz, mmpld::colour_type::intensity> dst_view;
+                std::vector<std::uint8_t> src(2 * src_view::stride());
+                std::vector<std::uint8_t> dst(2 * dst_view::stride());
+                mmpld::list_header src_header;
+                src_header.particles = 2;
+                src_header.vertex_type = src_view::vertex_traits::value;
+                src_header.colour_type = src_view::colour_traits::colour_type;
+                src_header.radius = 12.0f;
+                src_header.colour[0] = 0.7f;
+                src_header.colour[1] = 0.8f;
+                src_header.colour[2] = 0.9f;
+                src_header.colour[3] = 0.5f;
+
+                src_view::position(src.data())[0] = 1.0f;
+                src_view::position(src.data())[1] = 2.0f;
+                src_view::position(src.data())[2] = 3.0f;
+                *src_view::colour(src.data()) = 0.5f;
+
+                src_view::position(src.data() + src_view::stride())[0] = 4.0f;
+                src_view::position(src.data() + src_view::stride())[1] = 5.0f;
+                src_view::position(src.data() + src_view::stride())[2] = 6.0f;
+                *src_view::colour(src.data() + src_view::stride()) = 1.0f;
+
+                auto destination = mmpld::make_particle_view(dst_view::vertex_type(), dst_view::colour_type(), dst.data());
+                auto cnt = mmpld::convert(src.data(), src_header, destination, 2);
+                Assert::AreEqual(size_t(2), cnt, L"All particles have been converted.", LINE_INFO());
+
+                Assert::AreEqual(dst_view::vertex_value_type(1), dst_view::position(dst.data())[0], L"P1: Conversion to short at [0]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(2), dst_view::position(dst.data())[1], L"P1: Conversion to short at [1]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(3), dst_view::position(dst.data())[2], L"P1: Conversion to short at [2]", LINE_INFO());
+                Assert::AreEqual(*src_view::colour(src.data()), *dst_view::colour(dst.data()), L"P1: Unchanged intensity", LINE_INFO());
+
+                Assert::AreEqual(dst_view::vertex_value_type(4), dst_view::position(dst.data() + dst_view::stride())[0], L"P2: Conversion to short at [0]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(5), dst_view::position(dst.data() + dst_view::stride())[1], L"P2: Conversion to short at [1]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(6), dst_view::position(dst.data() + dst_view::stride())[2], L"P2: Conversion to short at [2]", LINE_INFO());
+                Assert::AreEqual(*src_view::colour(src.data() + src_view::stride()), *dst_view::colour(dst.data() + dst_view::stride()), L"P2: Unchanged intensity", LINE_INFO());
+            }
+
+            {
+                typedef mmpld::particle_traits<mmpld::vertex_type::float_xyz, mmpld::colour_type::intensity> src_view;
+                typedef mmpld::particle_traits<mmpld::vertex_type::float_xyzr, mmpld::colour_type::none> dst_view;
+                std::vector<std::uint8_t> src(2 * src_view::stride());
+                std::vector<std::uint8_t> dst(2 * dst_view::stride());
+                mmpld::list_header src_header;
+                src_header.particles = 2;
+                src_header.vertex_type = src_view::vertex_traits::value;
+                src_header.colour_type = src_view::colour_traits::colour_type;
+                src_header.radius = 12.0f;
+                src_header.colour[0] = 0.7f;
+                src_header.colour[1] = 0.8f;
+                src_header.colour[2] = 0.9f;
+                src_header.colour[3] = 0.5f;
+
+                src_view::position(src.data())[0] = 1.0f;
+                src_view::position(src.data())[1] = 2.0f;
+                src_view::position(src.data())[2] = 3.0f;
+                *src_view::colour(src.data()) = 0.5f;
+
+                src_view::position(src.data() + src_view::stride())[0] = 4.0f;
+                src_view::position(src.data() + src_view::stride())[1] = 5.0f;
+                src_view::position(src.data() + src_view::stride())[2] = 6.0f;
+                *src_view::colour(src.data() + src_view::stride()) = 1.0f;
+
+                auto destination = mmpld::make_particle_view(dst_view::vertex_type(), dst_view::colour_type(), dst.data());
+                auto cnt = mmpld::convert(src.data(), src_header, destination, 2);
+                Assert::AreEqual(size_t(2), cnt, L"All particles have been converted.", LINE_INFO());
+
+                Assert::AreEqual(dst_view::vertex_value_type(1), dst_view::position(dst.data())[0], L"P1: Conversion to short at [0]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(2), dst_view::position(dst.data())[1], L"P1: Conversion to short at [1]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(3), dst_view::position(dst.data())[2], L"P1: Conversion to short at [2]", LINE_INFO());
+                Assert::AreEqual(src_header.radius, *dst_view::radius(dst.data()), L"P1: Global radius has been converted.", LINE_INFO());
+
+                Assert::AreEqual(dst_view::vertex_value_type(4), dst_view::position(dst.data() + dst_view::stride())[0], L"P2: Conversion to short at [0]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(5), dst_view::position(dst.data() + dst_view::stride())[1], L"P2: Conversion to short at [1]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(6), dst_view::position(dst.data() + dst_view::stride())[2], L"P2: Conversion to short at [2]", LINE_INFO());
+                Assert::AreEqual(src_header.radius, *dst_view::radius(dst.data() + dst_view::stride()), L"P2: Global radius has been converted.", LINE_INFO());
+            }
+
+            {
+                typedef mmpld::particle_traits<mmpld::vertex_type::short_xyz, mmpld::colour_type::none> src_view;
+                typedef mmpld::particle_traits<mmpld::vertex_type::float_xyzr, mmpld::colour_type::rgba32> dst_view;
+                std::vector<std::uint8_t> src(2 * src_view::stride());
+                std::vector<std::uint8_t> dst(2 * dst_view::stride());
+                mmpld::list_header src_header;
+                src_header.particles = 2;
+                src_header.vertex_type = src_view::vertex_traits::value;
+                src_header.colour_type = src_view::colour_traits::colour_type;
+                src_header.radius = 12.0f;
+                src_header.colour[0] = 0.7f;
+                src_header.colour[1] = 0.8f;
+                src_header.colour[2] = 0.9f;
+                src_header.colour[3] = 0.5f;
+
+                src_view::position(src.data())[0] = 1;
+                src_view::position(src.data())[1] = 2;
+                src_view::position(src.data())[2] = 3;
+
+                src_view::position(src.data() + src_view::stride())[0] = 4;
+                src_view::position(src.data() + src_view::stride())[1] = 5;
+                src_view::position(src.data() + src_view::stride())[2] = 6;
+
+                auto destination = mmpld::make_particle_view(dst_view::vertex_type(), dst_view::colour_type(), dst.data());
+                auto cnt = mmpld::convert(src.data(), src_header, destination, 2);
+                Assert::AreEqual(size_t(2), cnt, L"All particles have been converted.", LINE_INFO());
+
+                Assert::AreEqual(dst_view::vertex_value_type(1), dst_view::position(dst.data())[0], L"P1: Conversion to float at [0]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(2), dst_view::position(dst.data())[1], L"P1: Conversion to float at [1]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(3), dst_view::position(dst.data())[2], L"P1: Conversion to float at [2]", LINE_INFO());
+                Assert::AreEqual(src_header.radius, *dst_view::radius(dst.data()), L"P1: Global radius has been converted.", LINE_INFO());
+                Assert::AreEqual(src_header.colour[0], dst_view::colour(dst.data())[0], L"P1: Global colour has been copied to [0]", LINE_INFO());
+                Assert::AreEqual(src_header.colour[1], dst_view::colour(dst.data())[1], L"P1: Global colour has been copied to [1]", LINE_INFO());
+                Assert::AreEqual(src_header.colour[2], dst_view::colour(dst.data())[2], L"P1: Global colour has been copied to [2]", LINE_INFO());
+                Assert::AreEqual(src_header.colour[3], dst_view::colour(dst.data())[3], L"P1: Global colour has been copied to [3]", LINE_INFO());
+
+                Assert::AreEqual(dst_view::vertex_value_type(4), dst_view::position(dst.data() + dst_view::stride())[0], L"P2: Conversion to float at [0]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(5), dst_view::position(dst.data() + dst_view::stride())[1], L"P2: Conversion to float at [1]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(6), dst_view::position(dst.data() + dst_view::stride())[2], L"P2: Conversion to float at [2]", LINE_INFO());
+                Assert::AreEqual(src_header.radius, *dst_view::radius(dst.data() + dst_view::stride()), L"P2: Global radius has been converted.", LINE_INFO());
+                Assert::AreEqual(src_header.colour[0], dst_view::colour(dst.data() + dst_view::stride())[0], L"P2: Global colour has been copied to [0]", LINE_INFO());
+                Assert::AreEqual(src_header.colour[1], dst_view::colour(dst.data() + dst_view::stride())[1], L"P2: Global colour has been copied to [1]", LINE_INFO());
+                Assert::AreEqual(src_header.colour[2], dst_view::colour(dst.data() + dst_view::stride())[2], L"P2: Global colour has been copied to [2]", LINE_INFO());
+                Assert::AreEqual(src_header.colour[3], dst_view::colour(dst.data() + dst_view::stride())[3], L"P2: Global colour has been copied to [3]", LINE_INFO());
+            }
+
+            {
+                typedef mmpld::particle_traits<mmpld::vertex_type::short_xyz, mmpld::colour_type::rgb8> src_view;
+                typedef mmpld::particle_traits<mmpld::vertex_type::float_xyzr, mmpld::colour_type::rgba32> dst_view;
+                std::vector<std::uint8_t> src(2 * src_view::stride());
+                std::vector<std::uint8_t> dst(2 * dst_view::stride());
+                mmpld::list_header src_header;
+                src_header.particles = 2;
+                src_header.vertex_type = src_view::vertex_traits::value;
+                src_header.colour_type = src_view::colour_traits::colour_type;
+                src_header.radius = 12.0f;
+                src_header.colour[0] = 0.7f;
+                src_header.colour[1] = 0.8f;
+                src_header.colour[2] = 0.9f;
+                src_header.colour[3] = 0.5f;
+
+                src_view::position(src.data())[0] = 1;
+                src_view::position(src.data())[1] = 2;
+                src_view::position(src.data())[2] = 3;
+                src_view::colour(src.data())[0] = 0;
+                src_view::colour(src.data())[1] = 16;
+                src_view::colour(src.data())[2] = 32;
+
+                src_view::position(src.data() + src_view::stride())[0] = 4;
+                src_view::position(src.data() + src_view::stride())[1] = 5;
+                src_view::position(src.data() + src_view::stride())[2] = 6;
+                src_view::colour(src.data() + src_view::stride())[0] = 64;
+                src_view::colour(src.data() + src_view::stride())[1] = 128;
+                src_view::colour(src.data() + src_view::stride())[2] = 255;
+
+                auto destination = mmpld::make_particle_view(dst_view::vertex_type(), dst_view::colour_type(), dst.data());
+                auto cnt = mmpld::convert(src.data(), src_header, destination, 2);
+                Assert::AreEqual(size_t(2), cnt, L"All particles have been converted.", LINE_INFO());
+
+                Assert::AreEqual(dst_view::vertex_value_type(1), dst_view::position(dst.data())[0], L"P1: Conversion to float at [0]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(2), dst_view::position(dst.data())[1], L"P1: Conversion to float at [1]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(3), dst_view::position(dst.data())[2], L"P1: Conversion to float at [2]", LINE_INFO());
+                Assert::AreEqual(src_header.radius, *dst_view::radius(dst.data()), L"P1: Global radius has been converted.", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(0.f / 255.f), dst_view::colour(dst.data())[0], L"P1: Byte to float colour conversion at [0]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(16.f / 255.f), dst_view::colour(dst.data())[1], L"P1: Byte to float colour conversion at [1]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(32.f / 255.f), dst_view::colour(dst.data())[2], L"P1: Byte to float colour conversion at [2]", LINE_INFO());
+
+                Assert::AreEqual(dst_view::vertex_value_type(4), dst_view::position(dst.data() + dst_view::stride())[0], L"P2: Conversion to float at [0]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(5), dst_view::position(dst.data() + dst_view::stride())[1], L"P2: Conversion to float at [1]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(6), dst_view::position(dst.data() + dst_view::stride())[2], L"P2: Conversion to float at [2]", LINE_INFO());
+                Assert::AreEqual(src_header.radius, *dst_view::radius(dst.data() + dst_view::stride()), L"P2: Global radius has been converted.", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(64.f / 255.f), dst_view::colour(dst.data() + dst_view::stride())[0], L"P2: Byte to float colour conversion at [0]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(128.f / 255.f), dst_view::colour(dst.data() + dst_view::stride())[1], L"P2: Byte to float colour conversion at [1]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(255.f / 255.f), dst_view::colour(dst.data() + dst_view::stride())[2], L"P2: Byte to float colour conversion at [2]", LINE_INFO());
+            }
+
+            {
+                typedef mmpld::particle_traits<mmpld::vertex_type::short_xyz, mmpld::colour_type::rgb8> src_view;
+                typedef mmpld::particle_traits<mmpld::vertex_type::float_xyz, mmpld::colour_type::rgba8> dst_view;
+                std::vector<std::uint8_t> src(2 * src_view::stride());
+                std::vector<std::uint8_t> dst(2 * dst_view::stride());
+                mmpld::list_header src_header;
+                src_header.particles = 2;
+                src_header.vertex_type = src_view::vertex_traits::value;
+                src_header.colour_type = src_view::colour_traits::colour_type;
+                src_header.radius = 12.0f;
+                src_header.colour[0] = 0.7f;
+                src_header.colour[1] = 0.8f;
+                src_header.colour[2] = 0.9f;
+                src_header.colour[3] = 0.5f;
+
+                src_view::position(src.data())[0] = 1;
+                src_view::position(src.data())[1] = 2;
+                src_view::position(src.data())[2] = 3;
+                src_view::colour(src.data())[0] = 0;
+                src_view::colour(src.data())[1] = 16;
+                src_view::colour(src.data())[2] = 32;
+
+                src_view::position(src.data() + src_view::stride())[0] = 4;
+                src_view::position(src.data() + src_view::stride())[1] = 5;
+                src_view::position(src.data() + src_view::stride())[2] = 6;
+                src_view::colour(src.data() + src_view::stride())[0] = 64;
+                src_view::colour(src.data() + src_view::stride())[1] = 128;
+                src_view::colour(src.data() + src_view::stride())[2] = 255;
+
+                auto destination = mmpld::make_particle_view(dst_view::vertex_type(), dst_view::colour_type(), dst.data());
+                auto cnt = mmpld::convert(src.data(), src_header, destination, 2);
+                Assert::AreEqual(size_t(2), cnt, L"All particles have been converted.", LINE_INFO());
+
+                Assert::AreEqual(dst_view::vertex_value_type(1), dst_view::position(dst.data())[0], L"P1: Conversion to float at [0]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(2), dst_view::position(dst.data())[1], L"P1: Conversion to float at [1]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(3), dst_view::position(dst.data())[2], L"P1: Conversion to float at [2]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(0), dst_view::colour(dst.data())[0], L"P1: Byte colour copy at [0]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(16), dst_view::colour(dst.data())[1], L"P1: Byte colour copy at [1]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(32), dst_view::colour(dst.data())[2], L"P1: Byte colour copy at [2]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(255), dst_view::colour(dst.data())[3], L"P1: Opaque alpha inserted at [3]", LINE_INFO());
+
+
+                Assert::AreEqual(dst_view::vertex_value_type(4), dst_view::position(dst.data() + dst_view::stride())[0], L"P2: Conversion to float at [0]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(5), dst_view::position(dst.data() + dst_view::stride())[1], L"P2: Conversion to float at [1]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(6), dst_view::position(dst.data() + dst_view::stride())[2], L"P2: Conversion to float at [2]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(64), dst_view::colour(dst.data() + dst_view::stride())[0], L"P2: Byte colour copy at [0]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(128), dst_view::colour(dst.data() + dst_view::stride())[1], L"P2: Byte colour copy at [1]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(255), dst_view::colour(dst.data() + dst_view::stride())[2], L"P2: Byte colour copy at [2]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(255), dst_view::colour(dst.data() + dst_view::stride())[3], L"P2: Opaque alpha inserted at [3]", LINE_INFO());
+            }
+
+            {
+                typedef mmpld::particle_traits<mmpld::vertex_type::short_xyz, mmpld::colour_type::rgb32> src_view;
+                typedef mmpld::particle_traits<mmpld::vertex_type::float_xyz, mmpld::colour_type::rgba32> dst_view;
+                std::vector<std::uint8_t> src(2 * src_view::stride());
+                std::vector<std::uint8_t> dst(2 * dst_view::stride());
+                mmpld::list_header src_header;
+                src_header.particles = 2;
+                src_header.vertex_type = src_view::vertex_traits::value;
+                src_header.colour_type = src_view::colour_traits::colour_type;
+                src_header.radius = 12.0f;
+                src_header.colour[0] = 0.7f;
+                src_header.colour[1] = 0.8f;
+                src_header.colour[2] = 0.9f;
+                src_header.colour[3] = 0.5f;
+
+                src_view::position(src.data())[0] = 1;
+                src_view::position(src.data())[1] = 2;
+                src_view::position(src.data())[2] = 3;
+                src_view::colour(src.data())[0] = 0.1f;
+                src_view::colour(src.data())[1] = 0.2f;
+                src_view::colour(src.data())[2] = 0.3f;
+
+                src_view::position(src.data() + src_view::stride())[0] = 4;
+                src_view::position(src.data() + src_view::stride())[1] = 5;
+                src_view::position(src.data() + src_view::stride())[2] = 6;
+                src_view::colour(src.data() + src_view::stride())[0] = 0.4f;
+                src_view::colour(src.data() + src_view::stride())[1] = 0.5f;
+                src_view::colour(src.data() + src_view::stride())[2] = 0.6f;
+
+                auto destination = mmpld::make_particle_view(dst_view::vertex_type(), dst_view::colour_type(), dst.data());
+                auto cnt = mmpld::convert(src.data(), src_header, destination, 2);
+                Assert::AreEqual(size_t(2), cnt, L"All particles have been converted.", LINE_INFO());
+
+                Assert::AreEqual(dst_view::vertex_value_type(1), dst_view::position(dst.data())[0], L"P1: Conversion to float at [0]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(2), dst_view::position(dst.data())[1], L"P1: Conversion to float at [1]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(3), dst_view::position(dst.data())[2], L"P1: Conversion to float at [2]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(0.1), dst_view::colour(dst.data())[0], L"P1: Float colour copy at [0]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(0.2), dst_view::colour(dst.data())[1], L"P1: Float colour copy at [1]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(0.3), dst_view::colour(dst.data())[2], L"P1: Float colour copy at [2]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(1.0), dst_view::colour(dst.data())[3], L"P1: Opaque alpha inserted at [3]", LINE_INFO());
+
+                Assert::AreEqual(dst_view::vertex_value_type(4), dst_view::position(dst.data() + dst_view::stride())[0], L"P2: Conversion to float at [0]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(5), dst_view::position(dst.data() + dst_view::stride())[1], L"P2: Conversion to float at [1]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(6), dst_view::position(dst.data() + dst_view::stride())[2], L"P2: Conversion to float at [2]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(0.4), dst_view::colour(dst.data() + dst_view::stride())[0], L"P2: Float colour copy at [0]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(0.5), dst_view::colour(dst.data() + dst_view::stride())[1], L"P2: Float colour copy at [1]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(0.6), dst_view::colour(dst.data() + dst_view::stride())[2], L"P2: Float colour copy at [2]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(1.0), dst_view::colour(dst.data() + dst_view::stride())[3], L"P2: Opaque alpha inserted at [3]", LINE_INFO());
+            }
+
+            {
+                typedef mmpld::particle_traits<mmpld::vertex_type::short_xyz, mmpld::colour_type::rgb8> src_view;
+                typedef mmpld::particle_traits<mmpld::vertex_type::float_xyzr, mmpld::colour_type::rgba32> dst_view;
+                std::vector<std::uint8_t> src(2 * src_view::stride());
+                std::vector<std::uint8_t> dst(2 * dst_view::stride());
+                mmpld::list_header src_header;
+                src_header.particles = 2;
+                src_header.vertex_type = src_view::vertex_traits::value;
+                src_header.colour_type = src_view::colour_traits::colour_type;
+                src_header.radius = 12.0f;
+                src_header.colour[0] = 0.7f;
+                src_header.colour[1] = 0.8f;
+                src_header.colour[2] = 0.9f;
+                src_header.colour[3] = 0.5f;
+
+                src_view::position(src.data())[0] = 1;
+                src_view::position(src.data())[1] = 2;
+                src_view::position(src.data())[2] = 3;
+                src_view::colour(src.data())[0] = 0;
+                src_view::colour(src.data())[1] = 16;
+                src_view::colour(src.data())[2] = 32;
+
+                src_view::position(src.data() + src_view::stride())[0] = 4;
+                src_view::position(src.data() + src_view::stride())[1] = 5;
+                src_view::position(src.data() + src_view::stride())[2] = 6;
+                src_view::colour(src.data() + src_view::stride())[0] = 64;
+                src_view::colour(src.data() + src_view::stride())[1] = 128;
+                src_view::colour(src.data() + src_view::stride())[2] = 255;
+
+                auto destination = mmpld::make_particle_view(dst_view::vertex_type(), dst_view::colour_type(), dst.data());
+                auto cnt = mmpld::convert(src.data(), src_header, destination, 2);
+                Assert::AreEqual(size_t(2), cnt, L"All particles have been converted.", LINE_INFO());
+
+                Assert::AreEqual(dst_view::vertex_value_type(1), dst_view::position(dst.data())[0], L"P1: Conversion to float at [0]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(2), dst_view::position(dst.data())[1], L"P1: Conversion to float at [1]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(3), dst_view::position(dst.data())[2], L"P1: Conversion to float at [2]", LINE_INFO());
+                Assert::AreEqual(src_header.radius, *dst_view::radius(dst.data()), L"P1: Global radius has been converted.", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(0.0 / 255.0), dst_view::colour(dst.data())[0], L"P1: Conversion to float colour at [0]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(16.0 / 255.0), dst_view::colour(dst.data())[1], L"P1: Conversion to float colour at [1]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(32.0 / 255.0), dst_view::colour(dst.data())[2], L"P1: Conversion to float colour at [2]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(1.0), dst_view::colour(dst.data())[3], L"P1: Opaque alpha inserted at [3]", LINE_INFO());
+
+                Assert::AreEqual(dst_view::vertex_value_type(4), dst_view::position(dst.data() + dst_view::stride())[0], L"P2: Conversion to float at [0]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(5), dst_view::position(dst.data() + dst_view::stride())[1], L"P2: Conversion to float at [1]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(6), dst_view::position(dst.data() + dst_view::stride())[2], L"P2: Conversion to float at [2]", LINE_INFO());
+                Assert::AreEqual(src_header.radius, *dst_view::radius(dst.data() + dst_view::stride()), L"P2: Global radius has been converted.", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(64.0 / 255.0), dst_view::colour(dst.data() + dst_view::stride())[0], L"P2: Conversion to float colour at [0]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(128.0 / 255.0), dst_view::colour(dst.data() + dst_view::stride())[1], L"P2: Conversion to float colour at [1]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(255.0 / 255.0), dst_view::colour(dst.data() + dst_view::stride())[2], L"P2: Conversion to float colour at [2]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(1.0), dst_view::colour(dst.data() + dst_view::stride())[3], L"P2: Opaque alpha inserted at [3]", LINE_INFO());
+            }
+
+            {
+                typedef mmpld::particle_traits<mmpld::vertex_type::float_xyz, mmpld::colour_type::rgb32> src_view;
+                typedef mmpld::particle_traits<mmpld::vertex_type::short_xyz, mmpld::colour_type::rgba8> dst_view;
+                std::vector<std::uint8_t> src(2 * src_view::stride());
+                std::vector<std::uint8_t> dst(2 * dst_view::stride());
+                mmpld::list_header src_header;
+                src_header.particles = 2;
+                src_header.vertex_type = src_view::vertex_traits::value;
+                src_header.colour_type = src_view::colour_traits::colour_type;
+                src_header.radius = 12.0f;
+                src_header.colour[0] = 0.7f;
+                src_header.colour[1] = 0.8f;
+                src_header.colour[2] = 0.9f;
+                src_header.colour[3] = 0.5f;
+
+                src_view::position(src.data())[0] = 1.0f;
+                src_view::position(src.data())[1] = 2.0f;
+                src_view::position(src.data())[2] = 3.0f;
+                src_view::colour(src.data())[0] = 0.0f;
+                src_view::colour(src.data())[1] = 16.0f / 255.0f;
+                src_view::colour(src.data())[2] = 32.0f / 255.0f;
+
+                src_view::position(src.data() + src_view::stride())[0] = 4.0f;
+                src_view::position(src.data() + src_view::stride())[1] = 5.0f;
+                src_view::position(src.data() + src_view::stride())[2] = 6.0f;
+                src_view::colour(src.data() + src_view::stride())[0] = 64.0f / 255.0f;
+                src_view::colour(src.data() + src_view::stride())[1] = 128.0f / 255.0f;
+                src_view::colour(src.data() + src_view::stride())[2] = 255.0f / 255.0f;
+
+                auto destination = mmpld::make_particle_view(dst_view::vertex_type(), dst_view::colour_type(), dst.data());
+                auto cnt = mmpld::convert(src.data(), src_header, destination, 2);
+                Assert::AreEqual(size_t(2), cnt, L"All particles have been converted.", LINE_INFO());
+
+                Assert::AreEqual(dst_view::vertex_value_type(1), dst_view::position(dst.data())[0], L"P1: Conversion to float at [0]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(2), dst_view::position(dst.data())[1], L"P1: Conversion to float at [1]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(3), dst_view::position(dst.data())[2], L"P1: Conversion to float at [2]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(0), dst_view::colour(dst.data())[0], L"P1: Conversion to byte colour at [0]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(16), dst_view::colour(dst.data())[1], L"P1: Conversion to byte colour at [1]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(32), dst_view::colour(dst.data())[2], L"P1: Conversion to byte colour at [2]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(255), dst_view::colour(dst.data())[3], L"P1: Opaque alpha inserted at [3]", LINE_INFO());
+
+                Assert::AreEqual(dst_view::vertex_value_type(4), dst_view::position(dst.data() + dst_view::stride())[0], L"P2: Conversion to float at [0]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(5), dst_view::position(dst.data() + dst_view::stride())[1], L"P2: Conversion to float at [1]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(6), dst_view::position(dst.data() + dst_view::stride())[2], L"P2: Conversion to float at [2]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(64), dst_view::colour(dst.data() + dst_view::stride())[0], L"P2: Conversion to byte colour at [0]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(128), dst_view::colour(dst.data() + dst_view::stride())[1], L"P2: Conversion to byte colour at [1]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(255), dst_view::colour(dst.data() + dst_view::stride())[2], L"P2: Conversion to byte colour at [2]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(255), dst_view::colour(dst.data() + dst_view::stride())[3], L"P2: Opaque alpha inserted at [3]", LINE_INFO());
+            }
+
+            {
+                typedef mmpld::particle_traits<mmpld::vertex_type::double_xyz, mmpld::colour_type::intensity64> src_view;
+                typedef mmpld::particle_traits<mmpld::vertex_type::float_xyz, mmpld::colour_type::intensity32> dst_view;
+                std::vector<std::uint8_t> src(2 * src_view::stride());
+                std::vector<std::uint8_t> dst(2 * dst_view::stride());
+                mmpld::list_header src_header;
+                src_header.particles = 2;
+                src_header.vertex_type = src_view::vertex_traits::value;
+                src_header.colour_type = src_view::colour_traits::colour_type;
+                src_header.radius = 12.0f;
+                src_header.min_intensity = 0.0f;
+                src_header.max_intensity = 1.0f;
+
+                src_view::position(src.data())[0] = 1.0;
+                src_view::position(src.data())[1] = 2.0;
+                src_view::position(src.data())[2] = 3.0;
+                src_view::colour(src.data())[0] = 0.0;
+
+                src_view::position(src.data() + src_view::stride())[0] = 4.0;
+                src_view::position(src.data() + src_view::stride())[1] = 5.0;
+                src_view::position(src.data() + src_view::stride())[2] = 6.0;
+                src_view::colour(src.data() + src_view::stride())[0] = 1.0;
+
+                auto destination = mmpld::make_particle_view(dst_view::vertex_type(), dst_view::colour_type(), dst.data());
+                auto cnt = mmpld::convert(src.data(), src_header, destination, 2);
+                Assert::AreEqual(size_t(2), cnt, L"All particles have been converted.", LINE_INFO());
+
+                Assert::AreEqual(dst_view::vertex_value_type(1), dst_view::position(dst.data())[0], L"P1: Conversion to float at [0]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(2), dst_view::position(dst.data())[1], L"P1: Conversion to float at [1]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(3), dst_view::position(dst.data())[2], L"P1: Conversion to float at [2]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(0), dst_view::colour(dst.data())[0], L"P1: Conversion to float intensity", LINE_INFO());
+
+                Assert::AreEqual(dst_view::vertex_value_type(4), dst_view::position(dst.data() + dst_view::stride())[0], L"P2: Conversion to float at [0]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(5), dst_view::position(dst.data() + dst_view::stride())[1], L"P2: Conversion to float at [1]", LINE_INFO());
+                Assert::AreEqual(dst_view::vertex_value_type(6), dst_view::position(dst.data() + dst_view::stride())[2], L"P2: Conversion to float at [2]", LINE_INFO());
+                Assert::AreEqual(dst_view::colour_value_type(1), dst_view::colour(dst.data() + dst_view::stride())[0], L"P2: Conversion to float intensity", LINE_INFO());
             }
         }
 

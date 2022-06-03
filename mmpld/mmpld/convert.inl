@@ -45,10 +45,7 @@ struct std::hash<std::pair<mmpld::colour_type, mmpld::colour_type>> {
 namespace mmpld {
 namespace detail {
 
-    /// <summary>
-    /// The identifier of a vertex conversion functor.
-    /// </summary>
-    typedef std::pair<vertex_type, vertex_type> vertex_conversion_id;
+    typedef void (*conversion_function)(const void *, void *);
 
     /// <summary>
     /// If <paramref name="offset" /> is not <paramref name="invalid" />, return
@@ -355,10 +352,10 @@ namespace detail {
     /// tuple.</typeparam>
     /// <returns></returns>
     template<class E, class T, std::size_t... Is>
-    inline std::unordered_map<std::pair<E, E>, void (*)(const void *, void *)>
+    inline std::unordered_map<std::pair<E, E>, conversion_function>
     make_conversion_table2(std::index_sequence<Is...>, T table) {
         typedef std::unordered_map<std::pair<E, E>,
-            void (*)(const void *, void *)> table_type;
+            conversion_function> table_type;
         return table_type { std::get<Is>(table)... };
     }
 
@@ -372,7 +369,7 @@ namespace detail {
     /// <param name="table"></param>
     /// <returns></returns>
     template<class E, class T>
-    inline std::unordered_map<std::pair<E, E>, void (*)(const void *, void *)>
+    inline std::unordered_map<std::pair<E, E>, conversion_function>
     make_conversion_table1(T table) {
         return make_conversion_table2<E>(std::make_index_sequence<
             std::tuple_size<T>::value> { }, table);
@@ -384,7 +381,7 @@ namespace detail {
     /// </summary>
     /// <returns></returns>
     inline const std::unordered_map<std::pair<colour_type, colour_type>,
-        void (*)(const void *, void *)>&
+        conversion_function>&
     make_colour_conversion_table() {
         static const auto retval = make_conversion_table1<colour_type>(
             make_conversion_table3<colour_type, colour_traits>(
@@ -398,12 +395,49 @@ namespace detail {
     /// </summary>
     /// <returns></returns>
     inline const std::unordered_map<std::pair<vertex_type, vertex_type>,
-        void (*)(const void *, void *)>&
+        conversion_function>&
     make_vertex_conversion_table() {
         static const auto retval = make_conversion_table1<vertex_type>(
             make_conversion_table3<vertex_type, vertex_traits>(
             vertex_dispatch_list { }));
         return retval;
+    }
+
+    /// <summary>
+    /// Gets the colour converter function for the specified conversion.
+    /// </summary>
+    /// <param name="dst"></param>
+    /// <param name="src"></param>
+    /// <returns></returns>
+    inline conversion_function get_colour_converter(const colour_type dst,
+            const colour_type src) {
+        static const auto& TABLE = detail::make_colour_conversion_table();
+        auto it = TABLE.find(std::make_pair(dst, src));
+        if (it != TABLE.end()) {
+            return it->second;
+        } else {
+            throw std::logic_error("No valid converter was registered for the "
+                "requested colour conversion");
+        }
+    }
+
+    /// <summary>
+    /// Gets the vertex/position converter function for the specified
+    /// conversion.
+    /// </summary>
+    /// <param name="dst"></param>
+    /// <param name="src"></param>
+    /// <returns></returns>
+    inline conversion_function get_vertex_converter(const vertex_type dst,
+            const vertex_type src) {
+        static const auto& TABLE = detail::make_vertex_conversion_table();
+        auto it = TABLE.find(std::make_pair(dst, src));
+        if (it != TABLE.end()) {
+            return it->second;
+        } else {
+            throw std::logic_error("No valid converter was registered for the "
+                "requested position conversion");
+        }
     }
 
 } /* end namespace detail */
@@ -528,152 +562,81 @@ std::size_t mmpld::convert(const void *src, const list_header& header,
 /*
  * mmpld::convert
  */
-template<class T, class S>
-void mmpld::convert(const particle_view<T>& src, const particle_view<T>& dst,
-        const std::size_t cnt) {
-    if (!src.good()) {
-        throw std::invalid_argument("The source view must be valid.");
-    }
-    if (!dst.good()) {
-        throw std::invalid_argument("The destination view must be valid.");
-    }
+template<class T>
+std::size_t mmpld::convert(const void *src, const list_header &header,
+        particle_view<T>& dst, const std::size_t cnt) {
+    const auto retval = (std::min)(static_cast<size_t>(header.particles), cnt);
 
-#if false
-    if ((src.vertex_type() == dst.colour_type())
-            && (src.colour_type() == dst.colour_type())) {
+    if ((header.vertex_type == dst.vertex_type())
+            && (header.colour_type == dst.colour_type())) {
         /* Source and destination types are the same, copy at once. */
-        assert(src.stride() == dst.stride());
-        ::memcpy(dst.data(), src.data(), cnt * dst_stride);
+        assert(mmpld::get_stride<std::size_t>(header) == dst.stride());
+        ::memcpy(dst.data(), src, retval * dst.stride());
 
     } else {
+        const auto col_conv = detail::get_colour_converter(dst.colour_type(),
+            header.colour_type);
+        const auto global_col_conv = detail::get_colour_converter(
+            dst.colour_type(), colour_type::rgba32);
+        const auto pos_conv = detail::get_vertex_converter(dst.vertex_type(),
+            header.vertex_type);
+        auto src_view = make_particle_view(header, src);
+
         /* Convert one particle at a time. */
-        for (std::size_t i = 0; i < cnt; ++i) {
+        for (std::size_t i = 0; i < retval; ++i) {
             auto dst_pos = dst.position<void>();
-            auto dst_rad = dst.radius<void>();
+            auto dst_rad = dst.radius<float>();
             auto dst_col = dst.colour<void>();
-            auto src_pos = src.position<void>();
-            auto src_rad = src.radius<void>();
-            auto src_col = src.colour<void>();
+            auto src_pos = src_view.position<const void>();
+            auto src_rad = src_view.radius<const float>();
+            auto src_col = src_view.colour<const void>();
 
             // Initialise the output particle with zeros.
             dst.clear();
 
             if ((dst_pos != nullptr) && (src_pos != nullptr)) {
-
-                // We need to write a position and we have one (this should be
-                // true for all valid data sets).
-                switch (src.vertex_type()) {
-                    case mmpld::vertex_type::float_xyz:
-                    case mmpld::vertex_type::float_xyzr:
-                        dst_pos[0] = static_cast<dst_vertex_scalar>(
-                            *(static_cast<const float *>(src_pos) + 0));
-                        dst_pos[1] = static_cast<dst_vertex_scalar>(
-                            *(static_cast<const float *>(src_pos) + 1));
-                        dst_pos[2] = static_cast<dst_vertex_scalar>(
-                            *(static_cast<const float *>(src_pos) + 2));
-                        break;
-
-                    case mmpld::vertex_type::short_xyz:
-                        dst_pos[0] = static_cast<dst_vertex_scalar>(
-                            *(static_cast<const std::int16_t *>(src_pos) + 0));
-                        dst_pos[1] = static_cast<dst_vertex_scalar>(
-                            *(static_cast<const std::int16_t *>(src_pos) + 1));
-                        dst_pos[2] = static_cast<dst_vertex_scalar>(
-                            *(static_cast<const std::int16_t *>(src_pos) + 2));
-                        break;
-
-                    case mmpld::vertex_type::double_xyz:
-                        dst_pos[0] = static_cast<dst_vertex_scalar>(
-                            *(static_cast<const double *>(src_pos) + 0));
-                        dst_pos[1] = static_cast<dst_vertex_scalar>(
-                            *(static_cast<const double *>(src_pos) + 1));
-                        dst_pos[2] = static_cast<dst_vertex_scalar>(
-                            *(static_cast<const double *>(src_pos) + 2));
-                        break;
-
-                    default:
-                        throw std::logic_error("An invalid source vertex type "
-                            "which cannot be converted was specified.");
-                }
+                assert(pos_conv != nullptr);
+                pos_conv(src_pos, dst_pos);
             }
 
             if (dst_rad != nullptr) {
+                // Note: We make the simplyfing assumption that the radius is
+                // always float, which is true for the current version of MMPLD.
+                // If additional vertex types are added in the future, this
+                // might not hold any more and this code (and the 'dst_rad' and
+                // 'src_rad' above need to be refactored).
+                assert(dst.vertex_type() == vertex_type::float_xyzr);
+
                 if (src_rad == nullptr) {
                     // We have no valid offset for the source radius, so we
                     // need to copy the global radius to each particle.
-                    *dst_rad = static_cast<dst_vertex_scalar>(header.radius);
+                    *dst_rad = header.radius;
                 } else {
                     // We know that all radii are float, so we can reinterpret
                     // the source pointer.
-                    *dst_rad = *static_cast<const dst_vertex_scalar *>(src_rad);
+                    assert(src_view.vertex_type() == vertex_type::float_xyzr);
+                    *dst_rad = *src_rad;
                 }
             }
 
             if (dst_col != nullptr) {
-                typedef typename dst_view::colour_value_type dst_type;
-
                 if (src_col == nullptr) {
                     // We have no valid offset for the source colour, so we
                     // need to use the global colour from the header.
-                    detail::convert_colour<dst_type>(header.colour, 4,
-                        dst_col, dst_channels);
+                    assert(global_col_conv != nullptr);
+                    global_col_conv(header.colour, dst_col);
 
                 } else {
-                    // There is a per-vertex colour that needs to be converted.
-                    switch (header.colour_type) {
-                        case mmpld::colour_type::intensity:
-                            detail::convert_colour<dst_type>(
-                                static_cast<const float *>(src_col), 1,
-                                dst_col, dst_channels);
-                            break;
-
-                        case mmpld::colour_type::rgb32:
-                            detail::convert_colour<dst_type>(
-                                static_cast<const float *>(src_col), 3,
-                                dst_col, dst_channels);
-                            break;
-
-                        case mmpld::colour_type::rgb8:
-                            detail::convert_colour<dst_type>(
-                                static_cast<const std::uint8_t *>(src_col), 3,
-                                dst_col, dst_channels);
-                            break;
-
-                        case mmpld::colour_type::rgba32:
-                            detail::convert_colour<dst_type>(
-                                static_cast<const float *>(src_col), 4,
-                                dst_col, dst_channels);
-                            break;
-
-                        case mmpld::colour_type::rgba8:
-                            detail::convert_colour<dst_type>(
-                                static_cast<const std::uint8_t *>(src_col), 4,
-                                dst_col, dst_channels);
-                            break;
-
-                        case mmpld::colour_type::rgba16:
-                            detail::convert_colour<dst_type>(
-                                static_cast<const std::uint16_t *>(src_col), 4,
-                                dst_col, dst_channels);
-                            break;
-
-                        case mmpld::colour_type::intensity64:
-                            detail::convert_colour<dst_type>(
-                                static_cast<const double *>(src_col), 1,
-                                dst_col, dst_channels);
-                            break;
-
-                        default:
-                            throw std::logic_error("An invalid source colour"
-                                "type which cannot be converted was "
-                                "specified.");
-                    }
+                    assert(col_conv != nullptr);
+                    col_conv(src_col, dst_col);
                 }
             }
 
-            s += src_stride;
-            d += dst_stride;
+            dst.advance();
+            src_view.advance();
         }
+
     }
-#endif
+
+    return retval;
 }
