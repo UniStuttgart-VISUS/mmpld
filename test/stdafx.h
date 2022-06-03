@@ -22,5 +22,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#define MMPLD_WITH_DEPRECATED_COLOUR_TYPE_CONSTANT
+#define MMPLD_WITH_DEPRECATED_VERTEX_TYPE_CONSTANT
 #define MMPLD_WITH_DIRECT3D
 #include "mmpld.h"

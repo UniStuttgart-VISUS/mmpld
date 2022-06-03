@@ -199,7 +199,7 @@ file.skip_cluster_info();
 
 ## test
 
-This project holds unit tests for Visual Studio's C++ unit test framework. It runs on Visual Studio 2017 atm.
+This project holds unit tests for Visual Studio's C++ unit test framework. It runs on Visual Studio 2019 atm.
 
 
 ## dumpmmpld

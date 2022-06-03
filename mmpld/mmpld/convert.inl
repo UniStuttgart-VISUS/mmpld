@@ -219,17 +219,15 @@ namespace detail {
     };
 
     /// <summary>
-    /// Further specialisation for conversion no position.
+    /// Further specialisation for conversion of no position.
     /// </summary>
-    template<>
-    struct runtime_converter<vertex_type, vertex_type::none,
+    template<> struct runtime_converter<vertex_type, vertex_type::none,
             vertex_type::none> {
         static inline void convert(void *dst, const void *src) { }
     };
 
     /// <summary>
-    /// Further specialisation for converting to a target type without a
-    /// position.
+    /// Further specialisation for discarding the position.
     /// </summary>
     template<vertex_type I>
     struct runtime_converter<vertex_type, vertex_type::none, I> {
@@ -251,6 +249,46 @@ namespace detail {
         }
     };
 
+    /// <summary>
+    /// Specialised conversion for colours, which redirects the conversion to
+    /// <see cref="convert_colour" />.
+    /// </summary>
+    template<colour_type O, colour_type I>
+    struct runtime_converter<colour_type, O, I> {
+        typedef colour_traits<O> output_traits;
+        typedef colour_traits<I> input_traits;
+
+        static inline void convert(void *dst, const void *src) {
+            auto s = static_cast<const input_traits::value_type *>(src);
+            convert_colour<output_traits::value_type>(
+                s, input_traits::channels, dst, output_traits::channels);
+        }
+    };
+
+    /// <summary>
+    /// Further specialisation for conversion of no colour.
+    /// </summary>
+    template<> struct runtime_converter<colour_type, colour_type::none,
+            colour_type::none> {
+        static inline void convert(void *dst, const void *src) { }
+    };
+
+    /// <summary>
+    /// Further specialisation generating a medium grey for missing position
+    /// input.
+    /// </summary>
+    template<colour_type O>
+    struct runtime_converter<colour_type, O, colour_type::none> {
+        typedef colour_traits<O> output_traits;
+
+        static inline void convert(void *dst, const void *src) {
+            static constexpr std::array<std::uint8_t, 4> GREY {
+                128, 128, 128, 255
+            };
+            convert_colour<output_traits::value_type>(GREY.data(), GREY.size(),
+                dst, output_traits::channels);
+        }
+    };
 
     /// <summary>
     /// Generates the conversion function pointers for converting from any of
@@ -357,18 +395,31 @@ namespace detail {
     }
 
     /// <summary>
-    /// Builds a hash table that allows for looking up a per-component
-    /// conversion function for two enumeration members of types like
-    /// <see cref="vertex_type" /> or <see cref="colour_type" />.
+    /// Builds a hash table that allows for looking up a conversion function for
+    /// two <see cref="colour_type" />s.
     /// </summary>
-    /// <typeparam name="E"></typeparam>
-    /// <typeparam name="T"></typeparam>
     /// <returns></returns>
-    template<class E, template<E> class T>
-    inline std::unordered_map<std::pair<E, E>, void (*)(void *, const void *)>
-    make_conversion_table() {
-        return make_conversion_table1<E>(make_conversion_table3<E, T>(
+    inline const std::unordered_map<std::pair<colour_type, colour_type>,
+        void (*)(void *, const void *)>&
+    make_colour_conversion_table() {
+        static const auto retval = make_conversion_table1<colour_type>(
+            make_conversion_table3<colour_type, colour_traits>(
+            colour_dispatch_list { }));
+        return retval;
+    }
+
+    /// <summary>
+    /// Builds a hash table that allows for looking up a conversion function for
+    /// two <see cref="vertex_type" />s.
+    /// </summary>
+    /// <returns></returns>
+    inline const std::unordered_map<std::pair<vertex_type, vertex_type>,
+        void (*)(void *, const void *)>&
+    make_vertex_conversion_table() {
+        static const auto retval = make_conversion_table1<vertex_type>(
+            make_conversion_table3<vertex_type, vertex_traits>(
             vertex_dispatch_list { }));
+        return retval;
     }
 
 } /* end namespace detail */

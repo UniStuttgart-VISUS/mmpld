@@ -1,7 +1,7 @@
-/// <copyright file="util.h" company="Visualisierungsinstitut der Universität Stuttgart">
+// <copyright file="util.h" company="Visualisierungsinstitut der Universität Stuttgart">
 /// Copyright © 2018 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
-/// </copyright>
-/// <author>Christoph Müller</author>
+// </copyright>
+// <author>Christoph Müller</author>
 
 #pragma once
 

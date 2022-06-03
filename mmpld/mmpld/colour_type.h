@@ -121,15 +121,27 @@ namespace detail {
         static constexpr const std::size_t channels = 0;
 
         /// <summary>
-        /// The enumeration value being reflected.
-        /// </summary>
-        static constexpr const mmpld::colour_type colour_type
-            = mmpld::colour_type::none;
-
-        /// <summary>
         /// The total size of the colour components in bytes.
         /// </summary>
         static constexpr const std::size_t size = 0;
+
+        /// <summary>
+        /// The enumeration value being reflected.
+        /// </summary>
+        static constexpr const mmpld::colour_type value
+            = mmpld::colour_type::none;
+
+#if defined(MMPLD_WITH_DEPRECATED_COLOUR_TYPE_CONSTANT)
+        /// <summary>
+        /// The enumeration value being reflected.
+        /// </summary>
+        /// <remarks>
+        /// This field is deprecated and only here for backwards compatibility.
+        /// Use <see cref="value" /> instead.
+        /// </remarks>
+        static constexpr const mmpld::colour_type colour_type = value;
+#endif /* defined(MMPLD_WITH_DEPRECATED_COLOUR_TYPE_CONSTANT) */
+
     };
 
     /// <summary>
@@ -147,15 +159,26 @@ namespace detail {
         static constexpr const std::size_t channels = 3;
 
         /// <summary>
-        /// The enumeration value being reflected.
-        /// </summary>
-        static constexpr const mmpld::colour_type colour_type
-            = mmpld::colour_type::rgb8;
-
-        /// <summary>
         /// The total size of the colour components in bytes.
         /// </summary>
         static constexpr const std::size_t size = channels * sizeof(value_type);
+
+        /// <summary>
+        /// The enumeration value being reflected.
+        /// </summary>
+        static constexpr const mmpld::colour_type value
+            = mmpld::colour_type::rgb8;
+
+#if defined(MMPLD_WITH_DEPRECATED_COLOUR_TYPE_CONSTANT)
+        /// <summary>
+        /// The enumeration value being reflected.
+        /// </summary>
+        /// <remarks>
+        /// This field is deprecated and only here for backwards compatibility.
+        /// Use <see cref="value" /> instead.
+        /// </remarks>
+        static constexpr const mmpld::colour_type colour_type = value;
+#endif /* defined(MMPLD_WITH_DEPRECATED_COLOUR_TYPE_CONSTANT) */
     };
 
     /// <summary>
@@ -173,15 +196,26 @@ namespace detail {
         static constexpr const std::size_t channels = 4;
 
         /// <summary>
-        /// The enumeration value being reflected.
-        /// </summary>
-        static constexpr const mmpld::colour_type colour_type
-            = mmpld::colour_type::rgba8;
-
-        /// <summary>
         /// The total size of the colour components in bytes.
         /// </summary>
         static constexpr const std::size_t size = channels * sizeof(value_type);
+
+        /// <summary>
+        /// The enumeration value being reflected.
+        /// </summary>
+        static constexpr const mmpld::colour_type value
+            = mmpld::colour_type::rgba8;
+
+#if defined(MMPLD_WITH_DEPRECATED_COLOUR_TYPE_CONSTANT)
+        /// <summary>
+        /// The enumeration value being reflected.
+        /// </summary>
+        /// <remarks>
+        /// This field is deprecated and only here for backwards compatibility.
+        /// Use <see cref="value" /> instead.
+        /// </remarks>
+        static constexpr const mmpld::colour_type colour_type = value;
+#endif /* defined(MMPLD_WITH_DEPRECATED_COLOUR_TYPE_CONSTANT) */
     };
 
     /// <summary>
@@ -199,15 +233,26 @@ namespace detail {
         static constexpr const std::size_t channels = 1;
 
         /// <summary>
-        /// The enumeration value being reflected.
-        /// </summary>
-        static constexpr const mmpld::colour_type colour_type
-            = mmpld::colour_type::intensity;
-
-        /// <summary>
         /// The total size of the colour components in bytes.
         /// </summary>
         static constexpr const std::size_t size = channels * sizeof(value_type);
+
+        /// <summary>
+        /// The enumeration value being reflected.
+        /// </summary>
+        static constexpr const mmpld::colour_type value
+            = mmpld::colour_type::intensity;
+
+#if defined(MMPLD_WITH_DEPRECATED_COLOUR_TYPE_CONSTANT)
+        /// <summary>
+        /// The enumeration value being reflected.
+        /// </summary>
+        /// <remarks>
+        /// This field is deprecated and only here for backwards compatibility.
+        /// Use <see cref="value" /> instead.
+        /// </remarks>
+        static constexpr const mmpld::colour_type colour_type = value;
+#endif /* defined(MMPLD_WITH_DEPRECATED_COLOUR_TYPE_CONSTANT) */
     };
 
     /// <summary>
@@ -225,15 +270,26 @@ namespace detail {
         static constexpr const std::size_t channels = 3;
 
         /// <summary>
-        /// The enumeration value being reflected.
-        /// </summary>
-        static constexpr const mmpld::colour_type colour_type
-            = mmpld::colour_type::rgb32;
-
-        /// <summary>
         /// The total size of the colour components in bytes.
         /// </summary>
         static constexpr const std::size_t size = channels * sizeof(value_type);
+
+        /// <summary>
+        /// The enumeration value being reflected.
+        /// </summary>
+        static constexpr const mmpld::colour_type value
+            = mmpld::colour_type::rgb32;
+
+#if defined(MMPLD_WITH_DEPRECATED_COLOUR_TYPE_CONSTANT)
+        /// <summary>
+        /// The enumeration value being reflected.
+        /// </summary>
+        /// <remarks>
+        /// This field is deprecated and only here for backwards compatibility.
+        /// Use <see cref="value" /> instead.
+        /// </remarks>
+        static constexpr const mmpld::colour_type colour_type = value;
+#endif /* defined(MMPLD_WITH_DEPRECATED_COLOUR_TYPE_CONSTANT) */
     };
 
     /// <summary>
@@ -251,15 +307,26 @@ namespace detail {
         static constexpr const std::size_t channels = 4;
 
         /// <summary>
-        /// The enumeration value being reflected.
-        /// </summary>
-        static constexpr const mmpld::colour_type colour_type
-            = mmpld::colour_type::rgba32;
-
-        /// <summary>
         /// The total size of the colour components in bytes.
         /// </summary>
         static constexpr const std::size_t size = channels * sizeof(value_type);
+
+        /// <summary>
+        /// The enumeration value being reflected.
+        /// </summary>
+        static constexpr const mmpld::colour_type value
+            = mmpld::colour_type::rgba32;
+
+#if defined(MMPLD_WITH_DEPRECATED_COLOUR_TYPE_CONSTANT)
+        /// <summary>
+        /// The enumeration value being reflected.
+        /// </summary>
+        /// <remarks>
+        /// This field is deprecated and only here for backwards compatibility.
+        /// Use <see cref="value" /> instead.
+        /// </remarks>
+        static constexpr const mmpld::colour_type colour_type = value;
+#endif /* defined(MMPLD_WITH_DEPRECATED_COLOUR_TYPE_CONSTANT) */
     };
 
     /// <summary>
@@ -277,15 +344,26 @@ namespace detail {
         static constexpr const std::size_t channels = 4;
 
         /// <summary>
-        /// The enumeration value being reflected.
-        /// </summary>
-        static constexpr const mmpld::colour_type colour_type
-            = mmpld::colour_type::rgba16;
-
-        /// <summary>
         /// The total size of the colour components in bytes.
         /// </summary>
         static const std::size_t size = channels * sizeof(value_type);
+
+        /// <summary>
+        /// The enumeration value being reflected.
+        /// </summary>
+        static constexpr const mmpld::colour_type value
+            = mmpld::colour_type::rgba16;
+
+#if defined(MMPLD_WITH_DEPRECATED_COLOUR_TYPE_CONSTANT)
+        /// <summary>
+        /// The enumeration value being reflected.
+        /// </summary>
+        /// <remarks>
+        /// This field is deprecated and only here for backwards compatibility.
+        /// Use <see cref="value" /> instead.
+        /// </remarks>
+        static constexpr const mmpld::colour_type colour_type = value;
+#endif /* defined(MMPLD_WITH_DEPRECATED_COLOUR_TYPE_CONSTANT) */
     };
 
     /// <summary>
@@ -303,15 +381,26 @@ namespace detail {
         static constexpr const std::size_t channels = 1;
 
         /// <summary>
-        /// The enumeration value being reflected.
-        /// </summary>
-        static constexpr const mmpld::colour_type colour_type
-            = mmpld::colour_type::intensity64;
-
-        /// <summary>
         /// The total size of the colour components in bytes.
         /// </summary>
         static constexpr const std::size_t size = channels * sizeof(value_type);
+
+        /// <summary>
+        /// The enumeration value being reflected.
+        /// </summary>
+        static constexpr const mmpld::colour_type value
+            = mmpld::colour_type::intensity64;
+
+#if defined(MMPLD_WITH_DEPRECATED_COLOUR_TYPE_CONSTANT)
+        /// <summary>
+        /// The enumeration value being reflected.
+        /// </summary>
+        /// <remarks>
+        /// This field is deprecated and only here for backwards compatibility.
+        /// Use <see cref="value" /> instead.
+        /// </remarks>
+        static constexpr const mmpld::colour_type colour_type = value;
+#endif /* defined(MMPLD_WITH_DEPRECATED_COLOUR_TYPE_CONSTANT) */
     };
 
 } /* end namespace mmpld */
