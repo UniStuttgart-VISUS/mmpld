@@ -172,7 +172,7 @@ namespace mmpld {
         /// </summary>
         /// <returns>The type of the vertex data.</returns>
         static inline mmpld::vertex_type vertex_type(void) {
-            return particle_traits::vertex_traits::vertex_type;
+            return particle_traits::vertex_traits::value;
         }
     };
 

@@ -1,5 +1,5 @@
 // <copyright file="vertex_type.h" company="Visualisierungsinstitut der Universität Stuttgart">
-// Copyright © 2018 - 2019 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+// Copyright © 2018 - 2022 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
 // Copyright © 2017 SFB-TRR 161. Alle Rechte vorbehalten.
 // </copyright>
 // <author>Christoph Müller</author>
@@ -99,14 +99,25 @@ namespace detail {
             = (std::numeric_limits<std::size_t>::max)();
 
         /// <summary>
-        /// The enumeration value being reflected.
-        /// </summary>
-        static const mmpld::vertex_type vertex_type = mmpld::vertex_type::none;
-
-        /// <summary>
         /// The total size of the whole positional parameters in bytes.
         /// </summary>
         static constexpr const std::size_t size = 0;
+
+        /// <summary>
+        /// The enumeration value being reflected.
+        /// </summary>
+        static constexpr mmpld::vertex_type value = mmpld::vertex_type::none;
+
+#if defined(MMPLD_WITH_DEPRECATED_VERTEX_TYPE_CONSTANT)
+        /// <summary>
+        /// The enumeration value being reflected.
+        /// </summary>
+        /// <remarks>
+        /// This field is deprecated and only here for backwards compatibility.
+        /// Use <see cref="value" /> instead.
+        /// </remarks>
+        static constexpr mmpld::vertex_type vertex_type = value;
+#endif /* defined(MMPLD_WITH_DEPRECATED_VERTEX_TYPE_CONSTANT) */
     };
 
     /// <summary>
@@ -125,15 +136,26 @@ namespace detail {
             = (std::numeric_limits<std::size_t>::max)();
 
         /// <summary>
-        /// The enumeration value being reflected.
-        /// </summary>
-        static const mmpld::vertex_type vertex_type
-            = mmpld::vertex_type::float_xyz;
-
-        /// <summary>
         /// The total size of the whole positional parameters in bytes.
         /// </summary>
         static constexpr const std::size_t size = 3 * sizeof(value_type);
+
+        /// <summary>
+        /// The enumeration value being reflected.
+        /// </summary>
+        static constexpr  mmpld::vertex_type value
+            = mmpld::vertex_type::float_xyz;
+
+#if defined(MMPLD_WITH_DEPRECATED_VERTEX_TYPE_CONSTANT)
+        /// <summary>
+        /// The enumeration value being reflected.
+        /// </summary>
+        /// <remarks>
+        /// This field is deprecated and only here for backwards compatibility.
+        /// Use <see cref="value" /> instead.
+        /// </remarks>
+        static constexpr mmpld::vertex_type vertex_type = value;
+#endif /* defined(MMPLD_WITH_DEPRECATED_VERTEX_TYPE_CONSTANT) */
     };
 
     /// <summary>
@@ -153,15 +175,26 @@ namespace detail {
             = 3 * sizeof(value_type);
 
         /// <summary>
-        /// The enumeration value being reflected.
-        /// </summary>
-        static const mmpld::vertex_type vertex_type
-            = mmpld::vertex_type::float_xyzr;
-
-        /// <summary>
         /// The total size of the whole positional parameters in bytes.
         /// </summary>
         static constexpr const std::size_t size = 4 * sizeof(value_type);
+
+        /// <summary>
+        /// The enumeration value being reflected.
+        /// </summary>
+        static constexpr mmpld::vertex_type value
+            = mmpld::vertex_type::float_xyzr;
+
+#if defined(MMPLD_WITH_DEPRECATED_VERTEX_TYPE_CONSTANT)
+        /// <summary>
+        /// The enumeration value being reflected.
+        /// </summary>
+        /// <remarks>
+        /// This field is deprecated and only here for backwards compatibility.
+        /// Use <see cref="value" /> instead.
+        /// </remarks>
+        static constexpr mmpld::vertex_type vertex_type = value;
+#endif /* defined(MMPLD_WITH_DEPRECATED_VERTEX_TYPE_CONSTANT) */
     };
 
     /// <summary>
@@ -180,15 +213,26 @@ namespace detail {
             = (std::numeric_limits<std::size_t>::max)();
 
         /// <summary>
-        /// The enumeration value being reflected.
-        /// </summary>
-        static const mmpld::vertex_type vertex_type
-            = mmpld::vertex_type::short_xyz;
-
-        /// <summary>
         /// The total size of the whole positional parameters in bytes.
         /// </summary>
         static constexpr const std::size_t size = 3 * sizeof(value_type);
+
+        /// <summary>
+        /// The enumeration value being reflected.
+        /// </summary>
+        static const mmpld::vertex_type value
+            = mmpld::vertex_type::short_xyz;
+
+#if defined(MMPLD_WITH_DEPRECATED_VERTEX_TYPE_CONSTANT)
+        /// <summary>
+        /// The enumeration value being reflected.
+        /// </summary>
+        /// <remarks>
+        /// This field is deprecated and only here for backwards compatibility.
+        /// Use <see cref="value" /> instead.
+        /// </remarks>
+        static constexpr mmpld::vertex_type vertex_type = value;
+#endif /* defined(MMPLD_WITH_DEPRECATED_VERTEX_TYPE_CONSTANT) */
     };
 
     /// <summary>
@@ -207,15 +251,26 @@ namespace detail {
             = (std::numeric_limits<std::size_t>::max)();
 
         /// <summary>
-        /// The enumeration value being reflected.
-        /// </summary>
-        static const mmpld::vertex_type vertex_type
-            = mmpld::vertex_type::double_xyz;
-
-        /// <summary>
         /// The total size of the whole positional parameters in bytes.
         /// </summary>
         static constexpr const std::size_t size = 3 * sizeof(value_type);
+
+        /// <summary>
+        /// The enumeration value being reflected.
+        /// </summary>
+        static const mmpld::vertex_type value
+            = mmpld::vertex_type::double_xyz;
+
+#if defined(MMPLD_WITH_DEPRECATED_VERTEX_TYPE_CONSTANT)
+        /// <summary>
+        /// The enumeration value being reflected.
+        /// </summary>
+        /// <remarks>
+        /// This field is deprecated and only here for backwards compatibility.
+        /// Use <see cref="value" /> instead.
+        /// </remarks>
+        static constexpr mmpld::vertex_type vertex_type = value;
+#endif /* defined(MMPLD_WITH_DEPRECATED_VERTEX_TYPE_CONSTANT) */
     };
 
 } /* end namespace mmpld */

@@ -25,7 +25,7 @@ namespace test {
                 std::vector<std::uint8_t> dst(2 * dst_view::stride());
                 mmpld::list_header src_header;
                 src_header.particles = 2;
-                src_header.vertex_type = src_view::vertex_traits::vertex_type;
+                src_header.vertex_type = src_view::vertex_traits::value;
                 src_header.colour_type = src_view::colour_traits::colour_type;
                 src_header.radius = 12.0f;
                 src_header.colour[0] = 0.7f;
@@ -58,7 +58,7 @@ namespace test {
                 std::vector<std::uint8_t> dst(2 * dst_view::stride());
                 mmpld::list_header src_header;
                 src_header.particles = 2;
-                src_header.vertex_type = src_view::vertex_traits::vertex_type;
+                src_header.vertex_type = src_view::vertex_traits::value;
                 src_header.colour_type = src_view::colour_traits::colour_type;
                 src_header.radius = 12.0f;
                 src_header.colour[0] = 0.7f;
@@ -97,7 +97,7 @@ namespace test {
                 std::vector<std::uint8_t> dst(2 * dst_view::stride());
                 mmpld::list_header src_header;
                 src_header.particles = 2;
-                src_header.vertex_type = src_view::vertex_traits::vertex_type;
+                src_header.vertex_type = src_view::vertex_traits::value;
                 src_header.colour_type = src_view::colour_traits::colour_type;
                 src_header.radius = 12.0f;
                 src_header.colour[0] = 0.7f;
@@ -136,7 +136,7 @@ namespace test {
                 std::vector<std::uint8_t> dst(2 * dst_view::stride());
                 mmpld::list_header src_header;
                 src_header.particles = 2;
-                src_header.vertex_type = src_view::vertex_traits::vertex_type;
+                src_header.vertex_type = src_view::vertex_traits::value;
                 src_header.colour_type = src_view::colour_traits::colour_type;
                 src_header.radius = 12.0f;
                 src_header.colour[0] = 0.7f;
@@ -181,7 +181,7 @@ namespace test {
                 std::vector<std::uint8_t> dst(2 * dst_view::stride());
                 mmpld::list_header src_header;
                 src_header.particles = 2;
-                src_header.vertex_type = src_view::vertex_traits::vertex_type;
+                src_header.vertex_type = src_view::vertex_traits::value;
                 src_header.colour_type = src_view::colour_traits::colour_type;
                 src_header.radius = 12.0f;
                 src_header.colour[0] = 0.7f;
@@ -230,7 +230,7 @@ namespace test {
                 std::vector<std::uint8_t> dst(2 * dst_view::stride());
                 mmpld::list_header src_header;
                 src_header.particles = 2;
-                src_header.vertex_type = src_view::vertex_traits::vertex_type;
+                src_header.vertex_type = src_view::vertex_traits::value;
                 src_header.colour_type = src_view::colour_traits::colour_type;
                 src_header.radius = 12.0f;
                 src_header.colour[0] = 0.7f;
@@ -280,7 +280,7 @@ namespace test {
                 std::vector<std::uint8_t> dst(2 * dst_view::stride());
                 mmpld::list_header src_header;
                 src_header.particles = 2;
-                src_header.vertex_type = src_view::vertex_traits::vertex_type;
+                src_header.vertex_type = src_view::vertex_traits::value;
                 src_header.colour_type = src_view::colour_traits::colour_type;
                 src_header.radius = 12.0f;
                 src_header.colour[0] = 0.7f;
@@ -329,7 +329,7 @@ namespace test {
                 std::vector<std::uint8_t> dst(2 * dst_view::stride());
                 mmpld::list_header src_header;
                 src_header.particles = 2;
-                src_header.vertex_type = src_view::vertex_traits::vertex_type;
+                src_header.vertex_type = src_view::vertex_traits::value;
                 src_header.colour_type = src_view::colour_traits::colour_type;
                 src_header.radius = 12.0f;
                 src_header.colour[0] = 0.7f;
@@ -380,7 +380,7 @@ namespace test {
                 std::vector<std::uint8_t> dst(2 * dst_view::stride());
                 mmpld::list_header src_header;
                 src_header.particles = 2;
-                src_header.vertex_type = src_view::vertex_traits::vertex_type;
+                src_header.vertex_type = src_view::vertex_traits::value;
                 src_header.colour_type = src_view::colour_traits::colour_type;
                 src_header.radius = 12.0f;
                 src_header.colour[0] = 0.7f;
@@ -429,7 +429,7 @@ namespace test {
                 std::vector<std::uint8_t> dst(2 * dst_view::stride());
                 mmpld::list_header src_header;
                 src_header.particles = 2;
-                src_header.vertex_type = src_view::vertex_traits::vertex_type;
+                src_header.vertex_type = src_view::vertex_traits::value;
                 src_header.colour_type = src_view::colour_traits::colour_type;
                 src_header.radius = 12.0f;
                 src_header.min_intensity = 0.0f;
@@ -885,19 +885,19 @@ namespace test {
                 *src_view::colour(src.data() + src_view::stride()) = 1.0f;
 
                 const_view dst(src_view::vertex_type(), src_view::colour_type(), src.data());
-                Assert::AreEqual(src_view::position(src.data())[0], dst.position<src_view::vertex_traits::vertex_type>()[0], L"P1: View on position[0] correct", LINE_INFO());
-                Assert::AreEqual(src_view::position(src.data())[1], dst.position<src_view::vertex_traits::vertex_type>()[1], L"P1: View on position[1] correct", LINE_INFO());
-                Assert::AreEqual(src_view::position(src.data())[2], dst.position<src_view::vertex_traits::vertex_type>()[2], L"P1: View on position[2] correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data())[0], dst.position<src_view::vertex_traits::value>()[0], L"P1: View on position[0] correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data())[1], dst.position<src_view::vertex_traits::value>()[1], L"P1: View on position[1] correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data())[2], dst.position<src_view::vertex_traits::value>()[2], L"P1: View on position[2] correct", LINE_INFO());
                 Assert::AreEqual((const void *) nullptr, dst.radius(), L"P1: View has no radius", LINE_INFO());
-                Assert::AreEqual((const src_view::vertex_value_type *) nullptr, dst.radius<src_view::vertex_traits::vertex_type>(), L"P1: View has no radius", LINE_INFO());
+                Assert::AreEqual((const src_view::vertex_value_type *) nullptr, dst.radius<src_view::vertex_traits::value>(), L"P1: View has no radius", LINE_INFO());
                 Assert::AreEqual(src_view::colour(src.data())[0], dst.colour<src_view::colour_traits::colour_type>()[0], L"P1: View on colour correct", LINE_INFO());
 
                 dst.advance();
-                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[0], dst.position<src_view::vertex_traits::vertex_type>()[0], L"P2: View on position[0] correct", LINE_INFO());
-                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[1], dst.position<src_view::vertex_traits::vertex_type>()[1], L"P2: View on position[1] correct", LINE_INFO());
-                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[2], dst.position<src_view::vertex_traits::vertex_type>()[2], L"P2: View on position[2] correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[0], dst.position<src_view::vertex_traits::value>()[0], L"P2: View on position[0] correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[1], dst.position<src_view::vertex_traits::value>()[1], L"P2: View on position[1] correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[2], dst.position<src_view::vertex_traits::value>()[2], L"P2: View on position[2] correct", LINE_INFO());
                 Assert::AreEqual((const void *) nullptr, dst.radius(), L"P2: View has no radius", LINE_INFO());
-                Assert::AreEqual((const src_view::vertex_value_type *) nullptr, dst.radius<src_view::vertex_traits::vertex_type>(), L"P2: View has no radius", LINE_INFO());
+                Assert::AreEqual((const src_view::vertex_value_type *) nullptr, dst.radius<src_view::vertex_traits::value>(), L"P2: View has no radius", LINE_INFO());
                 Assert::AreEqual(src_view::colour(src.data() + src_view::stride())[0], dst.colour<src_view::colour_traits::colour_type>()[0], L"P2: View on colour correct", LINE_INFO());
             }
 
@@ -922,21 +922,21 @@ namespace test {
                 src_view::colour(src.data() + src_view::stride())[2] = 0.7f;
 
                 mutable_view dst(src_view::vertex_type(), src_view::colour_type(), src.data());
-                Assert::AreEqual(src_view::position(src.data())[0], dst.position<src_view::vertex_traits::vertex_type>()[0], L"P1: View on position[0] correct", LINE_INFO());
-                Assert::AreEqual(src_view::position(src.data())[1], dst.position<src_view::vertex_traits::vertex_type>()[1], L"P1: View on position[1] correct", LINE_INFO());
-                Assert::AreEqual(src_view::position(src.data())[2], dst.position<src_view::vertex_traits::vertex_type>()[2], L"P1: View on position[2] correct", LINE_INFO());
-                Assert::AreEqual(src_view::position(src.data())[3], dst.position<src_view::vertex_traits::vertex_type>()[3], L"P1: View on position[3] correct", LINE_INFO());
-                Assert::AreEqual(src_view::position(src.data())[3], *dst.radius<src_view::vertex_traits::vertex_type>(), L"P1: View on radius correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data())[0], dst.position<src_view::vertex_traits::value>()[0], L"P1: View on position[0] correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data())[1], dst.position<src_view::vertex_traits::value>()[1], L"P1: View on position[1] correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data())[2], dst.position<src_view::vertex_traits::value>()[2], L"P1: View on position[2] correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data())[3], dst.position<src_view::vertex_traits::value>()[3], L"P1: View on position[3] correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data())[3], *dst.radius<src_view::vertex_traits::value>(), L"P1: View on radius correct", LINE_INFO());
                 Assert::AreEqual(src_view::colour(src.data())[0], dst.colour<src_view::colour_traits::colour_type>()[0], L"P2: View on colour[0] correct", LINE_INFO());
                 Assert::AreEqual(src_view::colour(src.data())[1], dst.colour<src_view::colour_traits::colour_type>()[1], L"P2: View on colour[1] correct", LINE_INFO());
                 Assert::AreEqual(src_view::colour(src.data())[2], dst.colour<src_view::colour_traits::colour_type>()[2], L"P2: View on colour[2] correct", LINE_INFO());
 
                 dst.advance();
-                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[0], dst.position<src_view::vertex_traits::vertex_type>()[0], L"P1: View on position[0] correct", LINE_INFO());
-                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[1], dst.position<src_view::vertex_traits::vertex_type>()[1], L"P1: View on position[1] correct", LINE_INFO());
-                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[2], dst.position<src_view::vertex_traits::vertex_type>()[2], L"P1: View on position[2] correct", LINE_INFO());
-                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[3], dst.position<src_view::vertex_traits::vertex_type>()[3], L"P1: View on position[3] correct", LINE_INFO());
-                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[3], *dst.radius<src_view::vertex_traits::vertex_type>(), L"P1: View on radius correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[0], dst.position<src_view::vertex_traits::value>()[0], L"P1: View on position[0] correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[1], dst.position<src_view::vertex_traits::value>()[1], L"P1: View on position[1] correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[2], dst.position<src_view::vertex_traits::value>()[2], L"P1: View on position[2] correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[3], dst.position<src_view::vertex_traits::value>()[3], L"P1: View on position[3] correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[3], *dst.radius<src_view::vertex_traits::value>(), L"P1: View on radius correct", LINE_INFO());
                 Assert::AreEqual(src_view::colour(src.data() + src_view::stride())[0], dst.colour<src_view::colour_traits::colour_type>()[0], L"P2: View on colour[0] correct", LINE_INFO());
                 Assert::AreEqual(src_view::colour(src.data() + src_view::stride())[1], dst.colour<src_view::colour_traits::colour_type>()[1], L"P2: View on colour[1] correct", LINE_INFO());
                 Assert::AreEqual(src_view::colour(src.data() + src_view::stride())[2], dst.colour<src_view::colour_traits::colour_type>()[2], L"P2: View on colour[2] correct", LINE_INFO());
@@ -965,22 +965,22 @@ namespace test {
                 src_view::colour(src.data() + src_view::stride())[2] = 2;
 
                 const_view dst(src_view::vertex_type(), src_view::colour_type(), src.data());
-                Assert::AreEqual(src_view::position(src.data())[0], dst.position<src_view::vertex_traits::vertex_type>()[0], L"P1: View on position[0] correct", LINE_INFO());
-                Assert::AreEqual(src_view::position(src.data())[1], dst.position<src_view::vertex_traits::vertex_type>()[1], L"P1: View on position[1] correct", LINE_INFO());
-                Assert::AreEqual(src_view::position(src.data())[2], dst.position<src_view::vertex_traits::vertex_type>()[2], L"P1: View on position[2] correct", LINE_INFO());
-                Assert::AreEqual(src_view::position(src.data())[3], dst.position<src_view::vertex_traits::vertex_type>()[3], L"P1: View on position[3] correct", LINE_INFO());
-                Assert::AreEqual(src_view::position(src.data())[3], *dst.radius<src_view::vertex_traits::vertex_type>(), L"P1: View on radius correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data())[0], dst.position<src_view::vertex_traits::value>()[0], L"P1: View on position[0] correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data())[1], dst.position<src_view::vertex_traits::value>()[1], L"P1: View on position[1] correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data())[2], dst.position<src_view::vertex_traits::value>()[2], L"P1: View on position[2] correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data())[3], dst.position<src_view::vertex_traits::value>()[3], L"P1: View on position[3] correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data())[3], *dst.radius<src_view::vertex_traits::value>(), L"P1: View on radius correct", LINE_INFO());
                 Assert::AreEqual(src_view::colour(src.data())[0], dst.colour<src_view::colour_traits::colour_type>()[0], L"P2: View on colour[0] correct", LINE_INFO());
                 Assert::AreEqual(src_view::colour(src.data())[1], dst.colour<src_view::colour_traits::colour_type>()[1], L"P2: View on colour[1] correct", LINE_INFO());
                 Assert::AreEqual(src_view::colour(src.data())[2], dst.colour<src_view::colour_traits::colour_type>()[2], L"P2: View on colour[2] correct", LINE_INFO());
                 Assert::AreEqual(src_view::colour(src.data())[3], dst.colour<src_view::colour_traits::colour_type>()[3], L"P2: View on colour[3] correct", LINE_INFO());
 
                 dst.advance();
-                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[0], dst.position<src_view::vertex_traits::vertex_type>()[0], L"P1: View on position[0] correct", LINE_INFO());
-                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[1], dst.position<src_view::vertex_traits::vertex_type>()[1], L"P1: View on position[1] correct", LINE_INFO());
-                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[2], dst.position<src_view::vertex_traits::vertex_type>()[2], L"P1: View on position[2] correct", LINE_INFO());
-                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[3], dst.position<src_view::vertex_traits::vertex_type>()[3], L"P1: View on position[3] correct", LINE_INFO());
-                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[3], *dst.radius<src_view::vertex_traits::vertex_type>(), L"P1: View on radius correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[0], dst.position<src_view::vertex_traits::value>()[0], L"P1: View on position[0] correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[1], dst.position<src_view::vertex_traits::value>()[1], L"P1: View on position[1] correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[2], dst.position<src_view::vertex_traits::value>()[2], L"P1: View on position[2] correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[3], dst.position<src_view::vertex_traits::value>()[3], L"P1: View on position[3] correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[3], *dst.radius<src_view::vertex_traits::value>(), L"P1: View on radius correct", LINE_INFO());
                 Assert::AreEqual(src_view::colour(src.data() + src_view::stride())[0], dst.colour<src_view::colour_traits::colour_type>()[0], L"P2: View on colour[0] correct", LINE_INFO());
                 Assert::AreEqual(src_view::colour(src.data() + src_view::stride())[1], dst.colour<src_view::colour_traits::colour_type>()[1], L"P2: View on colour[1] correct", LINE_INFO());
                 Assert::AreEqual(src_view::colour(src.data() + src_view::stride())[2], dst.colour<src_view::colour_traits::colour_type>()[2], L"P2: View on colour[2] correct", LINE_INFO());
@@ -1004,17 +1004,17 @@ namespace test {
                 src_view::colour(src.data() + src_view::stride())[0] = 1.0;
 
                 const_view dst(src_view::vertex_type(), src_view::colour_type(), src.data());
-                Assert::AreEqual(src_view::position(src.data())[0], dst.position<src_view::vertex_traits::vertex_type>()[0], L"P1: View on position[0] correct", LINE_INFO());
-                Assert::AreEqual(src_view::position(src.data())[1], dst.position<src_view::vertex_traits::vertex_type>()[1], L"P1: View on position[1] correct", LINE_INFO());
-                Assert::AreEqual(src_view::position(src.data())[2], dst.position<src_view::vertex_traits::vertex_type>()[2], L"P1: View on position[2] correct", LINE_INFO());
-                Assert::AreEqual(src_view::position(src.data())[3], dst.position<src_view::vertex_traits::vertex_type>()[3], L"P1: View on position[3] correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data())[0], dst.position<src_view::vertex_traits::value>()[0], L"P1: View on position[0] correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data())[1], dst.position<src_view::vertex_traits::value>()[1], L"P1: View on position[1] correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data())[2], dst.position<src_view::vertex_traits::value>()[2], L"P1: View on position[2] correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data())[3], dst.position<src_view::vertex_traits::value>()[3], L"P1: View on position[3] correct", LINE_INFO());
                 Assert::AreEqual(src_view::colour(src.data())[0], dst.colour<src_view::colour_traits::colour_type>()[0], L"P1: View on intensity correct", LINE_INFO());
 
                 dst.advance();
-                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[0], dst.position<src_view::vertex_traits::vertex_type>()[0], L"P2: View on position[0] correct", LINE_INFO());
-                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[1], dst.position<src_view::vertex_traits::vertex_type>()[1], L"P2: View on position[1] correct", LINE_INFO());
-                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[2], dst.position<src_view::vertex_traits::vertex_type>()[2], L"P2: View on position[2] correct", LINE_INFO());
-                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[3], dst.position<src_view::vertex_traits::vertex_type>()[3], L"P2: View on position[3] correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[0], dst.position<src_view::vertex_traits::value>()[0], L"P2: View on position[0] correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[1], dst.position<src_view::vertex_traits::value>()[1], L"P2: View on position[1] correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[2], dst.position<src_view::vertex_traits::value>()[2], L"P2: View on position[2] correct", LINE_INFO());
+                Assert::AreEqual(src_view::position(src.data() + src_view::stride())[3], dst.position<src_view::vertex_traits::value>()[3], L"P2: View on position[3] correct", LINE_INFO());
                 Assert::AreEqual(src_view::colour(src.data() + src_view::stride())[0], dst.colour<src_view::colour_traits::colour_type>()[0], L"P2: View on intensity correct", LINE_INFO());
             }
         }
@@ -1176,6 +1176,46 @@ namespace test {
             Assert::AreEqual(p_t(0), (props & p_t(pp_t::per_particle_colour)), L"per_particle_colour of double_xyz + intensity64", LINE_INFO());
             Assert::AreEqual(p_t(pp_t::per_particle_intensity), (props & p_t(pp_t::per_particle_intensity)), L"per_particle_intensity of double_xyz + intensity64", LINE_INFO());
             Assert::AreEqual(p_t(pp_t::float_colour), (props & p_t(pp_t::float_colour)), L"float_colour of double_xyz + intensity64", LINE_INFO());
+        }
+
+        TEST_METHOD(TestRuntimeConvert) {
+            {
+                typedef mmpld::particle_traits<mmpld::vertex_type::float_xyz, mmpld::colour_type::intensity> src_view;
+                typedef src_view dst_view;
+                std::vector<std::uint8_t> src(2 * src_view::stride());
+                std::vector<std::uint8_t> dst(2 * dst_view::stride());
+                mmpld::list_header src_header;
+                src_header.particles = 2;
+                src_header.vertex_type = src_view::vertex_traits::value;
+                src_header.colour_type = src_view::colour_traits::colour_type;
+                src_header.radius = 12.0f;
+                src_header.colour[0] = 0.7f;
+                src_header.colour[1] = 0.8f;
+                src_header.colour[2] = 0.9f;
+                src_header.colour[3] = 0.5f;
+
+                src_view::position(src.data())[0] = 1.0f;
+                src_view::position(src.data())[1] = 2.0f;
+                src_view::position(src.data())[2] = 3.0f;
+                *src_view::colour(src.data()) = 0.5f;
+
+                src_view::position(src.data() + src_view::stride())[0] = 4.0f;
+                src_view::position(src.data() + src_view::stride())[1] = 5.0f;
+                src_view::position(src.data() + src_view::stride())[2] = 6.0f;
+                *src_view::colour(src.data() + src_view::stride()) = 1.0f;
+
+
+
+
+
+
+                auto cnt = mmpld::convert<dst_view>(src.data(), src_header, dst.data(), 2);
+                Assert::AreEqual(size_t(2), cnt, L"All particles have been converted.", LINE_INFO());
+
+                for (size_t i = 0, end = src.size(); i < end; ++i) {
+                    Assert::AreEqual(src[i], dst[i], L"Particle byte has been copied.", LINE_INFO());
+                }
+            }
         }
 
         TEST_METHOD(TestStride) {

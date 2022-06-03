@@ -1,5 +1,5 @@
 // <copyright file="particle_view.inl" company="Visualisierungsinstitut der Universität Stuttgart">
-// Copyright © 2018 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+// Copyright © 2018 - 2022 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
 // </copyright>
 // <author>Christoph Müller</author>
 
@@ -9,15 +9,21 @@
  */
 template<class T>
 mmpld::particle_view<T>::particle_view(const mmpld::vertex_type vertex_type,
-        const mmpld::colour_type colour_type, pointer_type data)
-        : _colour_type(colour_type), _data(data), _vertex_type(vertex_type) {
+        const mmpld::colour_type colour_type, pointer_type data) : _data(data) {
     mmpld::list_header dummy;
-    dummy.colour_type = this->_colour_type;
-    dummy.vertex_type = this->_vertex_type;
+    dummy.colour_type = colour_type;
+    dummy.vertex_type = vertex_type;
+    this->set_properties(dummy);
+}
 
-    this->_invalid_offset = mmpld::get_offsets<size_type>(dummy,
-        this->_position_offset, this->_radius_offset, this->_colour_offset);
-    this->_stride = mmpld::get_stride<decltype(this->_stride)>(dummy);
+
+/*
+ * mmpld::particle_view<T>::particle_view
+ */
+template<class T>
+mmpld::particle_view<T>::particle_view(const mmpld::list_header& header,
+        pointer_type data) : _data(data) {
+    this->set_properties(header);
 }
 
 
@@ -121,4 +127,17 @@ mmpld::particle_view<T>& mmpld::particle_view<T>::operator =(
         rhs._vertex_type = mmpld::vertex_type::none;
     }
     return *this;
+}
+
+
+/*
+ * mmpld::particle_view<T>::set_properties
+ */
+template<class T>
+void mmpld::particle_view<T>::set_properties(const mmpld::list_header& header) {
+    this->_colour_type = header.colour_type;
+    this->_invalid_offset = mmpld::get_offsets<size_type>(header,
+        this->_position_offset, this->_radius_offset, this->_colour_offset);
+    this->_stride = mmpld::get_stride<size_type>(header);
+    this->_vertex_type = header.vertex_type;
 }

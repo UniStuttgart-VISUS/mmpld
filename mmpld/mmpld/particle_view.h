@@ -1,5 +1,5 @@
 // <copyright file="particle_view.h" company="Visualisierungsinstitut der Universität Stuttgart">
-// Copyright © 2018 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+// Copyright © 2018 - 2022 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
 // </copyright>
 // <author>Christoph Müller</author>
 
@@ -36,7 +36,7 @@ namespace mmpld {
         /// </summary>
         template<class Tp>
         using const_compatible_type = typename std::conditional<
-            std::is_const<T>::value, 
+            std::is_const<T>::value,
             const typename std::remove_const<Tp>::type,
             typename std::remove_const<Tp>::type>::type;
 
@@ -48,7 +48,7 @@ namespace mmpld {
         /// <summary>
         /// The type to measure sizes.
         /// </summary>
-        typedef size_t size_type;
+        typedef std::size_t size_type;
 
         /// <summary>
         /// Initialises a new instance.
@@ -61,6 +61,16 @@ namespace mmpld {
         /// <c>nullptr</c>.</param>
         particle_view(const mmpld::vertex_type vertex_type,
             const mmpld::colour_type colour_type, pointer_type data = nullptr);
+
+        /// <summary>
+        /// Initialises a new instance.
+        /// </summary>
+        /// <param name="header">A particle list header describing the data.
+        /// </param>
+        /// <param name="data">The pointer to the data, which defaults to
+        /// <c>nullptr</c>.</param>
+        particle_view(const mmpld::list_header& header,
+            pointer_type data = nullptr);
 
         /// <summary>
         /// Clones <paramref name="rhs" />.
@@ -94,20 +104,20 @@ namespace mmpld {
         }
 
         /// <summary>
-        /// Zero the memory of the particle.
-        /// </summary>
-        void clear(void) {
-            assert(this->good());
-            ::memset(this->_data, 0, this->stride());
-        }
-
-        /// <summary>
         /// Answer the data as pointer with byte-wise increment.
         /// </summary>
         /// <returns>The data pointer.</returns>
         inline const_compatible_type<std::uint8_t> *byte_data(void) {
             return reinterpret_cast<const_compatible_type<std::uint8_t> *>(
                 this->_data);
+        }
+
+        /// <summary>
+        /// Zero the memory of the particle.
+        /// </summary>
+        void clear(void) {
+            assert(this->good());
+            ::memset(this->_data, 0, this->stride());
         }
 
         /// <summary>
@@ -149,9 +159,9 @@ namespace mmpld {
         }
 
         /// <summary>
-        /// Answer the current data pointer.
+        /// Answer the data pointer for the current particle.
         /// </summary>
-        /// <returns>The current data pointer.</returns>
+        /// <returns>The data pointer.</returns>
         inline pointer_type data(void) {
             return this->_data;
         }
@@ -302,6 +312,8 @@ namespace mmpld {
 
     private:
 
+        void set_properties(const mmpld::list_header& header);
+
         size_type _colour_offset;
         mmpld::colour_type _colour_type;
         pointer_type _data;
@@ -311,6 +323,43 @@ namespace mmpld {
         size_type _stride;
         mmpld::vertex_type _vertex_type;
     };
+
+
+    /// <summary>
+    /// Creates a new <see cref="particle_view{T}" /> for the given data
+    /// pointer.
+    /// </summary>
+    /// <typeparam name="T">The value type of the pointer to be used. This
+    /// parameter allows for controlling the const-ness of the view.</typeparam>
+    /// <param name="vertex_type">The type of the positional information.
+    /// </param>
+    /// <param name="colour_type">The type of the colour information.
+    /// </param>
+    /// <param name="data">The pointer to the data.</param>
+    /// <returns>A view for the given particle data.</returns>
+    template<class T>
+    inline particle_view<T> make_particle_view(const vertex_type vertex_type,
+            const mmpld::colour_type colour_type, T *data) {
+        return particle_view<T>(vertex_type, colour_type, data);
+    }
+
+
+    /// <summary>
+    /// Creates a new <see cref="particle_view{T}" /> for the given data
+    /// pointer.
+    /// </summary>
+    /// <typeparam name="T">The value type of the pointer to be used. This
+    /// parameter allows for controlling the const-ness of the view.</typeparam>
+    /// <param name="header">A particle list header describing the data.
+    /// </param>
+    /// <param name="data">The pointer to the data.</param>
+    /// <returns>A view for the given particle data.</returns>
+    /// <returns>A view for the given particle data.</returns>
+    template<class T>
+    inline particle_view<T> make_particle_view(const list_header& header,
+            T *data) {
+        return particle_view<T>(header, data);
+    }
 
 } /* end namespace mmpld */
 

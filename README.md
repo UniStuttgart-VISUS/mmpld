@@ -219,3 +219,8 @@ nuget.exe pack mmpld.nuspec -properties version=x.x.x
 ```
 
 Replace `x.x.x` with the current version and do not forget to update the release notes in the nuspec.
+
+## Breaking changes
+### Version 1.5
+* The constant `vertex_traits::vertex_type` has been renamed to `vertex_traits::value` to allow for a unified implementation of at-runtime data conversion. It is recommended to adapt all client code to this change. However, if your application heavily relies on the presence of this constant, you can enable an alias via `#define MMPLD_WITH_DEPRECATED_VERTEX_TYPE_CONSTANT` before `#include "mmpld.h"`.
+* The constant `colour_traits::colour_type` has been renamed to `colour_traits::value` to allow for a unified implementation of at-runtime data conversion. It is recommended to adapt all client code to this change. However, if your application heavily relies on the presence of this constant, you can enable an alias via `#define MMPLD_WITH_DEPRECATED_COLOUR_TYPE_CONSTANT` before `#include "mmpld.h"`.

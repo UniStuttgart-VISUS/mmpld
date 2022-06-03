@@ -28,4 +28,3 @@ std::basic_string<C> mmpld::to_string(const colour_type value) {
 
 #undef __MMPLD_TO_STRING_CASE
 }
-
