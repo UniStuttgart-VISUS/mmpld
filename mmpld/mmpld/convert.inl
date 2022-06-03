@@ -170,22 +170,6 @@ namespace detail {
         const I *input, const size_t cnt_in, void *output,
         const size_t cnt_out) { }
 
-
-    //template<class C, C... Vs>
-    //inline auto make_conversions_to(enum_dispatch_list<C, Vs...>, C output)
-    //        -> decltype(std::tuple_cat(std::make_tuple(
-    //        std::make_pair(output, Vs))...)) {
-    //    return std::tuple_cat(std::make_tuple(std::make_pair(output, Vs))...);
-    //}
-
-    //template<class C, C... Vs>
-    //inline auto make_conversions(enum_dispatch_list<C, Vs...>)
-    //        -> decltype(std::tuple_cat(make_conversions_to(
-    //        enum_dispatch_list<C, Vs...>{}, Vs)...)) {
-    //    return std::tuple_cat(make_conversions_to(
-    //        enum_dispatch_list<C, Vs...>{}, Vs)...);
-    //}
-
     /// <summary>
     /// Generic base class for converting positions and colours.
     /// </summary>
@@ -209,12 +193,12 @@ namespace detail {
         typedef vertex_traits<O> output_traits;
         typedef vertex_traits<I> input_traits;
 
-        static inline void convert(void *dst, const void *src) {
+        static inline void convert(const void *src, void *dst) {
             auto d = static_cast<output_traits::value_type *>(dst);
             auto s = static_cast<const input_traits::value_type *>(src);
-            d[0] = static_cast<output_traits::value_type>(d[0]);
-            d[1] = static_cast<output_traits::value_type>(d[1]);
-            d[2] = static_cast<output_traits::value_type>(d[2]);
+            d[0] = static_cast<output_traits::value_type>(s[0]);
+            d[1] = static_cast<output_traits::value_type>(s[1]);
+            d[2] = static_cast<output_traits::value_type>(s[2]);
         }
     };
 
@@ -223,7 +207,7 @@ namespace detail {
     /// </summary>
     template<> struct runtime_converter<vertex_type, vertex_type::none,
             vertex_type::none> {
-        static inline void convert(void *dst, const void *src) { }
+        static inline void convert(const void *src, void *dst) { }
     };
 
     /// <summary>
@@ -231,7 +215,7 @@ namespace detail {
     /// </summary>
     template<vertex_type I>
     struct runtime_converter<vertex_type, vertex_type::none, I> {
-        static inline void convert(void *dst, const void *src) { }
+        static inline void convert(const void *src, void *dst) { }
     };
 
     /// <summary>
@@ -241,7 +225,7 @@ namespace detail {
     struct runtime_converter<vertex_type, O, vertex_type::none> {
         typedef vertex_traits<O> output_traits;
 
-        static inline void convert(void *dst, const void *src) {
+        static inline void convert(const void *src, void *dst) {
             auto d = static_cast<output_traits::value_type *>(dst);
             d[0] = static_cast<output_traits::value_type>(0);
             d[1] = static_cast<output_traits::value_type>(0);
@@ -258,7 +242,7 @@ namespace detail {
         typedef colour_traits<O> output_traits;
         typedef colour_traits<I> input_traits;
 
-        static inline void convert(void *dst, const void *src) {
+        static inline void convert(const void *src, void *dst) {
             auto s = static_cast<const input_traits::value_type *>(src);
             convert_colour<output_traits::value_type>(
                 s, input_traits::channels, dst, output_traits::channels);
@@ -270,7 +254,7 @@ namespace detail {
     /// </summary>
     template<> struct runtime_converter<colour_type, colour_type::none,
             colour_type::none> {
-        static inline void convert(void *dst, const void *src) { }
+        static inline void convert(const void *src, void *dst) { }
     };
 
     /// <summary>
@@ -281,7 +265,7 @@ namespace detail {
     struct runtime_converter<colour_type, O, colour_type::none> {
         typedef colour_traits<O> output_traits;
 
-        static inline void convert(void *dst, const void *src) {
+        static inline void convert(const void *src, void *dst) {
             static constexpr std::array<std::uint8_t, 4> GREY {
                 128, 128, 128, 255
             };
@@ -371,10 +355,10 @@ namespace detail {
     /// tuple.</typeparam>
     /// <returns></returns>
     template<class E, class T, std::size_t... Is>
-    inline std::unordered_map<std::pair<E, E>, void (*)(void *, const void *)>
+    inline std::unordered_map<std::pair<E, E>, void (*)(const void *, void *)>
     make_conversion_table2(std::index_sequence<Is...>, T table) {
         typedef std::unordered_map<std::pair<E, E>,
-            void (*)(void *, const void *)> table_type;
+            void (*)(const void *, void *)> table_type;
         return table_type { std::get<Is>(table)... };
     }
 
@@ -388,7 +372,7 @@ namespace detail {
     /// <param name="table"></param>
     /// <returns></returns>
     template<class E, class T>
-    inline std::unordered_map<std::pair<E, E>, void (*)(void *, const void *)>
+    inline std::unordered_map<std::pair<E, E>, void (*)(const void *, void *)>
     make_conversion_table1(T table) {
         return make_conversion_table2<E>(std::make_index_sequence<
             std::tuple_size<T>::value> { }, table);
@@ -400,7 +384,7 @@ namespace detail {
     /// </summary>
     /// <returns></returns>
     inline const std::unordered_map<std::pair<colour_type, colour_type>,
-        void (*)(void *, const void *)>&
+        void (*)(const void *, void *)>&
     make_colour_conversion_table() {
         static const auto retval = make_conversion_table1<colour_type>(
             make_conversion_table3<colour_type, colour_traits>(
@@ -414,7 +398,7 @@ namespace detail {
     /// </summary>
     /// <returns></returns>
     inline const std::unordered_map<std::pair<vertex_type, vertex_type>,
-        void (*)(void *, const void *)>&
+        void (*)(const void *, void *)>&
     make_vertex_conversion_table() {
         static const auto retval = make_conversion_table1<vertex_type>(
             make_conversion_table3<vertex_type, vertex_traits>(
@@ -435,6 +419,9 @@ std::size_t mmpld::convert(const void *src, const list_header& header,
     typedef T dst_view;
     typedef typename dst_view::vertex_value_type dst_vertex_scalar;
 
+    static const auto& COLOUR_TABLE = detail::make_colour_conversion_table();
+    static const auto& VERTEX_TABLE = detail::make_vertex_conversion_table();
+
     const auto retval = (std::min)(static_cast<size_t>(header.particles), cnt);
     const auto dst_channels = dst_view::colour_traits::channels;
     const auto dst_colour = dst_view::colour_traits::colour_type;
@@ -452,9 +439,29 @@ std::size_t mmpld::convert(const void *src, const list_header& header,
 
     } else {
         /* Convert one particle at a time. */
-        size_t src_col_offset, src_pos_offset, src_rad_offset;
+        std::size_t src_col_offset, src_pos_offset, src_rad_offset;
         const auto invalid = get_offsets<size_t>(header, src_pos_offset,
             src_rad_offset, src_col_offset);
+        typename std::decay<decltype(COLOUR_TABLE)>::type::mapped_type col_conv
+            = nullptr;
+        typename std::decay<decltype(VERTEX_TABLE)>::type::mapped_type pos_conv
+            = nullptr;
+
+        {
+            auto it = COLOUR_TABLE.find(std::make_pair(dst_colour,
+                header.colour_type));
+            if (it != COLOUR_TABLE.end()) {
+                col_conv = it->second;
+            }
+        }
+
+        {
+            auto it = VERTEX_TABLE.find(std::make_pair(dst_vertex,
+                header.vertex_type));
+            if (it != VERTEX_TABLE.end()) {
+                pos_conv = it->second;
+            }
+        }
 
         for (size_t i = 0; i < retval; ++i) {
             auto dst_pos = dst_view::position(d);
@@ -470,38 +477,11 @@ std::size_t mmpld::convert(const void *src, const list_header& header,
             if ((dst_pos != nullptr) && (src_pos != nullptr)) {
                 // We need to write a position and we have one (this should be
                 // true for all valid data sets).
-                switch (header.vertex_type) {
-                    case mmpld::vertex_type::float_xyz:
-                    case mmpld::vertex_type::float_xyzr:
-                        dst_pos[0] = static_cast<dst_vertex_scalar>(
-                            *(static_cast<const float *>(src_pos) + 0));
-                        dst_pos[1] = static_cast<dst_vertex_scalar>(
-                            *(static_cast<const float *>(src_pos) + 1));
-                        dst_pos[2] = static_cast<dst_vertex_scalar>(
-                            *(static_cast<const float *>(src_pos) + 2));
-                        break;
-
-                    case mmpld::vertex_type::short_xyz:
-                        dst_pos[0] = static_cast<dst_vertex_scalar>(
-                            *(static_cast<const std::int16_t *>(src_pos) + 0));
-                        dst_pos[1] = static_cast<dst_vertex_scalar>(
-                            *(static_cast<const std::int16_t *>(src_pos) + 1));
-                        dst_pos[2] = static_cast<dst_vertex_scalar>(
-                            *(static_cast<const std::int16_t *>(src_pos) + 2));
-                        break;
-
-                    case mmpld::vertex_type::double_xyz:
-                        dst_pos[0] = static_cast<dst_vertex_scalar>(
-                            *(static_cast<const double *>(src_pos) + 0));
-                        dst_pos[1] = static_cast<dst_vertex_scalar>(
-                            *(static_cast<const double *>(src_pos) + 1));
-                        dst_pos[2] = static_cast<dst_vertex_scalar>(
-                            *(static_cast<const double *>(src_pos) + 2));
-                        break;
-
-                    default:
-                        throw std::logic_error("An invalid source vertex type "
-                            "which cannot be converted was specified.");
+                if (pos_conv != nullptr) {
+                    pos_conv(src_pos, dst_pos);
+                } else {
+                    throw std::logic_error("An invalid source vertex type "
+                        "which cannot be converted was specified.");
                 }
             }
 
@@ -526,56 +506,13 @@ std::size_t mmpld::convert(const void *src, const list_header& header,
                     detail::convert_colour<dst_type>(header.colour, 4,
                         dst_col, dst_channels);
 
-                } else {
+                } else if (col_conv != nullptr) {
                     // There is a per-vertex colour that needs to be converted.
-                    switch (header.colour_type) {
-                        case mmpld::colour_type::intensity:
-                            detail::convert_colour<dst_type>(
-                                static_cast<const float *>(src_col), 1,
-                                dst_col, dst_channels);
-                            break;
+                    col_conv(src_col, dst_col);
 
-                        case mmpld::colour_type::rgb32:
-                            detail::convert_colour<dst_type>(
-                                static_cast<const float *>(src_col), 3,
-                                dst_col, dst_channels);
-                            break;
-
-                        case mmpld::colour_type::rgb8:
-                            detail::convert_colour<dst_type>(
-                                static_cast<const std::uint8_t *>(src_col), 3,
-                                dst_col, dst_channels);
-                            break;
-
-                        case mmpld::colour_type::rgba32:
-                            detail::convert_colour<dst_type>(
-                                static_cast<const float *>(src_col), 4,
-                                dst_col, dst_channels);
-                            break;
-
-                        case mmpld::colour_type::rgba8:
-                            detail::convert_colour<dst_type>(
-                                static_cast<const std::uint8_t *>(src_col), 4,
-                                dst_col, dst_channels);
-                            break;
-
-                        case mmpld::colour_type::rgba16:
-                            detail::convert_colour<dst_type>(
-                                static_cast<const std::uint16_t *>(src_col), 4,
-                                dst_col, dst_channels);
-                            break;
-
-                        case mmpld::colour_type::intensity64:
-                            detail::convert_colour<dst_type>(
-                                static_cast<const double *>(src_col), 1,
-                                dst_col, dst_channels);
-                            break;
-
-                        default:
-                            throw std::logic_error("An invalid source colour"
-                                "type which cannot be converted was "
-                                "specified.");
-                    }
+                } else {
+                    throw std::logic_error("An invalid source colour type "
+                        "which cannot be converted was specified.");
                 }
             }
 
