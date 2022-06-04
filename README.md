@@ -10,12 +10,17 @@ The library can be used without compiling anything. Just add the root directory 
 
 The library contains APIs for interacting with MMPLD files at different levels of abstractions: the low-level API leaves the user most control about handling the file. The `mmpld::file` abstraction handles the file I/O and the meta-data management for you.
 
-For the particle data themselves, the library provides several methods for interpeting the content of a particle list: The `mmpld::particle_view` is a runtime-defined view for particle data, which can be wrapped around a pointer to particles. `mmpld::particle_traits` holds similar functionality, but is defined at compile-time. Note that both views do not perfom any range checks for you, but assume that you pass only valid memory holding particles to them. As a last method, you can obtain the necessary information to interpret raw particle data from the `mmpld::list_header` of each particle list. Functions like `mmpld::get_offsets` and `mmpld::get_stride` allow for extracting the offsets to do pointer arithmetics on particles.
+For the particle data themselves, the library provides several methods for interpeting the content of a particle list: The `mmpld::particle_view` is a runtime-defined view for particle data, which can be wrapped around a pointer to particles. `mmpld::particle_traits` holds similar functionality, but is defined at compile-time. Note that both views do not perfom any range checks for you, but assume that you pass only valid memory holding particles to them. As a last method, you can obtain the necessary information to interpret raw particle data from the `mmpld::list_header` of each particle list. Functions like `mmpld::get_offsets` and `mmpld::get_stride` allow for extracting the offsets to do pointer arithmetics on particles. The `get_properties` function allows you to create a bitmask describing the contents of a particle list as a whole. For instance, this bitmask allows you to find out whether there are per-particle radius or colour information or whether the colours are given in floating point formats.
+
+The library also provides functions for converting particle lists to different formats, e.g. to convert global radii to per-particle data. Two different implementations for that are available, one that allows you to convert any type of particle list to a compile-time defined format described by a `mmpld::particle_traits` and one to perform arbitrary conversions at runtime.
 
 If `#define MMPLD_WITH_DIRECT3D` is added before including the library header, the library provides a method to create Direct3D input layout descriptions for a particle list. The output of the `mmpld::get_input_layout` function can be used to create an input layout for the raw data of the particle list. As versions 10, 11 and 12 of Direct3D use the same layout for their input layout descriptions, `mmpld::get_input_layout` can be instantiated with `D3D10_INPUT_ELEMENT_DESC`, `D3D11_INPUT_ELEMENT_DESC` or `D3D12_INPUT_ELEMENT_DESC`. 
 
 ## The low-level API
-The low-level API provides APIs for reading and interpreting the MMPLD file header, the frame header(s) and the list header(s). The user is responsible for seeking to the correct positions in the file. The templates in the API provide instantiations for several I/O methods: `std::ifstream`, `int` file handles obtained from POSIX `_open`, `FILE` pointers and on Windows for native `HANDLE`s. On Windows, `wchar_t` variants are also available. The following sample code illustrates how to use the low-level API:
+The low-level API provides APIs for reading and interpreting the MMPLD file header, the frame header(s) and the list header(s). The user is responsible for seeking to the correct positions in the file. The templates in the API provide instantiations for several I/O methods: `std::ifstream`, `int` file handles obtained from POSIX `_open`, `FILE` pointers and on Windows for native `HANDLE`s. On Windows, `wchar_t` variants are also available.
+
+### Reading a file
+The following sample code illustrates how to use the low-level API:
 
 ```C++
 #include "mmpld.h"
@@ -64,7 +69,7 @@ for (decltype(fileHeader.frames) i = 0; i < fileHeader.frames; ++i) {
         // Read until we have all particles in memory.
         while (rem > 0) {
             DWORD cnt = 0;
-            if (!::ReadFile(file, ptr, rem, &cnt, nullptr)) { /* Handle rror. */ }
+            if (!::ReadFile(file, ptr, rem, &cnt, nullptr)) { /* Handle error. */ }
             ptr += cnt;
             rem -= cnt;
         }
@@ -82,6 +87,7 @@ for (decltype(fileHeader.frames) i = 0; i < fileHeader.frames; ++i) {
 ::CloseHandle(hFile);
 ```
 
+### Writing a file
 Starting with release 1.3 of the library, the low-level API also includes support for writing certain parts of an MMPLD file, which is illustrated by the following sample:
 
 ```C++
@@ -95,7 +101,7 @@ mmpld::seek_table seekTable;
 // Fill the file header and the seek table. If you do not know the size of the
 // particle lists in advance, there is another variant of write_file_header
 // that writes only the header. You need to reserve the size of the seek table
-// (number of frames * sizeof(seek_table::value_type) after the header though
+// (number of frames * sizeof(seek_table::value_type)) after the header though
 // and write it at the end.
 
 mmpld::write_file_header(fileHeader, seekTable, file);
@@ -124,7 +130,10 @@ file.close();
 
 ## The mmpld::file class
 
-The `mmpld::file` class is a stateful wrapper around the low-level API, which allows you to parse through an MMPLD file one frame after another. The `mmpld::file` class is responsible for all I/O operations and keeps track of the seek table and the file pointer for you. The following code, which does roughly the same as the low-level API sample above, illustrates how to iterate over all particles in a file using this abstraction layer:
+The `mmpld::file` class is a stateful wrapper around the low-level API, which allows you parsing through an MMPLD file one frame after another. The `mmpld::file` class is responsible for all I/O operations and keeps track of the seek table and the file pointer for you.
+
+### Reading a file
+The following code, which does roughly the same as the low-level API sample above, illustrates how to iterate over all particles in a file using this abstraction layer:
 
 ```C++
 #include "mmpld.h"
@@ -147,6 +156,7 @@ for (mmpld::file::frame_number_type f = 0; f < file.frames(); ++f) {
 }
 ```
 
+### Read the list headers only
 Beside the one-shot `read_particles` method illustrated above, `mmpld::file` provides two other methods with user-provided output buffers. These methods must be used carefully, because a whole particle list must be consumed before the next list header can be read. Otherwise, subsequent reads will return corrupt data. The methods are mainly intended for two use cases: (i) if only the list headers should be read and the actual data are irrelevant and (ii) for reading directly into mapped GPU memory. The following sample illustrates the first application case in that it creates Direct3D 11 input layouts for all particle lists in the first frame of a file:
 
 ```C++
@@ -172,6 +182,7 @@ for (auto l = 0; l < file.frame_header().lists; ++l)
 }
 ```
 
+### Read into user-provided memory
 The second application case, writing into mapped memory, looks roughly like this:
 
 ```C++
@@ -209,6 +220,14 @@ This is a simple test application for dumping meta data from an MMPLD file. It s
 ```posh
 .\dumpmmpld /path .\test.mmpld
 ```
+
+### Command line arguments of dumpmmpld
+
+| Name                               | Description |
+|---                                 |--- |
+| `/path <path>`                     | Specifies the path the MMPLD file to be dumped. |
+| `/samples <number>`                | Instructs the tool to print the `<number>` first particles in each particle list. |
+| `/nologo`                          | Supresses the output of the version of the tool. |
 
 ## Nuget package
 
