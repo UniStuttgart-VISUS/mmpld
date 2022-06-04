@@ -96,9 +96,18 @@ namespace mmpld {
         /// Advances the data pointer by the stride of one particle.
         /// </summary>
         inline void advance(void) {
+            this->advance(1);
+        }
+
+        /// <summary>
+        /// Advances the data pointer by <paramref name="cnt" /> particles.
+        /// </summary>
+        /// <param name="cnt">The number of particles to advance the pointer
+        /// for.</param>
+        inline void advance(const decltype(list_header::particles) cnt) {
             assert(this->good());
             auto d = this->byte_data();
-            this->_data = (d + this->stride());
+            this->_data = (d + cnt * this->stride());
         }
 
         /// <summary>

@@ -55,8 +55,21 @@ namespace mmpld {
         /// <param name="data">The pointer to be advanced.</param>
         /// <returns>The advanced pointer.</returns>
         static inline const void *advance(const void *data) noexcept {
+            return particle_traits::advance(data, 1);
+        }
+
+        /// <summary>
+        /// Advances the given pointer by <paramref name="cnt" /> strides of
+        /// a particle.
+        /// </summary>
+        /// <param name="data">The pointer to be advanced.</param>
+        /// <param name="cnt">The number of particles to advance the pointer
+        /// for.</param>
+        /// <returns>The advanced pointer.</returns>
+        static inline const void *advance(const void *data,
+                const decltype(list_header::particles) cnt) noexcept {
             auto retval = static_cast<const std::uint8_t *>(data);
-            retval += particle_traits::stride();
+            retval += cnt * particle_traits::stride();
             return static_cast<void *>(retval);
         }
 

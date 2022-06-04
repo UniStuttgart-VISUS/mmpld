@@ -1487,7 +1487,7 @@ namespace test {
 
             {
                 typedef mmpld::particle_traits<mmpld::vertex_type::float_xyz, mmpld::colour_type::rgb32> traits_type;
-                auto particles = this->testStaticReadAs<traits_type, HANDLE>("test_xyz_float_rgb_float.mmpld");
+                auto particles = this->testStaticReadAs<traits_type, FILE *>("test_xyz_float_rgb_float.mmpld");
 
                 {
                     auto pos = traits_type::position(particles.data() + 0 * traits_type::stride());

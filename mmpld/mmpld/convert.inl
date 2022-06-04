@@ -627,19 +627,19 @@ std::size_t mmpld::convert(const void *src, const list_header& header,
 /*
  * mmpld::read_as
  */
-template<class T, class F>
-std::size_t mmpld::read_as(F& file, const list_header& header,
-        void *dst, const decltype(list_header::particles) cnt,
-        decltype(list_header::particles) cnt_buffer) {
+template<class F>
+decltype(mmpld::list_header::particles) mmpld::read_as(F& file,
+        const list_header& src_header, void *dst,
+        list_header& dst_header, decltype(list_header::particles) cnt_buffer) {
     typedef detail::basic_io_traits<F> io_traits;
 
-    const auto dst_stride = T::stride();
-    const auto retval = (std::min)(static_cast<std::size_t>(header.particles),
-        cnt);
-    const auto src_stride = get_stride<std::size_t>(header);
+    const auto dst_stride = get_stride<std::size_t>(dst_header);
+    const auto retval = (std::min)(src_header.particles, dst_header.particles);
+    const auto src_stride = get_stride<std::size_t>(src_header);
 
-    if (is_same_format<T>(header)) {
-        io_traits::read(file, dst, cnt * src_stride);
+    if (is_same_format(src_header, dst_header)) {
+        assert(src_stride == dst_stride);
+        io_traits::read(file, dst, retval * src_stride);
 
     } else {
         if (cnt_buffer == 0) {
@@ -647,14 +647,34 @@ std::size_t mmpld::read_as(F& file, const list_header& header,
         }
 
         std::vector<std::uint8_t> buffer(cnt_buffer * src_stride);
+        particle_view<void> view(dst_header.vertex_type, dst_header.colour_type,
+            dst);
 
-        for (std::size_t i = 0; i < cnt; i += cnt_buffer) {
-            auto c = (std::min)(cnt_buffer, cnt - i * cnt_buffer);
+        for (std::size_t i = 0; i < retval; i += cnt_buffer) {
+            auto c = (std::min)(cnt_buffer, retval - i * cnt_buffer);
             auto d = static_cast<std::uint8_t *>(dst) + i * dst_stride;
             io_traits::read(file, buffer.data(), c * src_stride);
-            convert<T>(buffer.data(), header, d, c);
+            convert(buffer.data(), src_header, view, c);
+            view.advance(c);
         }
     }
 
     return retval;
+}
+
+
+/*
+ * mmpld::read_as
+ */
+template<class T, class F>
+decltype(mmpld::list_header::particles) mmpld::read_as(F& file,
+        const list_header& header, void *dst,
+        const decltype(list_header::particles) cnt,
+        decltype(list_header::particles) cnt_buffer) {
+    list_header dst_header;
+    ::memset(&dst_header, sizeof(dst_header), 0);
+    dst_header.vertex_type = T::vertex_type();
+    dst_header.colour_type = T::colour_type();
+    dst_header.particles = cnt;
+    return read_as(file, header, dst, dst_header, cnt_buffer);
 }

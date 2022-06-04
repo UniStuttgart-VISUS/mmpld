@@ -68,8 +68,42 @@ namespace mmpld {
     std::size_t convert(const void *src, const list_header& header,
         particle_view<T>& dst, const std::size_t cnt);
 
+    template<class F>
+    decltype(list_header::particles) read_as(F& file,
+        const list_header& src_header, void *dst, list_header& dst_header,
+        decltype(list_header::particles) cnt_buffer = 0);
+
+    /// <summary>
+    /// Read the particle list described by <paramref name="header" /> from the
+    /// current position in <paramref name="file" /> and convert the data on the
+    /// fly to the format of <see cref="particle_traits" />
+    /// <typeparamref name="T" />.
+    /// </summary>
+    /// <remarks>
+    /// <para>The method will read the input in batches and convert them via a
+    /// temporary buffer holding <paramref name="cnt_buffer" /> particles to the
+    /// requested output format. If no buffer size is specified, the whole data
+    /// are read at once.</para>
+    /// <para>If the requested output format matches the actual format of the
+    /// input, the data are read directly into the output buffer and no
+    /// intermediate buffer is allocated.</para>
+    /// </remarks>
+    /// <typeparam name="T">The target particle traits to convert to.</typeparam>
+    /// <typeparam name="F">The type of the file handle.</typeparam>
+    /// <param name="file">An open file handle with the file pointer standing at
+    /// the begin of the list described by <paramref name="header" />.</param>
+    /// <param name="header">The description of the list to be read.</param>
+    /// <param name="dst">A buffer to hold at least <paramref name="cnt" />
+    /// particles of the size defined by <typeparamref name="T" />.</param>
+    /// <param name="cnt">The maximum number of particles to be read.</param>
+    /// <param name="cnt_buffer">The number of particles to be converted at
+    /// once. If this value is zero, which is its default, the method will
+    /// allocate a conversion buffer to hold all of the particles in the input
+    /// at once.</param>
+    /// <returns>The number of particles actually read, which might be less than
+    /// <paramref name="cnt" /> if the input was smaller.</returns>
     template<class T, class F>
-    std::size_t read_as(F& file, const list_header& header,
+    decltype(list_header::particles) read_as(F& file, const list_header& header,
         void *dst, const decltype(list_header::particles) cnt,
         decltype(list_header::particles) cnt_buffer = 0);
 
