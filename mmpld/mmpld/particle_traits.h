@@ -54,7 +54,7 @@ namespace mmpld {
         /// </summary>
         /// <param name="data">The pointer to be advanced.</param>
         /// <returns>The advanced pointer.</returns>
-        static inline const void *advance(const void *data) {
+        static inline const void *advance(const void *data) noexcept {
             auto retval = static_cast<const std::uint8_t *>(data);
             retval += particle_traits::stride();
             return static_cast<void *>(retval);
@@ -65,7 +65,7 @@ namespace mmpld {
         /// <paramref name="data" />.
         /// </summary>
         /// <param name="data">The pointer to the particle.</param>
-        static inline void clear(void *data) {
+        static inline void clear(void *data) noexcept {
             ::memset(data, 0, particle_traits::stride());
         }
 
@@ -74,7 +74,8 @@ namespace mmpld {
         /// </summary>
         /// <param name="data">A pointer to the begin of a particle.</param>
         /// <returns>The first colour component or <c>nullptr</c>.</returns>
-        static inline const colour_value_type *colour(const void *data) {
+        static inline const colour_value_type *colour(
+                const void *data) noexcept {
             auto c = (colour_traits::size > 0)
                 ? static_cast<const std::uint8_t *>(data) + vertex_traits::size
                 : nullptr;
@@ -86,7 +87,7 @@ namespace mmpld {
         /// </summary>
         /// <param name="data">A pointer to the begin of a particle.</param>
         /// <returns>The first colour component or <c>nullptr</c>.</returns>
-        static inline colour_value_type *colour(void *data) {
+        static inline colour_value_type *colour(void *data) noexcept {
             auto c = (colour_traits::size > 0)
                 ? static_cast<std::uint8_t *>(data) + vertex_traits::size
                 : nullptr;
@@ -97,7 +98,7 @@ namespace mmpld {
         /// Answer the type of the colour data.
         /// </summary>
         /// <returns>The type of the colour data.</returns>
-        static inline mmpld::colour_type colour_type(void) {
+        static inline mmpld::colour_type colour_type(void) noexcept {
             return particle_traits::colour_traits::colour_type;
         }
 
@@ -106,7 +107,8 @@ namespace mmpld {
         /// </summary>
         /// <param name="data">A pointer to the begin of a particle.</param>
         /// <returns>The first position component.</returns>
-        static inline const vertex_value_type *position(const void *data) {
+        static inline const vertex_value_type *position(
+                const void *data) noexcept {
             assert(vertex_traits::size > 0);
             return (vertex_traits::size > 0)
                 ? static_cast<const vertex_value_type *>(data)
@@ -118,7 +120,7 @@ namespace mmpld {
         /// </summary>
         /// <param name="data">A pointer to the begin of a particle.</param>
         /// <returns>The first position component.</returns>
-        static inline vertex_value_type *position(void *data) {
+        static inline vertex_value_type *position(void *data) noexcept {
             assert(vertex_traits::size > 0);
             return (vertex_traits::size > 0)
                 ? static_cast<vertex_value_type *>(data)
@@ -129,7 +131,7 @@ namespace mmpld {
         /// Answer the type of the vertex data.
         /// </summary>
         /// <returns>The type of the vertex data.</returns>
-        static inline mmpld::vertex_type position_type(void) {
+        static inline mmpld::vertex_type position_type(void) noexcept {
             return particle_traits::vertex_type();
         }
 
@@ -158,10 +160,22 @@ namespace mmpld {
         }
 
         /// <summary>
+        /// Answer the size in bytes of <paramref name="cnt" /> particles of
+        /// this type.
+        /// </summary>
+        /// <param name="cnt">The number of particles to compute the size for.
+        /// </param>
+        /// <returns>The size of <paramref name="cnt" /> particles.</returns>
+        static inline std::size_t size(
+                const decltype(list_header::particles) cnt) noexcept {
+            return cnt * particle_traits::stride();
+        }
+
+        /// <summary>
         /// Gets the particle stride.
         /// </summary>
         /// <returns>The particle stride in bytes.</returns>
-        static inline std::size_t stride(void) {
+        static inline std::size_t stride(void) noexcept {
             return (vertex_traits::size + colour_traits::size);
         }
 
@@ -169,7 +183,7 @@ namespace mmpld {
         /// Answer the type of the vertex data.
         /// </summary>
         /// <returns>The type of the vertex data.</returns>
-        static inline mmpld::vertex_type vertex_type(void) {
+        static inline mmpld::vertex_type vertex_type(void) noexcept {
             return particle_traits::vertex_traits::value;
         }
     };

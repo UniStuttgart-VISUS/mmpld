@@ -129,7 +129,10 @@ namespace detail {
                     // to maximum of output type.
                     auto w = static_cast<I>(1);
                     auto b = static_cast<I>(0);
-                    auto f = (i == 3) ? w : b;  // Alpha fallback 1, other 0.
+                    // Determine the fallback colour: For alpha (i == 3), use
+                    // white, otherwise splat the grey value or use black.
+                    auto g = (cnt_in == 1) ? input[0] : b;
+                    auto f = (i == 3) ? w : g;
                     auto c = (i < cnt_in) ? input[i] : f;
                     c *= static_cast<I>((std::numeric_limits<O>::max)());
                     static_cast<O *>(output)[i] = static_cast<O>(c);
@@ -139,7 +142,10 @@ namespace detail {
                     // to maximum of input type.
                     auto w = static_cast<O>((std::numeric_limits<I>::max)());
                     auto b = static_cast<O>(0);
-                    auto f = (i == 3) ? w : b;  // Alpha fallback 1, other 0.
+                    // Determine the fallback colour: For alpha (i == 3), use
+                    // white, otherwise splat the grey value or use black.
+                    auto g = (cnt_in == 1) ? static_cast<O>(input[0]) : b;
+                    auto f = (i == 3) ? w : g;
                     auto c = (i < cnt_in) ? static_cast<O>(input[i]) : f;
                     c /= w;
                     static_cast<O *>(output)[i] = c;
@@ -151,7 +157,10 @@ namespace detail {
                         ? static_cast<O>(1)
                         : (std::numeric_limits<O>::max)();
                     auto b = static_cast<O>(0);
-                    auto f = (i == 3) ? w : b;  // Alpha fallback 1, other 0.
+                    // Determine the fallback colour: For alpha (i == 3), use
+                    // white, otherwise splat the grey value or use black.
+                    auto g = (cnt_in == 1) ? static_cast<O>(input[0]) : b;
+                    auto f = (i == 3) ? w : g;
                     auto c = (i < cnt_in) ? static_cast<O>(input[i]) : f;
                     static_cast<O *>(output)[i] = c;
                 }
@@ -515,7 +524,7 @@ std::size_t mmpld::convert(const void *src, const list_header& header,
                 if (src_col == nullptr) {
                     // We have no valid offset for the source colour, so we
                     // need to use the global colour from the header.
-                    global_col_conv(src_col, dst_col);
+                    global_col_conv(header.colour, dst_col);
 
                 } else {
                     // There is a per-vertex colour that needs to be converted.
@@ -537,7 +546,7 @@ std::size_t mmpld::convert(const void *src, const list_header& header,
  * mmpld::convert
  */
 template<class T>
-std::size_t mmpld::convert(const void *src, const list_header &header,
+std::size_t mmpld::convert(const void *src, const list_header& header,
         particle_view<T>& dst, const std::size_t cnt) {
     const auto retval = (std::min)(static_cast<size_t>(header.particles), cnt);
 
@@ -610,6 +619,42 @@ std::size_t mmpld::convert(const void *src, const list_header &header,
             src_view.advance();
         }
     } /* end if (is_same_format(dst, header)) */
+
+    return retval;
+}
+
+
+/*
+ * mmpld::read_as
+ */
+template<class T, class F>
+std::size_t mmpld::read_as(F& file, const list_header& header,
+        void *dst, const decltype(list_header::particles) cnt,
+        decltype(list_header::particles) cnt_buffer) {
+    typedef detail::basic_io_traits<F> io_traits;
+
+    const auto dst_stride = T::stride();
+    const auto retval = (std::min)(static_cast<std::size_t>(header.particles),
+        cnt);
+    const auto src_stride = get_stride<std::size_t>(header);
+
+    if (is_same_format<T>(header)) {
+        io_traits::read(file, dst, cnt * src_stride);
+
+    } else {
+        if (cnt_buffer == 0) {
+            cnt_buffer = retval;
+        }
+
+        std::vector<std::uint8_t> buffer(cnt_buffer * src_stride);
+
+        for (std::size_t i = 0; i < cnt; i += cnt_buffer) {
+            auto c = (std::min)(cnt_buffer, cnt - i * cnt_buffer);
+            auto d = static_cast<std::uint8_t *>(dst) + i * dst_stride;
+            io_traits::read(file, buffer.data(), c * src_stride);
+            convert<T>(buffer.data(), header, d, c);
+        }
+    }
 
     return retval;
 }

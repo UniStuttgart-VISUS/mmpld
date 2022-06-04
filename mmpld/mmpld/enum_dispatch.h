@@ -11,7 +11,6 @@
 namespace mmpld {
 namespace detail {
 
-
     template<class F, class E, E V, E... Vs>
     auto enum_dispatch(enum_dispatch_list<E, V, Vs...>, const E value,
             F&& callback) -> decltype(callback()) {

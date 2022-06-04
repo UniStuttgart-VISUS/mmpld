@@ -69,8 +69,8 @@ namespace mmpld {
     /// <param name="major">The major version.</param>
     /// <param name="minor">The minor version.</param>
     /// <returns>The version number as it appears in an MMPLD file.</returns>
-    inline std::uint16_t make_version(const std::uint16_t major,
-            const std::uint16_t minor) {
+    inline constexpr std::uint16_t make_version(const std::uint16_t major,
+            const std::uint16_t minor) noexcept {
         assert(minor < 100);
         return (major * 100) + minor;
     }

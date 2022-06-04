@@ -1,5 +1,5 @@
 // <copyright file="file.h" company="Visualisierungsinstitut der Universität Stuttgart">
-// Copyright © 2018 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+// Copyright © 2018 - 2022 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
 // </copyright>
 // <author>Christoph Müller</author>
 
@@ -52,7 +52,7 @@ namespace mmpld {
         /// <summary>
         /// The type for file sizes and counters.
         /// </summary>
-        typedef size_t size_type;
+        typedef std::size_t size_type;
 
         /// <summary>
         /// Open the MMPLD file at the specified location.

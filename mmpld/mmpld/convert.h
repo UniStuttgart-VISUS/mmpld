@@ -10,6 +10,7 @@
 #include <stdexcept>
 #include <unordered_map>
 #include <utility>
+#include <vector>
 
 #include "mmpld/io.h"
 #include "mmpld/list_header.h"
@@ -66,6 +67,11 @@ namespace mmpld {
     template<class T>
     std::size_t convert(const void *src, const list_header& header,
         particle_view<T>& dst, const std::size_t cnt);
+
+    template<class T, class F>
+    std::size_t read_as(F& file, const list_header& header,
+        void *dst, const decltype(list_header::particles) cnt,
+        decltype(list_header::particles) cnt_buffer = 0);
 
 } /* end namespace mmpld */
 
