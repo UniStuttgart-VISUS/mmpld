@@ -453,9 +453,6 @@ std::size_t mmpld::convert(const void *src, const list_header& header,
     typedef T dst_view;
     typedef typename dst_view::vertex_value_type dst_vertex_scalar;
 
-    static const auto& COLOUR_TABLE = detail::make_colour_conversion_table();
-    static const auto& VERTEX_TABLE = detail::make_vertex_conversion_table();
-
     const auto retval = (std::min)(static_cast<size_t>(header.particles), cnt);
     const auto dst_channels = dst_view::colour_traits::channels;
     const auto dst_colour = dst_view::colour_traits::colour_type;
@@ -465,8 +462,7 @@ std::size_t mmpld::convert(const void *src, const list_header& header,
     auto d = static_cast<std::uint8_t *>(dst);
     auto s = static_cast<const std::uint8_t *>(src);
 
-    if ((header.vertex_type == dst_vertex)
-            && (header.colour_type == dst_colour)) {
+    if (is_same_format<T>(header)) {
         /* Source and destination types are the same, copy at once. */
         assert(dst_stride == src_stride);
         ::memcpy(d, s, retval * dst_stride);
@@ -476,26 +472,12 @@ std::size_t mmpld::convert(const void *src, const list_header& header,
         std::size_t src_col_offset, src_pos_offset, src_rad_offset;
         const auto invalid = get_offsets<size_t>(header, src_pos_offset,
             src_rad_offset, src_col_offset);
-        typename std::decay<decltype(COLOUR_TABLE)>::type::mapped_type col_conv
-            = nullptr;
-        typename std::decay<decltype(VERTEX_TABLE)>::type::mapped_type pos_conv
-            = nullptr;
-
-        {
-            auto it = COLOUR_TABLE.find(std::make_pair(dst_colour,
-                header.colour_type));
-            if (it != COLOUR_TABLE.end()) {
-                col_conv = it->second;
-            }
-        }
-
-        {
-            auto it = VERTEX_TABLE.find(std::make_pair(dst_vertex,
-                header.vertex_type));
-            if (it != VERTEX_TABLE.end()) {
-                pos_conv = it->second;
-            }
-        }
+        const auto col_conv = detail::get_colour_converter(dst_colour,
+            header.colour_type);
+        const auto global_col_conv = detail::get_colour_converter(dst_colour,
+            colour_type::rgba32);
+        const auto pos_conv = detail::get_vertex_converter(dst_vertex,
+            header.vertex_type);
 
         for (size_t i = 0; i < retval; ++i) {
             auto dst_pos = dst_view::position(d);
@@ -511,12 +493,8 @@ std::size_t mmpld::convert(const void *src, const list_header& header,
             if ((dst_pos != nullptr) && (src_pos != nullptr)) {
                 // We need to write a position and we have one (this should be
                 // true for all valid data sets).
-                if (pos_conv != nullptr) {
-                    pos_conv(src_pos, dst_pos);
-                } else {
-                    throw std::logic_error("An invalid source vertex type "
-                        "which cannot be converted was specified.");
-                }
+                assert(pos_conv != nullptr);
+                pos_conv(src_pos, dst_pos);
             }
 
             if (dst_rad != nullptr) {
@@ -537,16 +515,12 @@ std::size_t mmpld::convert(const void *src, const list_header& header,
                 if (src_col == nullptr) {
                     // We have no valid offset for the source colour, so we
                     // need to use the global colour from the header.
-                    detail::convert_colour<dst_type>(header.colour, 4,
-                        dst_col, dst_channels);
-
-                } else if (col_conv != nullptr) {
-                    // There is a per-vertex colour that needs to be converted.
-                    col_conv(src_col, dst_col);
+                    global_col_conv(src_col, dst_col);
 
                 } else {
-                    throw std::logic_error("An invalid source colour type "
-                        "which cannot be converted was specified.");
+                    // There is a per-vertex colour that needs to be converted.
+                    assert(col_conv != nullptr);
+                    col_conv(src_col, dst_col);
                 }
             }
 
@@ -567,8 +541,7 @@ std::size_t mmpld::convert(const void *src, const list_header &header,
         particle_view<T>& dst, const std::size_t cnt) {
     const auto retval = (std::min)(static_cast<size_t>(header.particles), cnt);
 
-    if ((header.vertex_type == dst.vertex_type())
-            && (header.colour_type == dst.colour_type())) {
+    if (is_same_format(dst, header)) {
         /* Source and destination types are the same, copy at once. */
         assert(mmpld::get_stride<std::size_t>(header) == dst.stride());
         ::memcpy(dst.data(), src, retval * dst.stride());
@@ -627,6 +600,7 @@ std::size_t mmpld::convert(const void *src, const list_header &header,
                     global_col_conv(header.colour, dst_col);
 
                 } else {
+                    // There is a per-vertex colour that needs to be converted.
                     assert(col_conv != nullptr);
                     col_conv(src_col, dst_col);
                 }
@@ -635,8 +609,7 @@ std::size_t mmpld::convert(const void *src, const list_header &header,
             dst.advance();
             src_view.advance();
         }
-
-    }
+    } /* end if (is_same_format(dst, header)) */
 
     return retval;
 }

@@ -1,5 +1,5 @@
 // <copyright file="particle_traits.h" company="Visualisierungsinstitut der Universität Stuttgart">
-// Copyright © 2018 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+// Copyright © 2018 -2022 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
 // </copyright>
 // <author>Christoph Müller</author>
 
@@ -8,9 +8,7 @@
 #include <cassert>
 #include <memory>
 
-#include "mmpld/colour_type.h"
-#include "mmpld/vertex_type.h"
-
+#include "mmpld/list_header.h"
 
 namespace mmpld {
 
@@ -163,7 +161,7 @@ namespace mmpld {
         /// Gets the particle stride.
         /// </summary>
         /// <returns>The particle stride in bytes.</returns>
-        static inline size_t stride(void) {
+        static inline std::size_t stride(void) {
             return (vertex_traits::size + colour_traits::size);
         }
 
@@ -175,5 +173,44 @@ namespace mmpld {
             return particle_traits::vertex_traits::value;
         }
     };
+
+
+    /// <summary>
+    /// Answer whether two <see cref="particle_traits" /> describe the same
+    /// particle format wrt. vertex type and colour type.
+    /// </summary>
+    /// <typeparam name="S">An instance of <see cref="particle_traits" />.
+    /// </typeparam>
+    /// <typeparam name="T">Another instance of <see cref="particle_traits" />.
+    /// </typeparam>
+    /// <returns><c>true</c> if <typeparamref name="S" /> and
+    /// <typeparamref name="T" /> describe the same particle format,
+    /// <c>false</c> otherwise.</returns>
+    template<class S, class T>
+    inline constexpr bool is_same_format(void) noexcept {
+        typedef typename S::colour_traits cl_t;
+        typedef typename T::colour_traits cr_t;
+        typedef typename S::vertex_traits vl_t;
+        typedef typename T::vertex_traits vr_t;
+        return ((vl_t::value == vr_t::value) && (cl_t::value == cr_t::value));
+    }
+
+    /// <summary>
+    /// Answer whether a <see cref="particle_traits" /> describes the particle
+    /// format of a <see cref="list_header" />.
+    /// </summary>
+    /// <typeparam name="T">An instance of <see cref="particle_traits" />.
+    /// </typeparam>
+    /// <param name="header">The description of the particle list to be
+    /// compared.</param>
+    /// <returns><c>true</c> if <typeparamref name="T" /> describes the particle
+    /// format of <paramref name="header" />, <c>false</c> otherwise.</returns>
+    template<class T>
+    inline bool is_same_format(const list_header& header) noexcept {
+        typedef typename T::colour_traits c_t;
+        typedef typename T::vertex_traits v_t;
+        return ((v_t::value == header.vertex_type)
+            && (c_t::value == header.colour_type));
+    }
 
 } /* end namespace mmpld */

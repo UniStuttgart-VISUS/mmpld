@@ -824,6 +824,54 @@ namespace test {
                 Assert::AreEqual(v_t(DATA + 0), view_type::position(DATA), L"Position pointer of vertex_type::double_xyz", LINE_INFO());
                 Assert::AreEqual(v_t(nullptr), view_type::radius(DATA), L"Radius pointer of vertex_type::double_xyz", LINE_INFO());
             }
+
+            {
+                typedef mmpld::particle_traits<mmpld::vertex_type::double_xyz, mmpld::colour_type::intensity> lhs;
+                typedef mmpld::particle_traits<mmpld::vertex_type::double_xyz, mmpld::colour_type::intensity> rhs;
+                Assert::IsTrue(mmpld::is_same_format<lhs, rhs>(), L"Same formats detected by is_same_format", LINE_INFO());
+            }
+
+            {
+                typedef mmpld::particle_traits<mmpld::vertex_type::float_xyz, mmpld::colour_type::intensity> lhs;
+                typedef mmpld::particle_traits<mmpld::vertex_type::double_xyz, mmpld::colour_type::intensity> rhs;
+                Assert::IsFalse(mmpld::is_same_format<lhs, rhs>(), L"Different vertex formats detected by is_same_format", LINE_INFO());
+            }
+
+            {
+                typedef mmpld::particle_traits<mmpld::vertex_type::double_xyz, mmpld::colour_type::rgb32> lhs;
+                typedef mmpld::particle_traits<mmpld::vertex_type::double_xyz, mmpld::colour_type::intensity> rhs;
+                Assert::IsFalse(mmpld::is_same_format<lhs, rhs>(), L"Different colour formats detected by is_same_format", LINE_INFO());
+            }
+
+            {
+                typedef mmpld::particle_traits<mmpld::vertex_type::double_xyz, mmpld::colour_type::intensity> lhs;
+
+                mmpld::list_header rhs = { };
+                rhs.vertex_type = mmpld::vertex_type::double_xyz;
+                rhs.colour_type = mmpld::colour_type::intensity;
+
+                Assert::IsTrue(mmpld::is_same_format<lhs>(rhs), L"Same formats detected by is_same_format", LINE_INFO());
+            }
+
+            {
+                typedef mmpld::particle_traits<mmpld::vertex_type::float_xyz, mmpld::colour_type::intensity> lhs;
+
+                mmpld::list_header rhs = { };
+                rhs.vertex_type = mmpld::vertex_type::double_xyz;
+                rhs.colour_type = mmpld::colour_type::intensity;
+
+                Assert::IsFalse(mmpld::is_same_format<lhs>(rhs), L"Different vertex formats detected by is_same_format", LINE_INFO());
+            }
+
+            {
+                typedef mmpld::particle_traits<mmpld::vertex_type::double_xyz, mmpld::colour_type::rgb32> lhs;
+
+                mmpld::list_header rhs = { };
+                rhs.vertex_type = mmpld::vertex_type::double_xyz;
+                rhs.colour_type = mmpld::colour_type::intensity;
+
+                Assert::IsFalse(mmpld::is_same_format<lhs>(rhs), L"Different colour formats detected by is_same_format", LINE_INFO());
+            }
         }
 
         TEST_METHOD(TestParticleView) {
@@ -1016,6 +1064,90 @@ namespace test {
                 Assert::AreEqual(src_view::position(src.data() + src_view::stride())[2], dst.position<src_view::vertex_traits::value>()[2], L"P2: View on position[2] correct", LINE_INFO());
                 Assert::AreEqual(src_view::position(src.data() + src_view::stride())[3], dst.position<src_view::vertex_traits::value>()[3], L"P2: View on position[3] correct", LINE_INFO());
                 Assert::AreEqual(src_view::colour(src.data() + src_view::stride())[0], dst.colour<src_view::colour_traits::colour_type>()[0], L"P2: View on intensity correct", LINE_INFO());
+            }
+
+            {
+                mmpld::particle_view<> lhs(mmpld::vertex_type::double_xyz, mmpld::colour_type::intensity);
+                mmpld::particle_view<> rhs(mmpld::vertex_type::double_xyz, mmpld::colour_type::intensity);
+                Assert::IsTrue(mmpld::is_same_format(lhs, rhs), L"Same formats detected by is_same_format", LINE_INFO());
+            }
+
+            {
+                mmpld::particle_view<> lhs(mmpld::vertex_type::double_xyz, mmpld::colour_type::intensity);
+                mmpld::particle_view<> rhs(mmpld::vertex_type::float_xyz, mmpld::colour_type::intensity);
+                Assert::IsFalse(mmpld::is_same_format(lhs, rhs), L"Different vertex formats detected by is_same_format", LINE_INFO());
+            }
+
+            {
+                mmpld::particle_view<> lhs(mmpld::vertex_type::double_xyz, mmpld::colour_type::intensity);
+                mmpld::particle_view<> rhs(mmpld::vertex_type::double_xyz, mmpld::colour_type::rgb32);
+                Assert::IsFalse(mmpld::is_same_format(lhs, rhs), L"Different colour formats detected by is_same_format", LINE_INFO());
+            }
+
+            {
+                mmpld::particle_view<> lhs(mmpld::vertex_type::double_xyz, mmpld::colour_type::intensity);
+
+                mmpld::list_header rhs = { };
+                rhs.vertex_type = mmpld::vertex_type::double_xyz;
+                rhs.colour_type = mmpld::colour_type::intensity;
+
+                Assert::IsTrue(mmpld::is_same_format(lhs, rhs), L"Same formats detected by is_same_format", LINE_INFO());
+            }
+
+            {
+                mmpld::particle_view<> lhs(mmpld::vertex_type::double_xyz, mmpld::colour_type::intensity);
+
+                mmpld::list_header rhs = { };
+                rhs.vertex_type = mmpld::vertex_type::float_xyz;
+                rhs.colour_type = mmpld::colour_type::intensity;
+
+                Assert::IsFalse(mmpld::is_same_format(lhs, rhs), L"Different vertex formats detected by is_same_format", LINE_INFO());
+            }
+
+            {
+                mmpld::particle_view<> lhs(mmpld::vertex_type::double_xyz, mmpld::colour_type::intensity);
+
+                mmpld::list_header rhs = { };
+                rhs.vertex_type = mmpld::vertex_type::double_xyz;
+                rhs.colour_type = mmpld::colour_type::rgb32;
+
+                Assert::IsFalse(mmpld::is_same_format(lhs, rhs), L"Different colour formats detected by is_same_format", LINE_INFO());
+            }
+
+            {
+                mmpld::particle_view<std::int8_t> lhs(mmpld::vertex_type::double_xyz, mmpld::colour_type::intensity);
+                mmpld::particle_view<> rhs(mmpld::vertex_type::double_xyz, mmpld::colour_type::intensity);
+                Assert::IsTrue(mmpld::is_same_format(lhs, rhs), L"Same formats detected by is_same_format", LINE_INFO());
+            }
+
+            {
+                mmpld::particle_view<std::int8_t> lhs(mmpld::vertex_type::double_xyz, mmpld::colour_type::intensity);
+                mmpld::particle_view<> rhs(mmpld::vertex_type::float_xyz, mmpld::colour_type::intensity);
+                Assert::IsFalse(mmpld::is_same_format(lhs, rhs), L"Different vertex formats detected by is_same_format", LINE_INFO());
+            }
+
+            {
+                mmpld::particle_view<std::int8_t> lhs(mmpld::vertex_type::double_xyz, mmpld::colour_type::intensity);
+                mmpld::particle_view<> rhs(mmpld::vertex_type::double_xyz, mmpld::colour_type::rgb32);
+                Assert::IsFalse(mmpld::is_same_format(lhs, rhs), L"Different colour formats detected by is_same_format", LINE_INFO());
+            }
+
+            {
+                typedef mmpld::particle_traits<mmpld::vertex_type::double_xyz, mmpld::colour_type::intensity> lhs;
+                mmpld::particle_view<> rhs(mmpld::vertex_type::double_xyz, mmpld::colour_type::intensity);
+                Assert::IsTrue(mmpld::is_same_format<lhs>(rhs), L"Same formats detected by is_same_format", LINE_INFO());
+            }
+
+            {
+                typedef mmpld::particle_traits<mmpld::vertex_type::float_xyz, mmpld::colour_type::intensity> lhs;
+                mmpld::particle_view<> rhs(mmpld::vertex_type::double_xyz, mmpld::colour_type::intensity);
+                Assert::IsFalse(mmpld::is_same_format<lhs>(rhs), L"Different vertex formats detected by is_same_format", LINE_INFO());
+            }
+
+            {
+                typedef mmpld::particle_traits<mmpld::vertex_type::double_xyz, mmpld::colour_type::rgb32> lhs;
+                mmpld::particle_view<> rhs(mmpld::vertex_type::double_xyz, mmpld::colour_type::intensity);
+                Assert::IsFalse(mmpld::is_same_format<lhs>(rhs), L"Different colour formats detected by is_same_format", LINE_INFO());
             }
         }
 

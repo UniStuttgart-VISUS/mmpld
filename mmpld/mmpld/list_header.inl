@@ -83,8 +83,8 @@ std::vector<T> mmpld::get_input_layout(const list_header& header) {
 /*
  * mmpld::get_offsets
  */
-template<class T>
-T mmpld::get_offsets(const list_header& header, T& pos, T& rad, T& col) {
+template<class T> T mmpld::get_offsets(const list_header& header,
+        T& pos, T& rad, T& col) noexcept {
     const auto retval = std::is_signed<T>::value
         ? std::numeric_limits<T>::lowest()
         : (std::numeric_limits<T>::max)();
@@ -118,7 +118,7 @@ T mmpld::get_offsets(const list_header& header, T& pos, T& rad, T& col) {
 /*
  * mmpld::get_properties
  */
-template<class T> T mmpld::get_properties(const list_header& header) {
+template<class T> T mmpld::get_properties(const list_header& header) noexcept {
     static_assert(sizeof(T) >= sizeof(mmpld::particle_properties), "Output "
         "type for particle properties is too small.");
     auto retval = mmpld::particle_properties::none;
@@ -150,9 +150,8 @@ template<class T> T mmpld::get_properties(const list_header& header) {
 /*
  * mmpld::get_stride
  */
-template<class T>
-T mmpld::get_stride(const vertex_type vertexType,
-        const colour_type colourType) {
+template<class T> T mmpld::get_stride(const vertex_type vertexType,
+        const colour_type colourType) noexcept {
     std::size_t retval = 0;
     colour_properties colourProps;
     vertex_properties vertexProps;

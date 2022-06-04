@@ -300,6 +300,42 @@ public:
                     | mmpld::particle_properties::float_colour);
                 Assert::AreEqual(props, expected, L"Flags are set.", LINE_INFO());
             }
+
+            {
+                mmpld::list_header lhs = { };
+                lhs.vertex_type = mmpld::vertex_type::double_xyz;
+                lhs.colour_type = mmpld::colour_type::intensity;
+
+                mmpld::list_header rhs = { };
+                rhs.vertex_type = mmpld::vertex_type::double_xyz;
+                rhs.colour_type = mmpld::colour_type::intensity;
+
+                Assert::IsTrue(mmpld::is_same_format(lhs, rhs), L"Same formats detected by is_same_format", LINE_INFO());
+            }
+
+            {
+                mmpld::list_header lhs = { };
+                lhs.vertex_type = mmpld::vertex_type::float_xyz;
+                lhs.colour_type = mmpld::colour_type::intensity;
+
+                mmpld::list_header rhs = { };
+                rhs.vertex_type = mmpld::vertex_type::double_xyz;
+                rhs.colour_type = mmpld::colour_type::intensity;
+
+                Assert::IsFalse(mmpld::is_same_format(lhs, rhs), L"Different vertex formats detected by is_same_format", LINE_INFO());
+            }
+
+            {
+                mmpld::list_header lhs = { };
+                lhs.vertex_type = mmpld::vertex_type::double_xyz;
+                lhs.colour_type = mmpld::colour_type::rgb32;
+
+                mmpld::list_header rhs = { };
+                rhs.vertex_type = mmpld::vertex_type::double_xyz;
+                rhs.colour_type = mmpld::colour_type::intensity;
+
+                Assert::IsFalse(mmpld::is_same_format(lhs, rhs), L"Different colour formats detected by is_same_format", LINE_INFO());
+            }
         }
     };
 }

@@ -119,7 +119,7 @@ namespace mmpld {
     /// <param name="col">Receives the offset of the colour in bytes.</param>
     /// <returns>The value that is used to express invalid offsets.</returns>
     template<class T>
-    T get_offsets(const list_header& header, T& pos, T& rad, T& col);
+    T get_offsets(const list_header& header, T& pos, T& rad, T& col) noexcept;
 
     /// <summary>
     /// Retrieve the particle properties of the list described by the given
@@ -132,7 +132,7 @@ namespace mmpld {
     /// which can be used to perform computations.</typeparam>
     /// <param name="header">The list header to get the properties for.</param>
     /// <returns>A bitmask holding the particle properties.</returns>
-    template<class T> T get_properties(const list_header& header);
+    template<class T> T get_properties(const list_header& header) noexcept;
 
     /// <summary>
     /// Compute the stride of the particles with the specified vertex and colour
@@ -144,8 +144,8 @@ namespace mmpld {
     /// <param name="vertexType">The type of the positional data.</param>
     /// <param name="colourType">The type of the colour data.</param>
     /// <returns>The stide of the particles in bytes.</returns>
-    template<class T>
-    T get_stride(const vertex_type vertexType, const colour_type colourType);
+    template<class T> T get_stride(const vertex_type vertexType,
+        const colour_type colourType) noexcept;
 
     /// <summary>
     /// Compute the stride of the particles in the list described by the given
@@ -156,7 +156,7 @@ namespace mmpld {
     /// working with Direct3D.</typeparam>
     /// <param name="header">The list header to get the stride for.</param>
     /// <returns>The stide of the particles in bytes.</returns>
-    template<class T> inline T get_stride(const list_header& header) {
+    template<class T> inline T get_stride(const list_header& header) noexcept {
         return get_stride<T>(header.vertex_type, header.colour_type);
     }
 
@@ -168,8 +168,23 @@ namespace mmpld {
     /// working with Direct3D.</typeparam>
     /// <param name="header">The list header to get the size for.</param>
     /// <returns>The total size of the particles in bytes.</returns>
-    template<class T> inline T get_size(const list_header& header) {
+    template<class T> inline T get_size(const list_header& header) noexcept {
         return static_cast<T>(header.particles) * get_stride<T>(header);
+    }
+
+    /// <summary>
+    /// Answer whether the particle format of the given two lists is the same
+    /// wrt. vertex format and colour format.
+    /// </summary>
+    /// <param name="lhs">A particle list header.</param>
+    /// <param name="rhs">Another particle list header.</param>
+    /// <returns><c>true</c> if <paramref name="lhs" /> and
+    /// <paramref name="rhs" /> share the same particle format, <c>false</c>
+    /// otherwise.</returns>
+    inline bool is_same_format(const list_header& lhs,
+            const list_header& rhs) noexcept {
+        return ((lhs.vertex_type == rhs.vertex_type)
+            && (lhs.colour_type == rhs.colour_type));
     }
 
     /// <summary>

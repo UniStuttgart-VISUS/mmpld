@@ -9,9 +9,7 @@
 #include <cstring>
 #include <memory>
 
-#include "mmpld/colour_type.h"
-#include "mmpld/list_header.h"
-#include "mmpld/vertex_type.h"
+#include "mmpld/particle_traits.h"
 
 
 namespace mmpld {
@@ -326,6 +324,82 @@ namespace mmpld {
 
 
     /// <summary>
+    /// Answer whether the given two particle views share the same format
+    /// wrt. vertex type and colour type.
+    /// </summary>
+    /// <typeparam name="S">The value type of the pointer to be used. This
+    /// parameter allows for controlling the const-ness of the view.</typeparam>
+    /// <typeparam name="T">The value type of the pointer to be used. This
+    /// parameter allows for controlling the const-ness of the view.</typeparam>
+    /// <param name="lhs">A particle view.</param>
+    /// <param name="rhs">Another particle view.</param>
+    /// <returns><c>true</c> if <paramref name="lhs" /> and
+    /// <paramref name="rhs" /> share the same particle format, <c>false</c>
+    /// otherwise.</returns>
+    template<class S, class T>
+    inline bool is_same_format(const particle_view<S>& lhs,
+            const particle_view<T>& rhs) {
+        return ((lhs.vertex_type() == rhs.vertex_type())
+            && (lhs.colour_type() == rhs.colour_type()));
+    }
+
+    /// <summary>
+    /// Answer whether the given particle view and the given particle list share
+    /// the same format wrt. vertex type and colour type.
+    /// </summary>
+    /// <typeparam name="T">The value type of the pointer to be used. This
+    /// parameter allows for controlling the const-ness of the view.</typeparam>
+    /// <param name="lhs">The particle view to be compared.</param>
+    /// <param name="rhs">The particle list to be compared.</param>
+    /// <returns><c>true</c> if <paramref name="lhs" /> and
+    /// <paramref name="rhs" /> share the same particle format, <c>false</c>
+    /// otherwise.</returns>
+    template<class T>
+    inline bool is_same_format(const particle_view<T>& lhs,
+            const list_header& rhs) {
+        return ((lhs.vertex_type() == rhs.vertex_type)
+            && (lhs.colour_type() == rhs.colour_type));
+    }
+
+    /// <summary>
+    /// Answer whether the given particle view and the given particle list share
+    /// the same format wrt. vertex type and colour type.
+    /// </summary>
+    /// <typeparam name="T">The value type of the pointer to be used. This
+    /// parameter allows for controlling the const-ness of the view.</typeparam>
+    /// <param name="lhs">The particle list to be compared.</param>
+    /// <param name="rhs">The particle view to be compared.</param>
+    /// <returns><c>true</c> if <paramref name="lhs" /> and
+    /// <paramref name="rhs" /> share the same particle format, <c>false</c>
+    /// otherwise.</returns>
+    template<class T>
+    inline bool is_same_format(const list_header& lhs,
+            const particle_view<T>& rhs) {
+        return is_same_format(rhs, lhs);
+    }
+
+    /// <summary>
+    /// Answer whether a <see cref="particle_traits" /> describes the particle
+    /// format of a <see cref="particle_view" />.
+    /// </summary>
+    /// <typeparam name="T">An instance of <see cref="particle_traits" />.
+    /// </typeparam>
+    /// <typeparam name="S">The value type of the pointer to be used. This
+    /// parameter allows for controlling the const-ness of the view.</typeparam>
+    /// <param name="view">The view to be compared.</param>
+    /// <returns><c>true</c> if <typeparamref name="T" /> describes the particle
+    /// format of <paramref name="view" />, <c>false</c> otherwise.</returns>
+    template<class T, class S>
+    inline bool is_same_format(const particle_view<S>& view) {
+        typedef typename T::colour_traits c_t;
+        typedef typename T::vertex_traits v_t;
+        typedef typename T::colour_traits c_t;
+        typedef typename T::vertex_traits v_t;
+        return ((v_t::value == view.vertex_type())
+            && (c_t::value == view.colour_type()));
+    }
+
+    /// <summary>
     /// Creates a new <see cref="particle_view{T}" /> for the given data
     /// pointer.
     /// </summary>
@@ -342,7 +416,6 @@ namespace mmpld {
             const mmpld::colour_type colour_type, T *data) {
         return particle_view<T>(vertex_type, colour_type, data);
     }
-
 
     /// <summary>
     /// Creates a new <see cref="particle_view{T}" /> for the given data
