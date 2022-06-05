@@ -692,7 +692,7 @@ decltype(mmpld::list_header::particles) mmpld::read_as(F& file,
         auto d_header = dst_header;
 
         for (std::size_t i = 0; i < retval; i += cnt_buffer) {
-            auto c = (std::min)(cnt_buffer, retval - i * cnt_buffer);
+            auto c = (std::min)(cnt_buffer, retval - i);
             auto d = static_cast<std::uint8_t *>(dst) + i * dst_stride;
             d_header.particles = c;
             io_traits::read(file, buffer.data(), c * src_stride);

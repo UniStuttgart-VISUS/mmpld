@@ -1729,6 +1729,252 @@ namespace test {
                     Assert::AreEqual(192.0f, col[0], L"Fourth intensity", LINE_INFO());
                 }
             }
+
+            {
+                typedef mmpld::particle_traits<mmpld::vertex_type::float_xyz, mmpld::colour_type::intensity> traits_type;
+                auto particles = this->testStaticReadAs<traits_type, std::ifstream>("test_xyz_float_int_float.mmpld", 1);
+
+                {
+                    auto pos = traits_type::position(particles.data() + 0 * traits_type::stride());
+                    auto col = traits_type::colour(particles.data() + 0 * traits_type::stride());
+                    Assert::AreEqual(0.0f, pos[0], L"First position x", LINE_INFO());
+                    Assert::AreEqual(0.0f, pos[1], L"First position y", LINE_INFO());
+                    Assert::AreEqual(0.0f, pos[2], L"First position z", LINE_INFO());
+                    Assert::AreEqual(255.0f, col[0], L"First intensity", LINE_INFO());
+                }
+
+                {
+                    auto pos = traits_type::position(particles.data() + 1 * traits_type::stride());
+                    auto col = traits_type::colour(particles.data() + 1 * traits_type::stride());
+                    Assert::AreEqual(1.0f, pos[0], L"Second position x", LINE_INFO());
+                    Assert::AreEqual(0.0f, pos[1], L"Second position y", LINE_INFO());
+                    Assert::AreEqual(0.0f, pos[2], L"Second position z", LINE_INFO());
+                    Assert::AreEqual(64.0f, col[0], L"Second intensity", LINE_INFO());
+                }
+
+                {
+                    auto pos = traits_type::position(particles.data() + 2 * traits_type::stride());
+                    auto col = traits_type::colour(particles.data() + 2 * traits_type::stride());
+                    Assert::AreEqual(0.0f, pos[0], L"Third position x", LINE_INFO());
+                    Assert::AreEqual(1.0f, pos[1], L"Third position y", LINE_INFO());
+                    Assert::AreEqual(0.0f, pos[2], L"Third position z", LINE_INFO());
+                    Assert::AreEqual(128.0f, col[0], L"Third intensity", LINE_INFO());
+                }
+
+                {
+                    auto pos = traits_type::position(particles.data() + 3 * traits_type::stride());
+                    auto col = traits_type::colour(particles.data() + 3 * traits_type::stride());
+                    Assert::AreEqual(0.0f, pos[0], L"Fourth position x", LINE_INFO());
+                    Assert::AreEqual(0.0f, pos[1], L"Fourth position y", LINE_INFO());
+                    Assert::AreEqual(1.0f, pos[2], L"Fourth position z", LINE_INFO());
+                    Assert::AreEqual(192.0f, col[0], L"Fourth intensity", LINE_INFO());
+                }
+            }
+
+            {
+                typedef mmpld::particle_traits<mmpld::vertex_type::short_xyz, mmpld::colour_type::intensity> traits_type;
+                auto particles = this->testStaticReadAs<traits_type, std::ifstream>("test_xyz_float_int_float.mmpld", 1);
+
+                {
+                    auto pos = traits_type::position(particles.data() + 0 * traits_type::stride());
+                    auto col = traits_type::colour(particles.data() + 0 * traits_type::stride());
+                    Assert::AreEqual(std::int16_t(0), pos[0], L"First position x", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(0), pos[1], L"First position y", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(0), pos[2], L"First position z", LINE_INFO());
+                    Assert::AreEqual(255.0f, col[0], L"First intensity", LINE_INFO());
+                }
+
+                {
+                    auto pos = traits_type::position(particles.data() + 1 * traits_type::stride());
+                    auto col = traits_type::colour(particles.data() + 1 * traits_type::stride());
+                    Assert::AreEqual(std::int16_t(1), pos[0], L"Second position x", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(0), pos[1], L"Second position y", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(0), pos[2], L"Second position z", LINE_INFO());
+                    Assert::AreEqual(64.0f, col[0], L"Second intensity", LINE_INFO());
+                }
+
+                {
+                    auto pos = traits_type::position(particles.data() + 2 * traits_type::stride());
+                    auto col = traits_type::colour(particles.data() + 2 * traits_type::stride());
+                    Assert::AreEqual(std::int16_t(0), pos[0], L"Third position x", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(1), pos[1], L"Third position y", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(0), pos[2], L"Third position z", LINE_INFO());
+                    Assert::AreEqual(128.0f, col[0], L"Third intensity", LINE_INFO());
+                }
+
+                {
+                    auto pos = traits_type::position(particles.data() + 3 * traits_type::stride());
+                    auto col = traits_type::colour(particles.data() + 3 * traits_type::stride());
+                    Assert::AreEqual(std::int16_t(0), pos[0], L"Fourth position x", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(0), pos[1], L"Fourth position y", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(1), pos[2], L"Fourth position z", LINE_INFO());
+                    Assert::AreEqual(192.0f, col[0], L"Fourth intensity", LINE_INFO());
+                }
+            }
+
+            {
+                typedef mmpld::particle_traits<mmpld::vertex_type::short_xyz, mmpld::colour_type::intensity> traits_type;
+                auto particles = this->testStaticReadAs<traits_type, std::ifstream>("test_xyz_float_int_float.mmpld", 2);
+
+                {
+                    auto pos = traits_type::position(particles.data() + 0 * traits_type::stride());
+                    auto col = traits_type::colour(particles.data() + 0 * traits_type::stride());
+                    Assert::AreEqual(std::int16_t(0), pos[0], L"First position x", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(0), pos[1], L"First position y", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(0), pos[2], L"First position z", LINE_INFO());
+                    Assert::AreEqual(255.0f, col[0], L"First intensity", LINE_INFO());
+                }
+
+                {
+                    auto pos = traits_type::position(particles.data() + 1 * traits_type::stride());
+                    auto col = traits_type::colour(particles.data() + 1 * traits_type::stride());
+                    Assert::AreEqual(std::int16_t(1), pos[0], L"Second position x", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(0), pos[1], L"Second position y", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(0), pos[2], L"Second position z", LINE_INFO());
+                    Assert::AreEqual(64.0f, col[0], L"Second intensity", LINE_INFO());
+                }
+
+                {
+                    auto pos = traits_type::position(particles.data() + 2 * traits_type::stride());
+                    auto col = traits_type::colour(particles.data() + 2 * traits_type::stride());
+                    Assert::AreEqual(std::int16_t(0), pos[0], L"Third position x", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(1), pos[1], L"Third position y", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(0), pos[2], L"Third position z", LINE_INFO());
+                    Assert::AreEqual(128.0f, col[0], L"Third intensity", LINE_INFO());
+                }
+
+                {
+                    auto pos = traits_type::position(particles.data() + 3 * traits_type::stride());
+                    auto col = traits_type::colour(particles.data() + 3 * traits_type::stride());
+                    Assert::AreEqual(std::int16_t(0), pos[0], L"Fourth position x", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(0), pos[1], L"Fourth position y", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(1), pos[2], L"Fourth position z", LINE_INFO());
+                    Assert::AreEqual(192.0f, col[0], L"Fourth intensity", LINE_INFO());
+                }
+            }
+
+            {
+                typedef mmpld::particle_traits<mmpld::vertex_type::short_xyz, mmpld::colour_type::intensity> traits_type;
+                auto particles = this->testStaticReadAs<traits_type, std::ifstream>("test_xyz_float_int_float.mmpld", 3);
+
+                {
+                    auto pos = traits_type::position(particles.data() + 0 * traits_type::stride());
+                    auto col = traits_type::colour(particles.data() + 0 * traits_type::stride());
+                    Assert::AreEqual(std::int16_t(0), pos[0], L"First position x", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(0), pos[1], L"First position y", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(0), pos[2], L"First position z", LINE_INFO());
+                    Assert::AreEqual(255.0f, col[0], L"First intensity", LINE_INFO());
+                }
+
+                {
+                    auto pos = traits_type::position(particles.data() + 1 * traits_type::stride());
+                    auto col = traits_type::colour(particles.data() + 1 * traits_type::stride());
+                    Assert::AreEqual(std::int16_t(1), pos[0], L"Second position x", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(0), pos[1], L"Second position y", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(0), pos[2], L"Second position z", LINE_INFO());
+                    Assert::AreEqual(64.0f, col[0], L"Second intensity", LINE_INFO());
+                }
+
+                {
+                    auto pos = traits_type::position(particles.data() + 2 * traits_type::stride());
+                    auto col = traits_type::colour(particles.data() + 2 * traits_type::stride());
+                    Assert::AreEqual(std::int16_t(0), pos[0], L"Third position x", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(1), pos[1], L"Third position y", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(0), pos[2], L"Third position z", LINE_INFO());
+                    Assert::AreEqual(128.0f, col[0], L"Third intensity", LINE_INFO());
+                }
+
+                {
+                    auto pos = traits_type::position(particles.data() + 3 * traits_type::stride());
+                    auto col = traits_type::colour(particles.data() + 3 * traits_type::stride());
+                    Assert::AreEqual(std::int16_t(0), pos[0], L"Fourth position x", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(0), pos[1], L"Fourth position y", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(1), pos[2], L"Fourth position z", LINE_INFO());
+                    Assert::AreEqual(192.0f, col[0], L"Fourth intensity", LINE_INFO());
+                }
+            }
+
+            {
+                typedef mmpld::particle_traits<mmpld::vertex_type::short_xyz, mmpld::colour_type::intensity> traits_type;
+                auto particles = this->testStaticReadAs<traits_type, std::ifstream>("test_xyz_float_int_float.mmpld", 4);
+
+                {
+                    auto pos = traits_type::position(particles.data() + 0 * traits_type::stride());
+                    auto col = traits_type::colour(particles.data() + 0 * traits_type::stride());
+                    Assert::AreEqual(std::int16_t(0), pos[0], L"First position x", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(0), pos[1], L"First position y", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(0), pos[2], L"First position z", LINE_INFO());
+                    Assert::AreEqual(255.0f, col[0], L"First intensity", LINE_INFO());
+                }
+
+                {
+                    auto pos = traits_type::position(particles.data() + 1 * traits_type::stride());
+                    auto col = traits_type::colour(particles.data() + 1 * traits_type::stride());
+                    Assert::AreEqual(std::int16_t(1), pos[0], L"Second position x", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(0), pos[1], L"Second position y", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(0), pos[2], L"Second position z", LINE_INFO());
+                    Assert::AreEqual(64.0f, col[0], L"Second intensity", LINE_INFO());
+                }
+
+                {
+                    auto pos = traits_type::position(particles.data() + 2 * traits_type::stride());
+                    auto col = traits_type::colour(particles.data() + 2 * traits_type::stride());
+                    Assert::AreEqual(std::int16_t(0), pos[0], L"Third position x", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(1), pos[1], L"Third position y", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(0), pos[2], L"Third position z", LINE_INFO());
+                    Assert::AreEqual(128.0f, col[0], L"Third intensity", LINE_INFO());
+                }
+
+                {
+                    auto pos = traits_type::position(particles.data() + 3 * traits_type::stride());
+                    auto col = traits_type::colour(particles.data() + 3 * traits_type::stride());
+                    Assert::AreEqual(std::int16_t(0), pos[0], L"Fourth position x", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(0), pos[1], L"Fourth position y", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(1), pos[2], L"Fourth position z", LINE_INFO());
+                    Assert::AreEqual(192.0f, col[0], L"Fourth intensity", LINE_INFO());
+                }
+            }
+
+            {
+                typedef mmpld::particle_traits<mmpld::vertex_type::short_xyz, mmpld::colour_type::intensity> traits_type;
+                auto particles = this->testStaticReadAs<traits_type, std::ifstream>("test_xyz_float_int_float.mmpld", 5);
+
+                {
+                    auto pos = traits_type::position(particles.data() + 0 * traits_type::stride());
+                    auto col = traits_type::colour(particles.data() + 0 * traits_type::stride());
+                    Assert::AreEqual(std::int16_t(0), pos[0], L"First position x", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(0), pos[1], L"First position y", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(0), pos[2], L"First position z", LINE_INFO());
+                    Assert::AreEqual(255.0f, col[0], L"First intensity", LINE_INFO());
+                }
+
+                {
+                    auto pos = traits_type::position(particles.data() + 1 * traits_type::stride());
+                    auto col = traits_type::colour(particles.data() + 1 * traits_type::stride());
+                    Assert::AreEqual(std::int16_t(1), pos[0], L"Second position x", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(0), pos[1], L"Second position y", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(0), pos[2], L"Second position z", LINE_INFO());
+                    Assert::AreEqual(64.0f, col[0], L"Second intensity", LINE_INFO());
+                }
+
+                {
+                    auto pos = traits_type::position(particles.data() + 2 * traits_type::stride());
+                    auto col = traits_type::colour(particles.data() + 2 * traits_type::stride());
+                    Assert::AreEqual(std::int16_t(0), pos[0], L"Third position x", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(1), pos[1], L"Third position y", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(0), pos[2], L"Third position z", LINE_INFO());
+                    Assert::AreEqual(128.0f, col[0], L"Third intensity", LINE_INFO());
+                }
+
+                {
+                    auto pos = traits_type::position(particles.data() + 3 * traits_type::stride());
+                    auto col = traits_type::colour(particles.data() + 3 * traits_type::stride());
+                    Assert::AreEqual(std::int16_t(0), pos[0], L"Fourth position x", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(0), pos[1], L"Fourth position y", LINE_INFO());
+                    Assert::AreEqual(std::int16_t(1), pos[2], L"Fourth position z", LINE_INFO());
+                    Assert::AreEqual(192.0f, col[0], L"Fourth intensity", LINE_INFO());
+                }
+            }
         }
 
         TEST_METHOD(TestRuntimeConvert) {
@@ -2582,7 +2828,7 @@ namespace test {
         }
 
         template<class F, class C>
-        std::vector<std::uint8_t> testRuntimeReadAs(const C *path, mmpld::list_header& dst_header) {
+        std::vector<std::uint8_t> testRuntimeReadAs(const C *path, mmpld::list_header& dst_header, const std::size_t buffer = 0) {
             typedef F file_type;
             typedef mmpld::detail::io_traits<F, C> io_type;
 
@@ -2601,7 +2847,7 @@ namespace test {
 
             dst_header.particles = listHeader.particles;
             std::vector<std::uint8_t> retval(mmpld::get_size<std::size_t>(dst_header));
-            mmpld::read_as(hFile, listHeader, retval.data(), dst_header);
+            mmpld::read_as(hFile, listHeader, retval.data(), dst_header, buffer);
 
             io_type::close(hFile);
 
@@ -2609,7 +2855,7 @@ namespace test {
         }
 
         template<class T, class F, class C>
-        std::vector<std::uint8_t> testStaticReadAs(const C *path) {
+        std::vector<std::uint8_t> testStaticReadAs(const C *path, const std::size_t buffer = 0) {
             typedef F file_type;
             typedef mmpld::detail::io_traits<F, C> io_type;
             typedef T traits_type;
@@ -2629,7 +2875,7 @@ namespace test {
 
             std::vector<std::uint8_t> retval(traits_type::size(listHeader.particles));
             mmpld::read_as<traits_type>(hFile, listHeader, retval.data(),
-                listHeader.particles);
+                listHeader.particles, buffer);
 
             io_type::close(hFile);
 
