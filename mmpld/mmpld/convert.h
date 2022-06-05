@@ -68,6 +68,13 @@ namespace mmpld {
     std::size_t convert(const void *src, const list_header& header,
         particle_view<T>& dst, const std::size_t cnt);
 
+    //template<class T, class F>
+    //decltype(list_header::particles) read_as(F& file,
+    //    const list_header& src_header,
+    //    particle_view<T>& dst,
+    //    const decltype(list_header::particles) cnt,
+    //    decltype(list_header::particles) cnt_buffer = 0);
+
     template<class F>
     decltype(list_header::particles) read_as(F& file,
         const list_header& src_header, void *dst, list_header& dst_header,

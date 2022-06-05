@@ -449,6 +449,22 @@ namespace detail {
         }
     }
 
+    /// <summary>
+    /// Incrementally computes the mean of a series of numbers.
+    /// </summary>
+    /// <typeparam name="T">The type of the numbers.</typeparam>
+    /// <typeparam name="C">The type of the counter.</typeparam>
+    /// <param name="mean">A reference to the incrementally computed mean.
+    /// This variable must be initialised with zero.</param>
+    /// <param name="count">A reference to the counter remembering the
+    /// number of already accumulated numbers. This variable must be initialised
+    /// with zero.</param>
+    /// <param name="n">The next number to be added to the mean.</param>
+    template<class T, class C>
+    inline void incremental_mean(T& mean, C& count, T n) {
+        mean += (n - mean) / ++count;
+    }
+
 } /* end namespace detail */
 } /* end namespace mmpld */
 

@@ -150,6 +150,25 @@ namespace test {
             }
         }
 
+        TEST_METHOD(TestIncrementalMean) {
+            {
+                float mean = 0.0f;
+                std::size_t count = 0;
+
+                mmpld::detail::incremental_mean(mean, count, 0.0f);
+                Assert::AreEqual(0.0f, mean, L"mean is 0.0f", LINE_INFO());
+                Assert::AreEqual(std::size_t(1), count, L"count is 1", LINE_INFO());
+
+                mmpld::detail::incremental_mean(mean, count, 1.0f);
+                Assert::AreEqual(0.5f, mean, L"mean is 0.5f", LINE_INFO());
+                Assert::AreEqual(std::size_t(2), count, L"count is 2", LINE_INFO());
+
+                mmpld::detail::incremental_mean(mean, count, 2.0f);
+                Assert::AreEqual(1.0f, mean, L"mean is 1.0f", LINE_INFO());
+                Assert::AreEqual(std::size_t(3), count, L"count is 3", LINE_INFO());
+            }
+        }
+
         TEST_METHOD(TestLegacyValues) {
             {
                 typedef std::underlying_type<mmpld::vertex_type>::type value_type;
