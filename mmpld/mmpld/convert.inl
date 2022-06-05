@@ -456,13 +456,12 @@ namespace detail {
     /// <typeparam name="C">The type of the counter.</typeparam>
     /// <param name="mean">A reference to the incrementally computed mean.
     /// This variable must be initialised with zero.</param>
-    /// <param name="count">A reference to the counter remembering the
-    /// number of already accumulated numbers. This variable must be initialised
-    /// with zero.</param>
+    /// <param name="count">The number of already accumulated values, not
+    /// including the one that is added now.</param>
     /// <param name="n">The next number to be added to the mean.</param>
     template<class T, class C>
-    inline void incremental_mean(T& mean, C& count, T n) {
-        mean += (n - mean) / ++count;
+    inline void incremental_mean(T& mean, const C count, T n) {
+        mean += (n - mean) / (count + 1);
     }
 
 } /* end namespace detail */
@@ -473,12 +472,13 @@ namespace detail {
  * mmpld::convert
  */
 template<class T>
-std::size_t mmpld::convert(const void *src, const list_header& header,
-        void *dst, const std::size_t cnt) {
+decltype(mmpld::list_header::particles) mmpld::convert(
+        const void *src, const list_header& header,
+        void *dst, const decltype(list_header::particles) cnt) {
     typedef T dst_view;
     typedef typename dst_view::vertex_value_type dst_vertex_scalar;
 
-    const auto retval = (std::min)(static_cast<size_t>(header.particles), cnt);
+    const auto retval = (std::min)(header.particles, cnt);
     const auto dst_channels = dst_view::colour_traits::channels;
     const auto dst_colour = dst_view::colour_traits::colour_type;
     const auto dst_stride = dst_view::stride();
@@ -561,36 +561,55 @@ std::size_t mmpld::convert(const void *src, const list_header& header,
 /*
  * mmpld::convert
  */
-template<class T>
-std::size_t mmpld::convert(const void *src, const list_header& header,
-        particle_view<T>& dst, const std::size_t cnt) {
-    const auto retval = (std::min)(static_cast<size_t>(header.particles), cnt);
+decltype(mmpld::list_header::particles) mmpld::convert(
+        const void *src, const list_header& src_header,
+        void *dst, list_header& dst_header) {
+    assert(src != nullptr);
+    assert(dst != nullptr);
+    const auto dst_stride = get_stride<std::size_t>(dst_header);
+    const auto retval = (std::min)(src_header.particles, dst_header.particles);
+    const auto src_stride = get_stride<std::size_t>(src_header);
 
-    if (is_same_format(dst, header)) {
+    if (is_same_format(src_header, dst_header)) {
         /* Source and destination types are the same, copy at once. */
-        assert(mmpld::get_stride<std::size_t>(header) == dst.stride());
-        ::memcpy(dst.data(), src, retval * dst.stride());
+        assert(src_stride == dst_stride);
+        ::memcpy(dst, src, retval * dst_stride);
 
     } else {
-        const auto col_conv = detail::get_colour_converter(dst.colour_type(),
-            header.colour_type);
+        const auto col_conv = detail::get_colour_converter(
+            dst_header.colour_type, src_header.colour_type);
         const auto global_col_conv = detail::get_colour_converter(
-            dst.colour_type(), colour_type::rgba32);
-        const auto pos_conv = detail::get_vertex_converter(dst.vertex_type(),
-            header.vertex_type);
-        auto src_view = make_particle_view(header, src);
+            dst_header.colour_type, colour_type::rgba32);
+        const auto pos_conv = detail::get_vertex_converter(
+            dst_header.vertex_type, src_header.vertex_type);
+        auto dst_view = make_particle_view(dst_header, dst);
+        auto src_view = make_particle_view(src_header, src);
+
+        // Prepare the global radius of the destination for computing the mean
+        // radius of the input in case the destination has no per-particle
+        // radius, but the input has.
+        {
+            vertex_properties dst_props, src_props;
+
+            if (get_properties(src_view.vertex_type(), src_props)
+                    && get_properties(dst_view.vertex_type(), dst_props)) {
+                if (src_props.has_radius && !dst_props.has_radius) {
+                    dst_header.radius = 0.0f;
+                }
+            }
+        }
 
         /* Convert one particle at a time. */
         for (std::size_t i = 0; i < retval; ++i) {
-            auto dst_pos = dst.position<void>();
-            auto dst_rad = dst.radius<float>();
-            auto dst_col = dst.colour<void>();
+            auto dst_pos = dst_view.position<void>();
+            auto dst_rad = dst_view.radius<float>();
+            auto dst_col = dst_view.colour<void>();
             auto src_pos = src_view.position<const void>();
             auto src_rad = src_view.radius<const float>();
             auto src_col = src_view.colour<const void>();
 
             // Initialise the output particle with zeros.
-            dst.clear();
+            dst_view.clear();
 
             if ((dst_pos != nullptr) && (src_pos != nullptr)) {
                 assert(pos_conv != nullptr);
@@ -603,18 +622,25 @@ std::size_t mmpld::convert(const void *src, const list_header& header,
                 // If additional vertex types are added in the future, this
                 // might not hold any more and this code (and the 'dst_rad' and
                 // 'src_rad' above need to be refactored).
-                assert(dst.vertex_type() == vertex_type::float_xyzr);
+                assert(dst_view.vertex_type() == vertex_type::float_xyzr);
 
                 if (src_rad == nullptr) {
                     // We have no valid offset for the source radius, so we
                     // need to copy the global radius to each particle.
-                    *dst_rad = header.radius;
+                    *dst_rad = src_header.radius;
+
                 } else {
                     // We know that all radii are float, so we can reinterpret
                     // the source pointer.
                     assert(src_view.vertex_type() == vertex_type::float_xyzr);
                     *dst_rad = *src_rad;
                 }
+
+            } else if (src_rad != nullptr) {
+                // We have no per-particle radius in the destination view, but
+                // we have radii in the source, so compute the average radius
+                // into the header of the destination.
+                detail::incremental_mean(dst_header.radius, i, *src_rad);
             }
 
             if (dst_col != nullptr) {
@@ -622,7 +648,7 @@ std::size_t mmpld::convert(const void *src, const list_header& header,
                     // We have no valid offset for the source colour, so we
                     // need to use the global colour from the header.
                     assert(global_col_conv != nullptr);
-                    global_col_conv(header.colour, dst_col);
+                    global_col_conv(src_header.colour, dst_col);
 
                 } else {
                     // There is a per-vertex colour that needs to be converted.
@@ -631,7 +657,7 @@ std::size_t mmpld::convert(const void *src, const list_header& header,
                 }
             }
 
-            dst.advance();
+            dst_view.advance();
             src_view.advance();
         }
     } /* end if (is_same_format(dst, header)) */
@@ -663,15 +689,14 @@ decltype(mmpld::list_header::particles) mmpld::read_as(F& file,
         }
 
         std::vector<std::uint8_t> buffer(cnt_buffer * src_stride);
-        particle_view<void> view(dst_header.vertex_type, dst_header.colour_type,
-            dst);
+        auto d_header = dst_header;
 
         for (std::size_t i = 0; i < retval; i += cnt_buffer) {
             auto c = (std::min)(cnt_buffer, retval - i * cnt_buffer);
             auto d = static_cast<std::uint8_t *>(dst) + i * dst_stride;
+            d_header.particles = c;
             io_traits::read(file, buffer.data(), c * src_stride);
-            convert(buffer.data(), src_header, view, c);
-            view.advance(c);
+            convert(buffer.data(), src_header, d, d_header);
         }
     }
 
