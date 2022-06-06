@@ -346,20 +346,31 @@ file.skip_cluster_info();
 ```
 
 ## test
-
 This project holds unit tests for Visual Studio's C++ unit test framework. It runs on Visual Studio 2019 atm.
 
+## convmmpld
+This is a simple test application for converting MMPLD files. It serves as a demo and test bed for the low-level APIs, namely for reading MMPLD, writing MMPLD and converting particle lists. The following command converts an MMPLD file to the specified vertex and colour format:
+```posh
+.\convertmmpld --input test.mmpld --output output.mmpld --vertex-type float_xyz --colour-type rgba32
+```
+
+### Command line arguments of convertmmpld
+| Name                               | Description |
+|---                                 |--- |
+| `--input <path>`                   | Specifies the path the MMPLD file to be converted. |
+| `--output <path>`                  | Specifies the path to the converted MMPLD file. Existing data will be overwritten. |
+| `--vertex-type <type>`             | Specifies the type of vertices being written. Use the symbolic constants from `mmpld::vertex_type` here. |
+| `--colour-type <type>`             | Specifies the type of colour/intensity being written. Use the symbolic constants from `mmpld::colour_type` here. |
+| `--batch-size <number>`            | Instructs the tool to read particles in batches of `<number>` instead of converting a whole particle list at once. |
+| `--no-logo`                        | Supresses the output of the version of the tool. |
 
 ## dumpmmpld
-
-This is a simple test application for dumping meta data from an MMPLD file. It serves as demo and test bed for the `mmpld::file` API. The following command dumps the metadata of an MMMPLD file:
-
+This is a simple test application for dumping meta data from an MMPLD file. It serves as demo and test bed for the `mmpld::file` API. The following command dumps the metadata of an MMPLD file:
 ```posh
 .\dumpmmpld /path .\test.mmpld
 ```
 
 ### Command line arguments of dumpmmpld
-
 | Name                               | Description |
 |---                                 |--- |
 | `/path <path>`                     | Specifies the path the MMPLD file to be dumped. |
@@ -367,7 +378,6 @@ This is a simple test application for dumping meta data from an MMPLD file. It s
 | `/nologo`                          | Supresses the output of the version of the tool. |
 
 ## Nuget package
-
 The project contains a nuspec to create a Nuget package using the tools from https://www.nuget.org/downloads with the following command line:
 
 ```posh
