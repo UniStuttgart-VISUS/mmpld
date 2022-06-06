@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "convertmmpld", "convertmmpld\convertmmpld.vcxproj", "{EE587B62-3E62-472A-A8E1-FF9FD0B14976}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -48,6 +50,14 @@ Global
 		{582038D8-3448-48EE-97B3-4904E91C3BE1}.Release|x64.Build.0 = Release|x64
 		{582038D8-3448-48EE-97B3-4904E91C3BE1}.Release|x86.ActiveCfg = Release|Win32
 		{582038D8-3448-48EE-97B3-4904E91C3BE1}.Release|x86.Build.0 = Release|Win32
+		{EE587B62-3E62-472A-A8E1-FF9FD0B14976}.Debug|x64.ActiveCfg = Debug|x64
+		{EE587B62-3E62-472A-A8E1-FF9FD0B14976}.Debug|x64.Build.0 = Debug|x64
+		{EE587B62-3E62-472A-A8E1-FF9FD0B14976}.Debug|x86.ActiveCfg = Debug|Win32
+		{EE587B62-3E62-472A-A8E1-FF9FD0B14976}.Debug|x86.Build.0 = Debug|Win32
+		{EE587B62-3E62-472A-A8E1-FF9FD0B14976}.Release|x64.ActiveCfg = Release|x64
+		{EE587B62-3E62-472A-A8E1-FF9FD0B14976}.Release|x64.Build.0 = Release|x64
+		{EE587B62-3E62-472A-A8E1-FF9FD0B14976}.Release|x86.ActiveCfg = Release|Win32
+		{EE587B62-3E62-472A-A8E1-FF9FD0B14976}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

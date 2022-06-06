@@ -1,10 +1,13 @@
 // <copyright file="mmpld.h" company="Visualisierungsinstitut der Universität Stuttgart">
-// Copyright © 2018 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+// Copyright © 2018 - 2022 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
 // Copyright © 2017 SFB-TRR 161. Alle Rechte vorbehalten.
 // </copyright>
 // <author>Christoph Müller</author>
 
 #pragma once
+
+#define MMPLD_API_MAJOR_VERSION (1)
+#define MMPLD_API_MINOR_VERSION (5)
 
 #include "mmpld/cluster_info.h"
 #include "mmpld/colour_properties.h"
