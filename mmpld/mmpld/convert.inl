@@ -471,10 +471,10 @@ namespace detail {
 /*
  * mmpld::convert
  */
-template<class T>
+template<class T, class I, class O>
 decltype(mmpld::list_header::particles) mmpld::convert(
-        const void *src, const list_header& header,
-        void *dst, const decltype(list_header::particles) cnt) {
+        const I *src, const list_header& header,
+        O *dst, const decltype(list_header::particles) cnt) {
     typedef T dst_view;
     typedef typename dst_view::vertex_value_type dst_vertex_scalar;
 
@@ -484,8 +484,8 @@ decltype(mmpld::list_header::particles) mmpld::convert(
     const auto dst_stride = dst_view::stride();
     const auto dst_vertex = dst_view::vertex_traits::value;
     const auto src_stride = get_stride<std::size_t>(header);
-    auto d = static_cast<std::uint8_t *>(dst);
-    auto s = static_cast<const std::uint8_t *>(src);
+    auto d = reinterpret_cast<std::uint8_t *>(dst);
+    auto s = reinterpret_cast<const std::uint8_t *>(src);
 
     if (is_same_format<T>(header)) {
         /* Source and destination types are the same, copy at once. */
@@ -561,9 +561,10 @@ decltype(mmpld::list_header::particles) mmpld::convert(
 /*
  * mmpld::convert
  */
+template<class I, class O>
 decltype(mmpld::list_header::particles) mmpld::convert(
-        const void *src, const list_header& src_header,
-        void *dst, list_header& dst_header) {
+        const I *src, const list_header& src_header,
+        O *dst, list_header& dst_header) {
     assert(src != nullptr);
     assert(dst != nullptr);
     const auto dst_stride = get_stride<std::size_t>(dst_header);
@@ -669,10 +670,11 @@ decltype(mmpld::list_header::particles) mmpld::convert(
 /*
  * mmpld::read_as
  */
-template<class F>
-decltype(mmpld::list_header::particles) mmpld::read_as(F& file,
-        const list_header& src_header, void *dst,
-        list_header& dst_header, decltype(list_header::particles) cnt_buffer) {
+template<class F, class O>
+decltype(mmpld::list_header::particles) mmpld::read_as(
+        F& file, const list_header& src_header,
+        O *dst, list_header& dst_header,
+        decltype(list_header::particles) cnt_buffer) {
     typedef detail::basic_io_traits<F> io_traits;
 
     const auto dst_stride = get_stride<std::size_t>(dst_header);
@@ -693,7 +695,7 @@ decltype(mmpld::list_header::particles) mmpld::read_as(F& file,
 
         for (std::size_t i = 0; i < retval; i += cnt_buffer) {
             auto c = (std::min)(cnt_buffer, retval - i);
-            auto d = static_cast<std::uint8_t *>(dst) + i * dst_stride;
+            auto d = reinterpret_cast<std::uint8_t *>(dst) + i * dst_stride;
             d_header.particles = c;
             io_traits::read(file, buffer.data(), c * src_stride);
             convert(buffer.data(), src_header, d, d_header);
@@ -707,10 +709,10 @@ decltype(mmpld::list_header::particles) mmpld::read_as(F& file,
 /*
  * mmpld::read_as
  */
-template<class T, class F>
-decltype(mmpld::list_header::particles) mmpld::read_as(F& file,
-        const list_header& header, void *dst,
-        const decltype(list_header::particles) cnt,
+template<class T, class F, class O>
+decltype(mmpld::list_header::particles) mmpld::read_as(
+        F& file, const list_header& header,
+        O *dst, const decltype(list_header::particles) cnt,
         decltype(list_header::particles) cnt_buffer) {
     list_header dst_header;
     ::memset(&dst_header, sizeof(dst_header), 0);

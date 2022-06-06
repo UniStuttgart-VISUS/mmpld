@@ -58,7 +58,7 @@ for (decltype(fileHeader.frames) i = 0; i < fileHeader.frames; ++i) {
         mmpld::read_list_header(hFile, fileHeader.version, listHeader);
 
         // Compute the number of bytes required for all particles.
-        auto rem = mmpld::get_size<size_t>(listHeader);
+        auto rem = mmpld::get_size<std::size_t>(listHeader);
 
         // Allocate the buffer for all particles.
         particles.resize(rem);
@@ -127,9 +127,71 @@ for (std::size_t f = 0; f < seekTable.size(); ++f) {
 file.close();
 ```
 
+### Converting particle lists
+The library provides several low-level functions to convert lists of particles from one format to another. If your application requires all data to be in a specific format, you can define a `mmpld::particle_traits<vertex_type, colour_type>` type and convert any input to this compile-time defined type. A variant of the function allows for converting any format at runtime by specifying a `list_header` for the input and the output format. Finally, for both of these variants, there is a function to convert particles on the fly while reading them from a file.
+
+The following example illustrates how to convert a particle list in memory to a compile-time defined format:
+```C++
+#include "mmpld.h"
+
+std::vector<char> buffer;
+mmpld::file_header fileHeader;
+mmpld::frame_header frameHeader;
+mmpld::list_header listHeader;
+std::vector<std::uint8_t> particles;
+mmpld::seek_table seekTable;
+
+// The target type we want to have our particles converted to.
+typedef mmpld::particle_traits<mmpld::vertex_type::float_xyz,
+    mmpld::colour_type::rgb32> ParticleFormat;
+
+// Open the input file, for example as STL input stream.
+std::ifstream file("test.mmpld", std::ios::binary);
+if (file.fail()) { /* Handle error. */ }
+
+// Read the file header to obtain information about the frames in the file.
+mmpld::read_file_header(file, fileHeader, seekTable);
+
+// Read the frame header of each frame in the file.
+for (decltype(fileHeader.frames) i = 0; i < fileHeader.frames; ++i) {
+    // Seek to the begin of the frame using the offset from 'seekTable'.
+    if (!file.seekg(seekTable[i]) { /* Handle error. */ }
+
+    // Read the frame header.
+    mmpld::read_frame_header(file, fileHeader.version, frameHeader);
+
+    // Load the particle lists into memory one after the other.
+    for (decltype(frameHeader.lists) j = 0; j < frameHeader.lists; ++j) {
+        mmpld::read_list_header(file, fileHeader.version, listHeader);
+        const auto cnt = static_cast<std::size_t>(listHeader.particles);
+
+        // Allocate the buffer for all particles.
+        buffer.resize(mmpld::get_size<std::size_t>(listHeader));
+        particles.resize(ParticleFormat::get_size(cnt));
+
+        // Read the particles.
+        if (!file.read(buffer.data(), cnt)) {
+            // Handle error.
+        }
+
+        // In MMPLD 1.1, a block of cluster information follows here. We need to
+        // skip this, because otherwise, the next list would be bogus.
+        if (fileHeader.version == mmpld::make_version(1, 1)) {
+            mmpld::skip_cluster_info(hFile);
+        }
+
+        // Convert the particles.
+        mmpld::convert<ParticleFormat>(buffer.data(), listHeader,
+            particles.data(), cnt);
+
+        /* Do something with the content of 'particles'. */
+    } /* end for (decltype(frameHeader.lists) j = 0; ... */
+} /* end for (decltype(fileHeader.frames) i = 0; ... */
+
+file.close();
+```
 
 ## The mmpld::file class
-
 The `mmpld::file` class is a stateful wrapper around the low-level API, which allows you parsing through an MMPLD file one frame after another. The `mmpld::file` class is responsible for all I/O operations and keeps track of the seek table and the file pointer for you.
 
 ### Reading a file

@@ -28,6 +28,8 @@ namespace mmpld {
     /// </summary>
     /// <typeparam name="T">A particle view describing the desired output type.
     /// </typeparam>
+    /// <typeparam name="I">Type of the input pointer.</typeparam>
+    /// <typeparam name="O">Type of the output pointer.</typeparam>
     /// <param name="src">A pointer to the source particles. Note that this must
     /// not necessarily the begin of the list, but could be any of the particles
     /// in the list provided that at least <paramref name="cnt" /> valid
@@ -43,16 +45,18 @@ namespace mmpld {
     /// larger than the list size in <paramref name="header" />, the conversion
     /// stops after the smaller list size has been processed.</param>
     /// <returns>The number of particles acutally converted.</returns>
-    template<class T>
+    template<class T, class I, class O>
     decltype(list_header::particles) convert(
-        const void *src, const list_header& header,
-        void *dst, const decltype(list_header::particles) cnt);
+        const I *src, const list_header& header,
+        O *dst, const decltype(list_header::particles) cnt);
 
     /// <summary>
     /// Convert at most the particle number from <paramref name="dst_header" />
     /// particles form <paramref name="src" /> to the format of
     /// <paramref name="dst_header" />.
     /// </summary>
+    /// <typeparam name="I">Type of the input pointer.</typeparam>
+    /// <typeparam name="O">Type of the output pointer.</typeparam>
     /// <param name="src">A pointer to the source particles. Note that this must
     /// not necessarily the begin of the list, but could be any of the particles
     /// in the list provided that at least the minimum of
@@ -70,9 +74,10 @@ namespace mmpld {
     /// the number of particles are set.</param>
     /// <returns>The number of particles acutally converted, which is the
     /// minimum of the source and destination particles.</returns>
-    inline decltype(list_header::particles) convert(
-        const void *src, const list_header& src_header,
-        void *dst, list_header& dst_header);
+    template<class I, class O>
+    decltype(list_header::particles) convert(
+        const I *src, const list_header& src_header,
+        O *dst, list_header& dst_header);
 
     /// <summary>
     /// Read the particle list described by <paramref name="src_header" /> from
@@ -89,6 +94,7 @@ namespace mmpld {
     /// intermediate buffer is allocated.</para>
     /// </remarks>
     /// <typeparam name="F">The type of the file handle.</typeparam>
+    /// <typeparam name="O">Type of the output pointer.</typeparam>
     /// <param name="file">An open file handle with the file pointer standing at
     /// the begin of the list described by <paramref name="src_header" />.
     /// </param>
@@ -105,9 +111,9 @@ namespace mmpld {
     /// <returns>The number of particles actually read, which might be less than
     /// the number of particles specified in <paramref name="dst_header" /> if
     /// the input was smaller.</returns>
-    template<class F>
+    template<class F, class O>
     decltype(list_header::particles) read_as(F& file,
-        const list_header& src_header, void *dst, list_header& dst_header,
+        const list_header& src_header, O *dst, list_header& dst_header,
         decltype(list_header::particles) cnt_buffer = 0);
 
     /// <summary>
@@ -127,6 +133,7 @@ namespace mmpld {
     /// </remarks>
     /// <typeparam name="T">The target particle traits to convert to.</typeparam>
     /// <typeparam name="F">The type of the file handle.</typeparam>
+    /// <typeparam name="O">Type of the output pointer.</typeparam>
     /// <param name="file">An open file handle with the file pointer standing at
     /// the begin of the list described by <paramref name="header" />.</param>
     /// <param name="header">The description of the list to be read.</param>
@@ -139,9 +146,9 @@ namespace mmpld {
     /// at once.</param>
     /// <returns>The number of particles actually read, which might be less than
     /// <paramref name="cnt" /> if the input was smaller.</returns>
-    template<class T, class F>
+    template<class T, class F, class O>
     decltype(list_header::particles) read_as(F& file, const list_header& header,
-        void *dst, const decltype(list_header::particles) cnt,
+        O *dst, const decltype(list_header::particles) cnt,
         decltype(list_header::particles) cnt_buffer = 0);
 
 } /* end namespace mmpld */
