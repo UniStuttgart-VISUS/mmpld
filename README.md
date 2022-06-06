@@ -351,7 +351,7 @@ This project holds unit tests for Visual Studio's C++ unit test framework. It ru
 ## convertmmpld
 This is a simple test application for converting MMPLD files. It serves as a demo and test bed for the low-level APIs, namely for reading MMPLD, writing MMPLD and converting particle lists. The following command converts an MMPLD file to the specified vertex and colour format:
 ```posh
-.\convertmmpld --input test.mmpld --output output.mmpld --vertex-type float_xyz --colour-type rgba32
+.\convertmmpld.exe --input .\test.mmpld --output .\output.mmpld --vertex-type float_xyz --colour-type rgba32
 ```
 
 ### Command line arguments of convertmmpld
@@ -367,7 +367,7 @@ This is a simple test application for converting MMPLD files. It serves as a dem
 ## dumpmmpld
 This is a simple test application for dumping meta data from an MMPLD file. It serves as demo and test bed for the `mmpld::file` API. The following command dumps the metadata of an MMPLD file:
 ```posh
-.\dumpmmpld /path .\test.mmpld
+.\dumpmmpld.exe /path .\test.mmpld
 ```
 
 ### Command line arguments of dumpmmpld
