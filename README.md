@@ -8,7 +8,7 @@ This is a C++ header-only library for loading MegaMol's MMPLD particle files.
 ## Usage
 The library can be used without compiling anything. Just add the root directory `mmpld` of the library project to the include directories of your C++ programme and include `mmpld.h` from there.
 
-The library contains APIs for interacting with MMPLD files at different levels of abstractions: the low-level API leaves the user most control about handling the file. The `mmpld::file` abstraction handles the file I/O and the meta-data management for you.
+The library contains APIs for interacting with MMPLD files at different levels of abstractions: the [low-level API](#the-low-level-api) leaves the user most control about handling the file. The `mmpld::file` [abstraction](#the-mmpld--file-class) handles the file I/O and the meta-data management for you.
 
 For the particle data themselves, the library provides several methods for interpeting the content of a particle list: The `mmpld::particle_view` is a runtime-defined view for particle data, which can be wrapped around a pointer to particles. `mmpld::particle_traits` holds similar functionality, but is defined at compile-time. Note that both views do not perfom any range checks for you, but assume that you pass only valid memory holding particles to them. As a last method, you can obtain the necessary information to interpret raw particle data from the `mmpld::list_header` of each particle list. Functions like `mmpld::get_offsets` and `mmpld::get_stride` allow for extracting the offsets to do pointer arithmetics on particles. The `get_properties` function allows you to create a bitmask describing the contents of a particle list as a whole. For instance, this bitmask allows you to find out whether there are per-particle radius or colour information or whether the colours are given in floating point formats.
 
@@ -30,7 +30,6 @@ mmpld::frame_header frameHeader;
 mmpld::list_header listHeader;
 std::vector<std::uint8_t> particles;
 mmpld::seek_table seekTable;
-
 
 // Open the file with your preferred API, in this case WIN32.
 auto hFile = ::CreateFile(_T("test.mmpld"), GENERIC_READ, FILE_SHARE_READ,
@@ -199,14 +198,6 @@ mmpld::list_header listHeader;
 std::vector<std::uint8_t> particles;
 mmpld::seek_table seekTable;
 
-// Define the vertex format and colour format we want to have the particles in.
-// In this sample, this is a compile-time constant, but you can use any format
-// here, e.g. something you read from user input.
-mmpld::list_header targetListHeader;
-::ZeroMemory(&targetListHeader, sizeof(targetListHeader));
-targetListHeader.vertex_type = mmpld::vertex_type::float_xyz;
-targetListHeader.colour_type = mmpld::colour_type::rgb32;
-
 // Open the file with your preferred API, in this case WIN32.
 auto hFile = ::CreateFile(_T("test.mmpld"), GENERIC_READ, FILE_SHARE_READ,
     nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_READONLY, NULL);
@@ -233,10 +224,19 @@ for (decltype(fileHeader.frames) i = 0; i < fileHeader.frames; ++i) {
         mmpld::read_list_header(hFile, fileHeader.version, listHeader);
 
         // We need to tell the read_as API how big our buffer is, which is done
-        // by setting the available size in 'targetListHeader'.
-        targetListHeader.particles = listHeader.particles.
+        // by copying the available size to 'targetListHeader'.
+        auto targetListHeader = listHeader;
 
-        // Allocate the buffer for all converted particles.
+        // Next, set the format we want to have the particles in. In this
+        // example, the format is a compile-time constant, but you could use
+        // any format at runtime here.
+        targetListHeader.vertex_type = mmpld::vertex_type::float_xyz;
+        targetListHeader.colour_type = mmpld::colour_type::rgb32;
+
+        // Allocate the buffer for all converted particles. It is important to
+        // use 'targetListHeader' here and not the list header read from the
+        // file, because the conversion target might have a different size than
+        // the original input.
         particles.resize(mmpld::get_size<std::size_t>(targetListHeader));
 
         // Initialise the destination pointer.
