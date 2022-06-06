@@ -348,7 +348,7 @@ file.skip_cluster_info();
 ## test
 This project holds unit tests for Visual Studio's C++ unit test framework. It runs on Visual Studio 2019 atm.
 
-## convmmpld
+## convertmmpld
 This is a simple test application for converting MMPLD files. It serves as a demo and test bed for the low-level APIs, namely for reading MMPLD, writing MMPLD and converting particle lists. The following command converts an MMPLD file to the specified vertex and colour format:
 ```posh
 .\convertmmpld --input test.mmpld --output output.mmpld --vertex-type float_xyz --colour-type rgba32
