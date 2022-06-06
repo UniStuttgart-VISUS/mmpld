@@ -170,14 +170,12 @@ for (decltype(fileHeader.frames) i = 0; i < fileHeader.frames; ++i) {
         particles.resize(ParticleFormat::get_size(cnt));
 
         // Read the particles.
-        if (!file.read(buffer.data(), cnt)) {
-            // Handle error.
-        }
+        if (!file.read(buffer.data(), cnt)) { /* Handle error. */ }
 
         // In MMPLD 1.1, a block of cluster information follows here. We need to
         // skip this, because otherwise, the next list would be bogus.
         if (fileHeader.version == mmpld::make_version(1, 1)) {
-            mmpld::skip_cluster_info(hFile);
+            mmpld::skip_cluster_info(file);
         }
 
         // Convert the particles.
@@ -189,6 +187,83 @@ for (decltype(fileHeader.frames) i = 0; i < fileHeader.frames; ++i) {
 } /* end for (decltype(fileHeader.frames) i = 0; ... */
 
 file.close();
+```
+
+The next example illustrates how to use `mmpld::read_as` to convert particles to a runtime-defined format on-the-fly (in this case using Win32 API as file API):
+```C++
+#include "mmpld.h"
+
+mmpld::file_header fileHeader;
+mmpld::frame_header frameHeader;
+mmpld::list_header listHeader;
+std::vector<std::uint8_t> particles;
+mmpld::seek_table seekTable;
+
+// Define the vertex format and colour format we want to have the particles in.
+// In this sample, this is a compile-time constant, but you can use any format
+// here, e.g. something you read from user input.
+mmpld::list_header targetListHeader;
+::ZeroMemory(&targetListHeader, sizeof(targetListHeader));
+targetListHeader.vertex_type = mmpld::vertex_type::float_xyz;
+targetListHeader.colour_type = mmpld::colour_type::rgb32;
+
+// Open the file with your preferred API, in this case WIN32.
+auto hFile = ::CreateFile(_T("test.mmpld"), GENERIC_READ, FILE_SHARE_READ,
+    nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_READONLY, NULL);
+if (hFile == INVALID_HANDLE_VALUE) { /* Handle error. */ }
+
+// Read the file header to obtain information about the frames in the file.
+mmpld::read_file_header(hFile, fileHeader, seekTable);
+
+// Read the frame header of each frame in the file.
+for (decltype(fileHeader.frames) i = 0; i < fileHeader.frames; ++i) {
+    LARGE_INTEGER offset;
+    offset.QuadPart = seekTable[i];
+
+    // Seek to the begin of the frame using the offset from 'seekTable'.
+    if (!::SetFilePointerEx(hFile, offset, nullptr, FILE_BEGIN)) { /* Handle error. */ }
+
+    // Read the frame header.
+    mmpld::read_frame_header(hFile, fileHeader.version, frameHeader);
+
+    // Process all particle lists which are located directly after the frame
+    // header. Each particle list has its own header which allows for finding
+    // out about its format and size.
+    for (decltype(frameHeader.lists) j = 0; j < frameHeader.lists; ++j) {
+        mmpld::read_list_header(hFile, fileHeader.version, listHeader);
+
+        // We need to tell the read_as API how big our buffer is, which is done
+        // by setting the available size in 'targetListHeader'.
+        targetListHeader.particles = listHeader.particles.
+
+        // Allocate the buffer for all converted particles.
+        particles.resize(mmpld::get_size<std::size_t>(targetListHeader));
+
+        // Initialise the destination pointer.
+        auto ptr = particles.data();
+
+        // Read the particles and let the API convert it to the format of
+        // 'targetListHeader'. If the format in 'listHeader' happens to be the
+        // same format, you do not need to pay for any conversion, but the input
+        // is directly read to 'ptr'.
+        mmpld::read_as(hFile, listHeader, ptr, targetListHeader);
+
+        // You could specify the size of the conversion buffer here like this,
+        // which would instruct the API to allocate a temporary buffer for 16
+        // particles and read and convert the input in baches of 16.
+        // mmpld::read_as(hFile, listHeader, ptr, targetListHeader, 16);
+
+        // In MMPLD 1.1, a block of cluster information follows here. We need to
+        // skip this, because otherwise, the next list would be bogus.
+        if (fileHeader.version == mmpld::make_version(1, 1)) {
+            mmpld::skip_cluster_info(hFile);
+        }
+
+        /* Do something with the content of 'particles'. */
+    } /* end for (decltype(frameHeader.lists) j = 0; ... */
+} /* end for (decltype(fileHeader.frames) i = 0; ... */
+
+::CloseHandle(hFile);
 ```
 
 ## The mmpld::file class
