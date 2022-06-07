@@ -7,9 +7,11 @@
     <authors>Christoph Müller</authors>
     <owners>mueller</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <license type="expression">MIT</license>
+    <!--<license type="expression">MIT</license>-->
+    <licenseUrl>https://github.com/UniStuttgart-VISUS/mmpld/blob/master/LICENSE</licenseUrl>
     <projectUrl>https://github.com/UniStuttgart-VISUS/mmpld</projectUrl>
     <description>This library allows for processing and converting binary particle files used by the MegaMol framework.</description>
+    <readme>docs\README.md</readme>
     <summary>A C++ header-only library for loading MegaMol's MMPLD particle files.</summary>
     <releaseNotes>Added conversion APIs for particle lists.</releaseNotes>
     <copyright>Copyright © 2018 - 2022 Visualisierungsinstitut der Universität Stuttgart</copyright>
@@ -19,5 +21,6 @@
     <file src="mmpld.h" target="build\native\include" />
     <file src="mmpld\**" target="build\native\include\mmpld" />
     <file src="mmpld.targets" target="build\native\mmpld.targets" />
+    <file src="..\README.md" target="docs\" />
   </files>
 </package>
