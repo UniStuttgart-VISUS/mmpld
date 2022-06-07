@@ -10,6 +10,7 @@
     <license type="expression">MIT</license>
     <projectUrl>https://github.com/UniStuttgart-VISUS/mmpld</projectUrl>
     <description>This library allows for processing and converting binary particle files used by the MegaMol framework.</description>
+    <readme>..\README.md</readme>
     <summary>A C++ header-only library for loading MegaMol's MMPLD particle files.</summary>
     <releaseNotes>Added conversion APIs for particle lists.</releaseNotes>
     <copyright>Copyright © 2018 - 2022 Visualisierungsinstitut der Universität Stuttgart</copyright>
