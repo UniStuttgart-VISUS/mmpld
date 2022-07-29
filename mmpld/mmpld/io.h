@@ -47,7 +47,7 @@ namespace detail {
 
     template<> struct basic_io_traits<std::ifstream> {
         typedef std::ifstream file_type;
-        typedef std::ifstream::streamoff size_type;
+        typedef std::streamoff size_type;
 
         static inline void close(file_type& file) {
             file.close();
@@ -71,7 +71,7 @@ namespace detail {
 
     template<> struct basic_io_traits<std::ofstream> {
         typedef std::ofstream file_type;
-        typedef std::ofstream::streamoff size_type;
+        typedef std::streamoff size_type;
 
         static inline void close(file_type& file) {
             file.close();
