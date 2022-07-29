@@ -181,7 +181,7 @@ namespace mmpld {
         /// <returns>The size of <paramref name="cnt" /> particles.</returns>
         static inline std::size_t size(
                 const decltype(list_header::particles) cnt) noexcept {
-            return cnt * particle_traits::stride();
+            return static_cast<std::size_t>(cnt) * particle_traits::stride();
         }
 
         /// <summary>

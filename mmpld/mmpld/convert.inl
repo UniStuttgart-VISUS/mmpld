@@ -602,12 +602,12 @@ decltype(mmpld::list_header::particles) mmpld::convert(
 
         /* Convert one particle at a time. */
         for (std::size_t i = 0; i < retval; ++i) {
-            auto dst_pos = dst_view.position<void>();
-            auto dst_rad = dst_view.radius<float>();
-            auto dst_col = dst_view.colour<void>();
-            auto src_pos = src_view.position<const void>();
-            auto src_rad = src_view.radius<const float>();
-            auto src_col = src_view.colour<const void>();
+            auto dst_pos = dst_view.template position<void>();
+            auto dst_rad = dst_view.template radius<float>();
+            auto dst_col = dst_view.template colour<void>();
+            auto src_pos = src_view.template position<const void>();
+            auto src_rad = src_view.template radius<const float>();
+            auto src_col = src_view.template colour<const void>();
 
             // Initialise the output particle with zeros.
             dst_view.clear();
