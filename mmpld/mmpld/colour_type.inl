@@ -1,7 +1,7 @@
-// <copyright file="colour_type.inl" company="Visualisierungsinstitut der Universität Stuttgart">
-// Copyright © 2018 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+// <copyright file="colour_type.inl" company="Visualisierungsinstitut der Universitï¿½t Stuttgart">
+// Copyright Â© 2018 - 2022 Visualisierungsinstitut der UniversitÃ¤t Stuttgart. Alle Rechte vorbehalten.
 // </copyright>
-// <author>Christoph Müller</author>
+// <author>Christoph MÃ¼ller</author>
 
 
 /*
