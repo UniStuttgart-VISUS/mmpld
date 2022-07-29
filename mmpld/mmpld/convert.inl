@@ -1,7 +1,7 @@
-// <copyright file="convert.inl" company="Visualisierungsinstitut der Universität Stuttgart">
-// Copyright © 2018 - 2022 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+// <copyright file="convert.inl" company="Visualisierungsinstitut der Universitï¿½t Stuttgart">
+// Copyright ï¿½ 2018 - 2022 Visualisierungsinstitut der Universitï¿½t Stuttgart. Alle Rechte vorbehalten.
 // </copyright>
-// <author>Christoph Müller</author>
+// <author>Christoph Mï¿½ller</author>
 
 
 /// <summary>
@@ -200,11 +200,11 @@ namespace detail {
         typedef vertex_traits<I> input_traits;
 
         static inline void convert(const void *src, void *dst) {
-            auto d = static_cast<output_traits::value_type *>(dst);
-            auto s = static_cast<const input_traits::value_type *>(src);
-            d[0] = static_cast<output_traits::value_type>(s[0]);
-            d[1] = static_cast<output_traits::value_type>(s[1]);
-            d[2] = static_cast<output_traits::value_type>(s[2]);
+            auto d = static_cast<typename output_traits::value_type *>(dst);
+            auto s = static_cast<const typename input_traits::value_type *>(src);
+            d[0] = static_cast<typename output_traits::value_type>(s[0]);
+            d[1] = static_cast<typename output_traits::value_type>(s[1]);
+            d[2] = static_cast<typename output_traits::value_type>(s[2]);
         }
     };
 
@@ -232,10 +232,10 @@ namespace detail {
         typedef vertex_traits<O> output_traits;
 
         static inline void convert(const void *src, void *dst) {
-            auto d = static_cast<output_traits::value_type *>(dst);
-            d[0] = static_cast<output_traits::value_type>(0);
-            d[1] = static_cast<output_traits::value_type>(0);
-            d[2] = static_cast<output_traits::value_type>(0);
+            auto d = static_cast<typename output_traits::value_type *>(dst);
+            d[0] = static_cast<typename output_traits::value_type>(0);
+            d[1] = static_cast<typename output_traits::value_type>(0);
+            d[2] = static_cast<typename output_traits::value_type>(0);
         }
     };
 
@@ -250,7 +250,7 @@ namespace detail {
 
         static inline void convert(const void *src, void *dst) {
             auto s = static_cast<const input_traits::value_type *>(src);
-            convert_colour<output_traits::value_type>(
+            convert_colour<typename output_traits::value_type>(
                 s, input_traits::channels, dst, output_traits::channels);
         }
     };

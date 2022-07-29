@@ -1,7 +1,7 @@
-// <copyright file="particle_traits.h" company="Visualisierungsinstitut der Universität Stuttgart">
-// Copyright © 2018 -2022 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+// <copyright file="particle_traits.h" company="Visualisierungsinstitut der Universitï¿½t Stuttgart">
+// Copyright ï¿½ 2018 -2022 Visualisierungsinstitut der Universitï¿½t Stuttgart. Alle Rechte vorbehalten.
 // </copyright>
-// <author>Christoph Müller</author>
+// <author>Christoph Mï¿½ller</author>
 
 #pragma once
 
@@ -70,7 +70,7 @@ namespace mmpld {
                 const decltype(list_header::particles) cnt) noexcept {
             auto retval = static_cast<const std::uint8_t *>(data);
             retval += cnt * particle_traits::stride();
-            return static_cast<void *>(retval);
+            return static_cast<const void *>(retval);
         }
 
         /// <summary>
