@@ -275,8 +275,8 @@ namespace detail {
             static constexpr std::array<std::uint8_t, 4> GREY {
                 128, 128, 128, 255
             };
-            convert_colour<output_traits::value_type>(GREY.data(), GREY.size(),
-                dst, output_traits::channels);
+            convert_colour<typename output_traits::value_type>(GREY.data(),
+                GREY.size(), dst, output_traits::channels);
         }
     };
 
