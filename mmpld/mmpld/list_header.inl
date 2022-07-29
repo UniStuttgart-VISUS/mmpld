@@ -1,8 +1,8 @@
-// <copyright file="list_header.inl" company="Visualisierungsinstitut der Universität Stuttgart">
-// Copyright © 2018 - 2022 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
-// Copyright © 2017 SFB-TRR 161. Alle Rechte vorbehalten.
+// <copyright file="list_header.inl" company="Visualisierungsinstitut der Universitï¿½t Stuttgart">
+// Copyright ï¿½ 2018 - 2022 Visualisierungsinstitut der Universitï¿½t Stuttgart. Alle Rechte vorbehalten.
+// Copyright ï¿½ 2017 SFB-TRR 161. Alle Rechte vorbehalten.
 // </copyright>
-// <author>Christoph Müller</author>
+// <author>Christoph Mï¿½ller</author>
 
 
 #if defined(MMPLD_WITH_DIRECT3D)
@@ -228,7 +228,7 @@ T& mmpld::read_list_header(T& stream, const std::uint16_t fileVersion,
         // this should be forward-compatible (>= 103).
         detail::read(stream, header.bounding_box);
     } else {
-        ::memset(header.bounding_box, sizeof(header.bounding_box), 0);
+        ::memset(header.bounding_box, 0, sizeof(header.bounding_box));
     }
 
     return stream;
@@ -242,7 +242,6 @@ T& mmpld::read_list_header(T& stream, const std::uint16_t fileVersion,
 template<class T>
 T& mmpld::write_list_header(const list_header& header,
         const std::uint16_t fileVersion, T& stream) {
-    typedef typename std::basic_ostream<T>::char_type char_type;
     static const auto MAX_COLOUR = static_cast<float>(
         (std::numeric_limits<std::uint8_t>::max)());
 
