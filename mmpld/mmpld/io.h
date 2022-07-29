@@ -219,7 +219,7 @@ namespace detail {
 #if defined(_WIN32)
         typedef __int64 size_type;
 #else /* defined(_WIN32) */
-        typedef off64_t size_type;
+        typedef off_t size_type;
 #endif /* defined(_WIN32) */
 
         static inline void close(file_type& file) {
@@ -246,7 +246,7 @@ namespace detail {
 #if defined(_WIN32)
             return ::_telli64(file);
 #else /* defined(_WIN32) */
-            return ::tell64(file);
+            return tell(file);
 #endif /* defined(_WIN32) */
         }
 
