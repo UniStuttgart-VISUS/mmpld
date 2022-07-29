@@ -249,7 +249,7 @@ namespace detail {
         typedef colour_traits<I> input_traits;
 
         static inline void convert(const void *src, void *dst) {
-            auto s = static_cast<const input_traits::value_type *>(src);
+            auto s = static_cast<const typename input_traits::value_type *>(src);
             convert_colour<typename output_traits::value_type>(
                 s, input_traits::channels, dst, output_traits::channels);
         }
