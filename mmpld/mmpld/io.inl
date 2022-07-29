@@ -65,19 +65,19 @@ mmpld::detail::basic_io_traits<int>::read(file_type& file, void *dst,
     while (rem > 0) {
 #if defined(_WIN32)
         assert(rem < (std::numeric_limits<unsigned int>::max)());
-        auto read = ::_read(file, ptr, static_cast<unsigned int>(rem));
+        auto cnt = ::_read(file, ptr, static_cast<unsigned int>(rem));
 #else /* defined(_WIN32) */
         auto cnt = ::read(file, ptr, rem);
 #endif /* defined(_WIN32) */
-        if (read == -1) {
+        if (cnt == -1) {
             throw std::system_error(errno, std::system_category());
         }
-        if (read == 0) {
+        if (cnt == 0) {
             // EOF
             break;
         }
-        ptr += read;
-        rem -= read;
+        ptr += cnt;
+        rem -= cnt;
     }
 
     return (cnt - rem);
@@ -98,7 +98,7 @@ mmpld::detail::basic_io_traits<int>::write(file_type& file, const void *dst,
         assert(rem < (std::numeric_limits<unsigned int>::max)());
         auto written = ::_write(file, ptr, static_cast<unsigned int>(rem));
 #else /* defined(_WIN32) */
-        auto written = ::_write(file, ptr, rem);
+        auto written = ::write(file, ptr, rem);
 #endif /* defined(_WIN32) */
         if (written == -1) {
             throw std::system_error(errno, std::system_category());

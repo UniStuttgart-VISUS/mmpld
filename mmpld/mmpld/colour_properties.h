@@ -1,7 +1,7 @@
-// <copyright file="colour_properties.h" company="Visualisierungsinstitut der Universität Stuttgart">
-// Copyright © 2019 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+// <copyright file="colour_properties.h" company="Visualisierungsinstitut der Universitï¿½t Stuttgart">
+// Copyright ï¿½ 2019 Visualisierungsinstitut der Universitï¿½t Stuttgart. Alle Rechte vorbehalten.
 // </copyright>
-// <author>Christoph Müller</author>
+// <author>Christoph Mï¿½ller</author>
 
 #pragma once
 
@@ -49,7 +49,7 @@ namespace detail {
             typedef colour_traits<C> traits_type;
             properties.channels = traits_type::channels;
             properties.is_float = std::is_floating_point<
-                traits_type::value_type>::value;
+                typename traits_type::value_type>::value;
             properties.size = traits_type::size;
 
             return (type != colour_type::none);
