@@ -1,7 +1,7 @@
-// <copyright file="file.inl" company="Visualisierungsinstitut der Universität Stuttgart">
-// Copyright © 2018 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+// <copyright file="file.inl" company="Visualisierungsinstitut der Universitï¿½t Stuttgart">
+// Copyright ï¿½ 2018 Visualisierungsinstitut der Universitï¿½t Stuttgart. Alle Rechte vorbehalten.
 // </copyright>
-// <author>Christoph Müller</author>
+// <author>Christoph Mï¿½ller</author>
 
 
 /*
@@ -118,7 +118,7 @@ template<class F, class C>
 std::vector<std::uint8_t> mmpld::file<F, C>::read_particles(
         list_header& header, cluster_info *clusters) {
     this->read_particles(false, header, nullptr, 0);
-    auto size = mmpld::get_size(header);
+    auto size = mmpld::get_size<std::size_t>(header);
 
     std::vector<std::uint8_t> retval(size);
     this->read_particles(header, retval.data(), size);
