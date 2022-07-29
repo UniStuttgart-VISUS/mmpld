@@ -219,7 +219,7 @@ namespace detail {
 #if defined(_WIN32)
         typedef __int64 size_type;
 #else /* defined(_WIN32) */
-        typedef off_t size_type;
+        typedef off64_t size_type;
 #endif /* defined(_WIN32) */
 
         static inline void close(file_type& file) {
@@ -246,7 +246,7 @@ namespace detail {
 #if defined(_WIN32)
             return ::_telli64(file);
 #else /* defined(_WIN32) */
-            return ::tell(file);
+            return ::tell64(file);
 #endif /* defined(_WIN32) */
         }
 
@@ -268,7 +268,7 @@ namespace detail {
                 throw std::system_error(errno, std::system_category());
             }
 #else /* defined(_WIN32) */
-            if ((file = ::open(path, O_BINARY | O_RDONLY)) != 0) {
+            if ((file = ::open(path, O_RDONLY)) != 0) {
                 throw std::system_error(errno, std::system_category());
             }
 #endif /* defined(_WIN32) */
@@ -283,7 +283,7 @@ namespace detail {
                 throw std::system_error(errno, std::system_category());
             }
 #else /* defined(_WIN32) */
-            if ((file = ::open(path, O_BINARY | O_CREAT)) != 0) {
+            if ((file = ::open(path, O_CREAT)) != 0) {
                 throw std::system_error(errno, std::system_category());
             }
 #endif /* defined(_WIN32) */
