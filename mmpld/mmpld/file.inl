@@ -53,8 +53,7 @@ mmpld::cluster_info mmpld::file<F, C>::read_cluster_info(void) {
     if (this->_file_header.version == mmpld::make_version(1, 1)) {
         return mmpld::read_cluster_info(this->_file);
     } else {
-        static const cluster_info empty;
-        return empty;
+        return cluster_info();
     }
 }
 

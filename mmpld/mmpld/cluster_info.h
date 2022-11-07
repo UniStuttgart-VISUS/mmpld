@@ -62,7 +62,7 @@ namespace mmpld {
         /// </summary>
         /// <param name="rhs">The object to be moved.</param>
         /// <returns><c>*this</c>.</returns>
-        inline cluster_info& operator =(cluster_info&& rhs) {
+        inline cluster_info& operator =(cluster_info&& rhs) noexcept {
             if (this != std::addressof(rhs)) {
                 this->_count = rhs._count;
                 rhs._count = 0;
