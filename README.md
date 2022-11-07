@@ -16,6 +16,8 @@ The library also provides functions for [converting particle lists](#converting-
 
 If `#define MMPLD_WITH_DIRECT3D` is added before including the library header, the library provides a method to [create Direct3D input layout descriptions](#read-the-list-headers-only) for a particle list. The output of the `mmpld::get_input_layout` function can be used to create an input layout for the raw data of the particle list. As versions 10, 11 and 12 of Direct3D use the same layout for their input layout descriptions, `mmpld::get_input_layout` can be instantiated with `D3D10_INPUT_ELEMENT_DESC`, `D3D11_INPUT_ELEMENT_DESC` or `D3D12_INPUT_ELEMENT_DESC`. 
 
+If `#define MMPLD_WITHOUT_POSIX_IO` is added before including the library header, the library does not include the I/O traits for POSIX `int` file handles. Use this define when the library should be used in Unreal Engine.
+
 ## The low-level API
 The low-level API provides APIs for reading and interpreting the MMPLD file header, the frame header(s) and the list header(s). The user is responsible for seeking to the correct positions in the file. The templates in the API provide instantiations for several I/O methods: `std::ifstream`, `int` file handles obtained from POSIX `_open`, `FILE` pointers and on Windows for native `HANDLE`s. On Windows, `wchar_t` variants are also available.
 
