@@ -214,6 +214,8 @@ namespace detail {
     };
 #endif /* defined(_WIN32) */
 
+
+#if !defined(MMPLD_WITHOUT_POSIX_IO)
     template<> struct basic_io_traits<int> {
         typedef int file_type;
 #if defined(_WIN32)
@@ -313,6 +315,7 @@ namespace detail {
         }
     };
 #endif /* defined(_WIN32) */
+#endif /* !defined(MMPLD_WITHOUT_POSIX_IO) */
 
 #if defined(_WIN32)
     template<> struct basic_io_traits<HANDLE> {

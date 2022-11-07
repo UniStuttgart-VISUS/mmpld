@@ -53,6 +53,7 @@ mmpld::detail::basic_io_traits<FILE *>::write(file_type& file, const void *src,
 }
 
 
+#if !defined(MMPLD_WITHOUT_POSIX_IO)
 /*
  * mmpld::detail::basic_io_traits<int>::read
  */
@@ -109,6 +110,7 @@ mmpld::detail::basic_io_traits<int>::write(file_type& file, const void *dst,
 
     return (cnt - rem);
 }
+#endif /* !defined(MMPLD_WITHOUT_POSIX_IO) */
 
 
 #if defined(_WIN32)
