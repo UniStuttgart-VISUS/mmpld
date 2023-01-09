@@ -1,7 +1,7 @@
-// <copyright file="colour_properties.h" company="Visualisierungsinstitut der Universit�t Stuttgart">
-// Copyright � 2019 Visualisierungsinstitut der Universit�t Stuttgart. Alle Rechte vorbehalten.
+// <copyright file="colour_properties.h" company="Visualisierungsinstitut der Universität Stuttgart">
+// Copyright © 2019 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
 // </copyright>
-// <author>Christoph M�ller</author>
+// <author>Christoph Müller</author>
 
 #pragma once
 

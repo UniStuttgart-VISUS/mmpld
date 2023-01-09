@@ -1,5 +1,5 @@
 // <copyright file="convert.inl" company="Visualisierungsinstitut der Universität Stuttgart">
-// Copyright © 2018 - 2022 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+// Copyright © 2018 - 2023 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
 // </copyright>
 // <author>Christoph Müller</author>
 
@@ -480,7 +480,7 @@ decltype(mmpld::list_header::particles) mmpld::convert(
 
     const auto retval = (std::min)(header.particles, cnt);
     const auto dst_channels = dst_view::colour_traits::channels;
-    const auto dst_colour = dst_view::colour_traits::colour_type;
+    const auto dst_colour = dst_view::colour_traits::value;
     const auto dst_stride = dst_view::stride();
     const auto dst_vertex = dst_view::vertex_traits::value;
     const auto src_stride = get_stride<std::size_t>(header);
@@ -693,7 +693,8 @@ decltype(mmpld::list_header::particles) mmpld::read_as(
         std::vector<std::uint8_t> buffer(cnt_buffer * src_stride);
         auto d_header = dst_header;
 
-        for (std::size_t i = 0; i < retval; i += cnt_buffer) {
+        for (std::decay<decltype(retval)>::type i = 0; i < retval;
+                i += cnt_buffer) {
             auto c = (std::min)(cnt_buffer, retval - i);
             auto d = reinterpret_cast<std::uint8_t *>(dst) + i * dst_stride;
             d_header.particles = c;

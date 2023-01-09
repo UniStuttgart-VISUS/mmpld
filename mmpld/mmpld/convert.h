@@ -26,8 +26,8 @@ namespace mmpld {
     /// the type defined by the <see cref="mmpld::particle_traits" />
     /// <typeparamref name="T" />.
     /// </summary>
-    /// <typeparam name="T">A particle view describing the desired output type.
-    /// </typeparam>
+    /// <typeparam name="T">An instance of <see cref="mmpld::particle_traits" />
+    /// describing the desired output type.</typeparam>
     /// <typeparam name="I">Type of the input pointer.</typeparam>
     /// <typeparam name="O">Type of the output pointer.</typeparam>
     /// <param name="src">A pointer to the source particles. Note that this must

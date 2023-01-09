@@ -1,7 +1,7 @@
-// <copyright file="particle_view.h" company="Visualisierungsinstitut der Universit�t Stuttgart">
-// Copyright � 2018 - 2022 Visualisierungsinstitut der Universit�t Stuttgart. Alle Rechte vorbehalten.
+// <copyright file="particle_view.h" company="Visualisierungsinstitut der Universität Stuttgart">
+// Copyright © 2018 - 2022 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
 // </copyright>
-// <author>Christoph M�ller</author>
+// <author>Christoph Müller</author>
 
 #pragma once
 
