@@ -177,6 +177,47 @@ namespace detail {
         const size_t cnt_out) { }
 
     /// <summary>
+    /// Perform a radius conversion in cases where, both, input and output have
+    /// an radius specified according to their type.
+    /// </summary>
+    template<class O, class I>
+    typename std::enable_if<!std::is_void<I>::value
+        && !std::is_void<O>::value>::type
+    convert_radius(const I *input, const float global_radius, O *output) {
+        if (output != nullptr) {
+            if (input == nullptr) {
+                // We have no valid offset for the source radius, so we
+                // need to copy the global radius to each particle.
+                *output = static_cast<O>(global_radius);
+            } else {
+                // We know that all radii are float, so we can just cast.
+                *output = static_cast<O>(*input);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Apply the global radius in lack of a per-vertex input.
+    /// </summary>
+    template<class O>
+    typename std::enable_if<!std::is_void<O>::value>::type
+    convert_radius(const void *input, const float global_radius, O *output) {
+        if (output != nullptr) {
+            // As we have no input, we must use the global radius.
+            *output = static_cast<O>(global_radius);
+        }
+    }
+
+    /// <summary>
+    /// Do nothing if no radius is requested in output.
+    /// </summary>
+    template<class I>
+    inline void convert_radius(const I *input, const float global_radius,
+            void *output) {
+        // As we have no output, there is nothing to do.
+    }
+
+    /// <summary>
     /// Generic base class for converting positions and colours.
     /// </summary>
     /// <remarks>
@@ -522,17 +563,10 @@ decltype(mmpld::list_header::particles) mmpld::convert(
                 pos_conv(src_pos, dst_pos);
             }
 
-            if (dst_rad != nullptr) {
-                if (src_rad == nullptr) {
-                    // We have no valid offset for the source radius, so we
-                    // need to copy the global radius to each particle.
-                    *dst_rad = static_cast<dst_vertex_scalar>(header.radius);
-                } else {
-                    // We know that all radii are float, so we can reinterpret
-                    // the source pointer.
-                    *dst_rad = *static_cast<const dst_vertex_scalar *>(src_rad);
-                }
-            }
+            // Delegate radius conversion to separate template that can handle 
+            // void input/output cases.
+            detail::convert_radius<dst_vertex_scalar>(src_rad, header.radius,
+                dst_rad);
 
             if (dst_col != nullptr) {
                 typedef typename dst_view::colour_value_type dst_type;
