@@ -156,7 +156,8 @@ mmpld::read_file_header(file, fileHeader, seekTable);
 // Read the frame header of each frame in the file.
 for (decltype(fileHeader.frames) i = 0; i < fileHeader.frames; ++i) {
     // Seek to the begin of the frame using the offset from 'seekTable'.
-    if (!file.seekg(seekTable[i]) { /* Handle error. */ }
+    file.seekg(seekTable[i]);
+    if (!file.good()) { /* Handle error. */ }
 
     // Read the frame header.
     mmpld::read_frame_header(file, fileHeader.version, frameHeader);
@@ -165,13 +166,15 @@ for (decltype(fileHeader.frames) i = 0; i < fileHeader.frames; ++i) {
     for (decltype(frameHeader.lists) j = 0; j < frameHeader.lists; ++j) {
         mmpld::read_list_header(file, fileHeader.version, listHeader);
         const auto cnt = static_cast<std::size_t>(listHeader.particles);
+        const auto mem = mmpld::get_size<std::size_t>(listHeader);
 
         // Allocate the buffer for all particles.
-        buffer.resize(mmpld::get_size<std::size_t>(listHeader));
+        buffer.resize(mem);
         particles.resize(ParticleFormat::get_size(cnt));
 
         // Read the particles.
-        if (!file.read(buffer.data(), cnt)) { /* Handle error. */ }
+        file.read(buffer.data(), mem));
+        if (!file.good()) { /* Handle error. */ }
 
         // In MMPLD 1.1, a block of cluster information follows here. We need to
         // skip this, because otherwise, the next list would be bogus.
