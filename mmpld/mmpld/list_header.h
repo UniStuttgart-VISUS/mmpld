@@ -1,5 +1,5 @@
 // <copyright file="list_header.h" company="Visualisierungsinstitut der Universität Stuttgart">
-// Copyright © 2018 - 2019 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+// Copyright © 2018 - 2023 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
 // Copyright © 2017 SFB-TRR 161. Alle Rechte vorbehalten.
 // </copyright>
 // <author>Christoph Müller</author>
@@ -80,6 +80,18 @@ namespace mmpld {
         /// </summary>
         mmpld::vertex_type vertex_type;
     };
+
+    /// <summary>
+    /// Retreive the number of particles from the list.
+    /// </summary>
+    /// <typeparam name="T">The scalar type to express the size in. This is
+    /// usually <c>size_t</c> when working on the CPU or <c>UINT</c> when
+    /// working with Direct3D.</typeparam>
+    /// <param name="header">The list header to get the size for.</param>
+    /// <returns><see cref="mmpld::list_header::particles" />.</returns>
+    template<class T> inline T count(const list_header &header) noexcept {
+        return static_cast<T>(header.particles);
+    }
 
 #if defined(MMPLD_WITH_DIRECT3D)
     /// <summary>
@@ -201,6 +213,31 @@ namespace mmpld {
     template<class T>
     T& read_list_header(T& stream, const std::uint16_t fileVersion,
         list_header& header);
+
+    /// <summary>
+    /// Advance the stream such that all particles of the given list are
+    /// skipped.
+    /// </summary>
+    /// <remarks>
+    /// <para>This function only requires the file pointer in
+    /// <paramref name="stream" /> to point to the first particle of the list
+    /// described by <paramref name="header" />. If this precondition is not
+    /// met, the effect of the function is undefined.</para>
+    /// <para>Please note that an <se cref="mmpld::cluster_info" /> block after
+    /// the particles will <i>not</i> be skipped. The caller is responsible
+    /// for handling this if the file version is 1.1.</para>
+    /// </remarks>
+    /// <typeparam name="T">The type of stream, which can be an STL stream or a
+    /// file descriptor or <see cref="FILE" /> handle.</typeparam>
+    /// <param name="stream">The stream to read the header from. The stream must
+    /// be open and in binary mode.</param>
+    /// <param name="header">The description of the list to be skipped.</param>
+    /// <returns><paramref name="stream" />.</returns>
+    template<class T>
+    inline T& skip_particles(T& stream, const list_header& header) {
+        detail::skip(stream, get_size<std::size_t>(header));
+        return stream;
+    }
 
     /// <summary>
     /// Writes and MMPLD list header to the current location in the stream.

@@ -1,5 +1,5 @@
 // <copyright file="io.h" company="Visualisierungsinstitut der Universität Stuttgart">
-// Copyright © 2018 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+// Copyright © 2018 - 2023 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
 // </copyright>
 // <author>Christoph Müller</author>
 
@@ -413,6 +413,17 @@ namespace detail {
     template<class F, class T> inline T& read(F& handle, T& retval) {
         basic_io_traits<F>::read(handle, std::addressof(retval), sizeof(retval));
         return retval;
+    }
+
+    /// <summary>
+    /// Skip <paramref name="cnt" /> in the given file.
+    /// </summary>
+    /// <typeparam name="F">The type of the file handle.</typeparam>
+    /// <param name="handle">The file handle.</param>
+    /// <param name="cnt">The number of bytes to skip.</param>
+    template<class F> inline void skip(F& handle, const std::size_t cnt) {
+        const auto pos = basic_io_traits<F>::tell(handle);
+        basic_io_traits<F>::seek(handle, pos + cnt);
     }
 
     /// <summary>

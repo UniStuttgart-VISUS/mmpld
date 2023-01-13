@@ -2676,7 +2676,77 @@ namespace test {
             this->testRoundTrip<HANDLE, int>("test_xyz_double_rgba_short.mmpld");
         }
 
+        TEST_METHOD(TestCount) {
+            this->testCount<std::ifstream>("test_xyz_double_int_double.mmpld");
+            this->testCount<FILE *>("test_xyz_double_int_double.mmpld");
+            this->testCount<HANDLE>("test_xyz_double_int_double.mmpld");
+            this->testCount<int>("test_xyz_double_int_double.mmpld");
+        }
+
     private:
+
+        template<class F, class C> void testCount(const C *path) {
+            typedef F file_type;
+            typedef mmpld::detail::io_traits<F, C> io_type;
+
+            mmpld::file_header fileHeader;
+            mmpld::frame_header frameHeader;
+            file_type hFile;
+            mmpld::list_header listHeader;
+            mmpld::list_header retval;
+            mmpld::seek_table seekTable;
+            std::size_t totalCount = 0;
+
+            io_type::open_read(path, hFile);
+
+            mmpld::read_file_header(hFile, fileHeader, seekTable);
+            io_type::seek(hFile, static_cast<size_t>(seekTable[0]));
+            mmpld::read_frame_header(hFile, fileHeader.version, frameHeader);
+            Assert::AreEqual(std::int32_t(4), frameHeader.lists, L"Frame #1 holds four particle lists.", LINE_INFO());
+
+            mmpld::read_list_header(hFile, fileHeader.version, listHeader);
+            {
+                auto cnt = mmpld::count<std::size_t>(listHeader);
+                Assert::AreEqual(std::size_t(listHeader.particles), cnt, L"Count returns # of particles in list 1", LINE_INFO());
+                totalCount += cnt;
+            }
+            mmpld::skip_particles(hFile, listHeader);
+
+            mmpld::read_list_header(hFile, fileHeader.version, listHeader);
+            {
+                auto cnt = mmpld::count<std::size_t>(listHeader);
+                Assert::AreEqual(std::size_t(listHeader.particles), cnt, L"Count returns # of particles in list 2", LINE_INFO());
+                totalCount += cnt;
+            }
+            mmpld::skip_particles(hFile, listHeader);
+
+            mmpld::read_list_header(hFile, fileHeader.version, listHeader);
+            {
+                auto cnt = mmpld::count<std::size_t>(listHeader);
+                Assert::AreEqual(std::size_t(listHeader.particles), cnt, L"Count returns # of particles in list 3", LINE_INFO());
+                totalCount += cnt;
+            }
+            mmpld::skip_particles(hFile, listHeader);
+
+            mmpld::read_list_header(hFile, fileHeader.version, listHeader);
+            {
+                auto cnt = mmpld::count<std::size_t>(listHeader);
+                Assert::AreEqual(std::size_t(listHeader.particles), cnt, L"Count returns # of particles in list 4", LINE_INFO());
+                totalCount += cnt;
+            }
+            mmpld::skip_particles(hFile, listHeader);
+
+            io_type::seek(hFile, static_cast<size_t>(seekTable[0]));
+            mmpld::read_frame_header(hFile, fileHeader.version, frameHeader);
+            {
+                auto pos = io_type::tell(hFile);
+                auto cnt = mmpld::count<std::size_t>(frameHeader, fileHeader.version, hFile);
+                Assert::AreEqual(totalCount, cnt, L"Count on whole frame returns number over all lists", LINE_INFO());
+                Assert::AreEqual(pos, io_type::tell(hFile), L"File pointer returned to begin of frame", LINE_INFO());
+            }
+
+            io_type::close(hFile);
+        }
 
         template<class F, class G> void testRoundTrip(const char *path) {
             typedef F ifile_type;
