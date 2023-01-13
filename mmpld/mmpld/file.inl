@@ -1,7 +1,7 @@
-// <copyright file="file.inl" company="Visualisierungsinstitut der Universit�t Stuttgart">
-// Copyright � 2018 Visualisierungsinstitut der Universit�t Stuttgart. Alle Rechte vorbehalten.
+// <copyright file="file.inl" company="Visualisierungsinstitut der Universität Stuttgart">
+// Copyright © 2018 - 2023 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
 // </copyright>
-// <author>Christoph M�ller</author>
+// <author>Christoph Müller</author>
 
 
 /*
@@ -42,6 +42,7 @@ void mmpld::file<F, C>::open_frame(const frame_number_type frame) {
     io_traits_type::seek(this->_file, offset);
     read_frame_header(this->_file, this->_file_header.version,
         this->_frame_header);
+    this->_frame = frame;
 }
 
 
