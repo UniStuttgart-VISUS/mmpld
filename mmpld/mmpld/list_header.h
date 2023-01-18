@@ -6,6 +6,7 @@
 
 #pragma once
 
+#include <algorithm>
 #include <limits>
 #include <type_traits>
 #include <vector>
@@ -225,6 +226,30 @@ namespace mmpld {
     inline T& skip_particles(T& stream, const list_header& header) {
         detail::skip(stream, get_size<std::size_t>(header));
         return stream;
+    }
+
+    /// <summary>
+    /// Union the bounding box of the two list headers into the left one.
+    /// </summary>
+    /// <param name="lhs">The first list header.</param>
+    /// <param name="rhs">The second list header.</param>
+    inline void union_bounding_box(list_header& lhs, const list_header& rhs) {
+        lhs.bounding_box[0] = (std::min)(lhs.bounding_box[0], rhs.bounding_box[0]);
+        lhs.bounding_box[1] = (std::min)(lhs.bounding_box[1], rhs.bounding_box[1]);
+        lhs.bounding_box[2] = (std::min)(lhs.bounding_box[2], rhs.bounding_box[2]);
+        lhs.bounding_box[3] = (std::max)(lhs.bounding_box[3], rhs.bounding_box[3]);
+        lhs.bounding_box[4] = (std::max)(lhs.bounding_box[4], rhs.bounding_box[4]);
+        lhs.bounding_box[5] = (std::max)(lhs.bounding_box[5], rhs.bounding_box[5]);
+    }
+
+    /// <summary>
+    /// Union the intensity ranges of the two list headers into the left one.
+    /// </summary>
+    /// <param name="lhs">The first list header.</param>
+    /// <param name="rhs">The second list header.</param>
+    inline void union_intensity_range(list_header& lhs, const list_header& rhs) {
+        lhs.min_intensity = (std::min)(lhs.min_intensity, rhs.min_intensity);
+        lhs.max_intensity = (std::max)(lhs.max_intensity, rhs.max_intensity);
     }
 
     /// <summary>

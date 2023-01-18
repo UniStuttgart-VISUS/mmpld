@@ -2156,6 +2156,11 @@ namespace test {
                 Assert::AreEqual(0.07f, view.colour()[0], 0.0001f, L"p18.i", LINE_INFO());
             }
 
+            // Note: we cannot check the bbox union here, because our test file is MMPLD 1.2
+
+            Assert::AreEqual(0.0f, listHeader.min_intensity, L"minimum intensity", LINE_INFO());
+            Assert::AreEqual(255.0f, listHeader.max_intensity, L"maximum intensity", LINE_INFO());
+
             // Buffered read
             {
                 LARGE_INTEGER offset;
@@ -2334,6 +2339,11 @@ namespace test {
                 Assert::AreEqual(0.0f, view.colour()[1], 0.0001f, L"p18.g", LINE_INFO());
                 Assert::AreEqual(1.0f, view.colour()[2], 0.0001f, L"p18.b", LINE_INFO());
             }
+
+            // Note: we cannot check the bbox union here, because our test file is MMPLD 1.2
+
+            Assert::AreEqual(0.0f, listHeader.min_intensity, L"minimum intensity", LINE_INFO());
+            Assert::AreEqual(255.0f, listHeader.max_intensity, L"maximum intensity", LINE_INFO());
         }
 
         TEST_METHOD(TestRuntimeConvert) {

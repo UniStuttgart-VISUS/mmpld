@@ -797,11 +797,28 @@ decltype(mmpld::list_header::particles) mmpld::read_as(
     auto rem = dst_header.particles;
     auto retval = static_cast<decltype(mmpld::list_header::particles)>(0);
 
+    // Initialise the bounding box and the intensity range.
+    dst_header.bounding_box[0]
+        = dst_header.bounding_box[1]
+        = dst_header.bounding_box[2]
+        = dst_header.min_intensity
+        = (std::numeric_limits<float>::max)();
+    dst_header.bounding_box[3]
+        = dst_header.bounding_box[4]
+        = dst_header.bounding_box[5]
+        = dst_header.max_intensity
+        = (std::numeric_limits<float>::lowest)();
+
     for (decltype(mmpld::frame_header::lists) i = 0; i < src_header.lists;
             ++i) {
         read_list_header(file, file_version, header);
         const auto src_stride = get_stride<std::size_t>(header);
 
+        // Update global variables.
+        union_bounding_box(dst_header, header);
+        union_intensity_range(dst_header, header);
+
+        // Convert the particles.
         if (is_same_format(header, dst_header)) {
             // Format is as requested, so we can just copy.
             assert(src_stride == dst_stride);
