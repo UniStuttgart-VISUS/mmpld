@@ -21,6 +21,8 @@ namespace test {
         static constexpr auto TEST_FILE = _T("test_xyz_float_rgba_byte.mmpld");
 
         TEST_METHOD(TestReferenceContent) {
+            ::SetMmpldWorkingDirectory();   // Need to have access to the test files.
+
             mmpld::file<HANDLE, TCHAR> file(TEST_FILE);
             auto& header = file.file_header();
 
@@ -93,6 +95,8 @@ namespace test {
         }
 
         TEST_METHOD(TestLowLevelIO) {
+            ::SetMmpldWorkingDirectory();   // Need to have access to the test files.
+
             mmpld::file_header fileHeader;
             mmpld::frame_header frameHeader;
             mmpld::list_header listHeader;
@@ -210,6 +214,8 @@ namespace test {
         }
 
         TEST_METHOD(TestWriting) {
+            ::SetMmpldWorkingDirectory();   // Need to have access to the test files.
+
             mmpld::file_header inFileHeader;
             mmpld::frame_header inFrameHeader;
             mmpld::list_header inListHeader;
@@ -383,6 +389,8 @@ namespace test {
         }
 
         TEST_METHOD(TestReadAs) {
+            ::SetMmpldWorkingDirectory();   // Need to have access to the test files.
+
             mmpld::file_header fileHeader;
             mmpld::frame_header frameHeader;
             mmpld::list_header listHeader;
@@ -510,6 +518,8 @@ namespace test {
         }
 
         TEST_METHOD(TestFile) {
+            ::SetMmpldWorkingDirectory();   // Need to have access to the test files.
+
             // Open the file and prepare the first frame.
             mmpld::file<HANDLE, TCHAR> file(TEST_FILE);
 
@@ -583,6 +593,8 @@ namespace test {
         }
 
         TEST_METHOD(TestInputLayout) {
+            ::SetMmpldWorkingDirectory();   // Need to have access to the test files.
+
             // Open the file and prepare the first frame.
             mmpld::file<HANDLE, TCHAR> file(TEST_FILE);
 
@@ -607,6 +619,8 @@ namespace test {
         }
 
         TEST_METHOD(ReadToUserBuffer) {
+            ::SetMmpldWorkingDirectory();   // Need to have access to the test files.
+
             // Open the file and prepare the first frame.
             mmpld::file<HANDLE, TCHAR> file(TEST_FILE);
 

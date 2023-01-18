@@ -107,7 +107,8 @@ namespace mmpld {
         inline void advance(const decltype(list_header::particles) cnt) {
             assert(this->good());
             auto d = this->byte_data();
-            this->_data = (d + cnt * this->stride());
+            d += cnt * this->stride();
+            this->_data = reinterpret_cast<pointer_type>(d);
         }
 
         /// <summary>

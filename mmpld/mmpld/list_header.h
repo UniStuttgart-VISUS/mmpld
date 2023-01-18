@@ -81,18 +81,6 @@ namespace mmpld {
         mmpld::vertex_type vertex_type;
     };
 
-    /// <summary>
-    /// Retreive the number of particles from the list.
-    /// </summary>
-    /// <typeparam name="T">The scalar type to express the size in. This is
-    /// usually <c>size_t</c> when working on the CPU or <c>UINT</c> when
-    /// working with Direct3D.</typeparam>
-    /// <param name="header">The list header to get the size for.</param>
-    /// <returns><see cref="mmpld::list_header::particles" />.</returns>
-    template<class T> inline T count(const list_header &header) noexcept {
-        return static_cast<T>(header.particles);
-    }
-
 #if defined(MMPLD_WITH_DIRECT3D)
     /// <summary>
     /// Gets the Direct3D input layout elements for the given particle list.

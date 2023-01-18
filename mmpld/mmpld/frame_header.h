@@ -9,6 +9,7 @@
 #include <cinttypes>
 #include <istream>
 
+#include "file_header.h"
 #include "mmpld/io.h"
 
 

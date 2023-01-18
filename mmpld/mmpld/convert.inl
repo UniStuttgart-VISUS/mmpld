@@ -218,6 +218,36 @@ namespace detail {
     }
 
     /// <summary>
+    /// Read and convert the specified particle list.
+    /// </summary>
+    template<class F, class O>
+    decltype(mmpld::list_header::particles) read_as(
+            F& file, const list_header& src_header,
+            O *dst, list_header& dst_header,
+            std::vector<std::uint8_t>& buffer) {
+        typedef detail::basic_io_traits<F> io_traits;
+        assert(buffer.size() > 0);
+
+        auto d_header = dst_header;
+        const auto dst_stride = get_stride<std::size_t>(dst_header);
+        const auto retval = (std::min)(src_header.particles, dst_header.particles);
+        const auto src_stride = get_stride<std::size_t>(src_header);
+        assert(buffer.size() >= src_stride);
+        const auto cnt_buffer = buffer.size() / src_stride;
+
+        for (std::decay<decltype(retval)>::type i = 0; i < retval;
+                i += cnt_buffer) {
+            auto c = (std::min)(cnt_buffer, retval - i);
+            auto d = reinterpret_cast<std::uint8_t *>(dst) + i * dst_stride;
+            d_header.particles = c;
+            io_traits::read(file, buffer.data(), c * src_stride);
+            convert(buffer.data(), src_header, d, d_header);
+        }
+
+        return retval;
+    }
+
+    /// <summary>
     /// Generic base class for converting positions and colours.
     /// </summary>
     /// <remarks>
@@ -711,12 +741,11 @@ decltype(mmpld::list_header::particles) mmpld::read_as(
         decltype(list_header::particles) cnt_buffer) {
     typedef detail::basic_io_traits<F> io_traits;
 
-    const auto dst_stride = get_stride<std::size_t>(dst_header);
     const auto retval = (std::min)(src_header.particles, dst_header.particles);
     const auto src_stride = get_stride<std::size_t>(src_header);
 
     if (is_same_format(src_header, dst_header)) {
-        assert(src_stride == dst_stride);
+        assert(src_stride == get_stride<std::size_t>(dst_header));
         io_traits::read(file, dst, retval * src_stride);
 
     } else {
@@ -725,16 +754,7 @@ decltype(mmpld::list_header::particles) mmpld::read_as(
         }
 
         std::vector<std::uint8_t> buffer(cnt_buffer * src_stride);
-        auto d_header = dst_header;
-
-        for (std::decay<decltype(retval)>::type i = 0; i < retval;
-                i += cnt_buffer) {
-            auto c = (std::min)(cnt_buffer, retval - i);
-            auto d = reinterpret_cast<std::uint8_t *>(dst) + i * dst_stride;
-            d_header.particles = c;
-            io_traits::read(file, buffer.data(), c * src_stride);
-            convert(buffer.data(), src_header, d, d_header);
-        }
+        detail::read_as(file, src_header, dst, dst_header, buffer);
     }
 
     return retval;
@@ -755,4 +775,72 @@ decltype(mmpld::list_header::particles) mmpld::read_as(
     dst_header.colour_type = T::colour_type();
     dst_header.particles = cnt;
     return read_as(file, header, dst, dst_header, cnt_buffer);
+}
+
+
+/*
+ * mmpld::read_as
+ */
+template<class F, class O>
+decltype(mmpld::list_header::particles) mmpld::read_as(
+        F& file, const frame_header& src_header,
+        const std::uint16_t file_version,
+        O *dst, list_header& dst_header,
+        const decltype(list_header::particles) cnt_buffer) {
+    typedef detail::basic_io_traits<F> io_traits;
+
+    const auto dst_stride = get_stride<std::size_t>(dst_header);
+
+    std::vector<std::uint8_t> buffer(0);
+    auto d = reinterpret_cast<std::uint8_t *>(dst);
+    list_header header;
+    auto rem = dst_header.particles;
+    auto retval = static_cast<decltype(mmpld::list_header::particles)>(0);
+
+    for (decltype(mmpld::frame_header::lists) i = 0; i < src_header.lists;
+            ++i) {
+        read_list_header(file, file_version, header);
+        const auto src_stride = get_stride<std::size_t>(header);
+
+        if (is_same_format(header, dst_header)) {
+            // Format is as requested, so we can just copy.
+            assert(src_stride == dst_stride);
+            auto cnt = (std::min)(header.particles, rem);
+            io_traits::read(file, d + retval * dst_stride, cnt * src_stride);
+            retval += cnt;
+            rem -= cnt;
+
+        } else {
+            // A conversion is required for this list. Make sure that the buffer
+            // is either large enough to hold the whole frame or to hold the
+            // user-defined number of particles to be converted at once.
+            if (cnt_buffer > 0) {
+                const auto s = header.particles * src_stride;
+                if (buffer.size() < s) { 
+                    buffer.resize(s);
+                }
+
+            } else {
+                const auto s = dst_header.particles * src_stride;
+                if (buffer.size() < s) {
+                    buffer.resize(s);
+                }
+            }
+
+            dst_header.particles = (std::min)(header.particles, rem);
+            auto cnt = detail::read_as(file, header, d + retval * dst_stride,
+                dst_header, buffer);
+            retval += cnt;
+            rem -= cnt;
+        }
+
+        // Skip cluster info in MMPLD 1.1.
+        if (file_version == mmpld::make_version(1, 1)) {
+            mmpld::skip_cluster_info(file);
+        }
+    }
+
+    dst_header.particles = retval;
+
+    return retval;
 }
