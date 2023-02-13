@@ -159,6 +159,7 @@
     <ClInclude Include="mmpld\colour_properties.h" />
     <ClInclude Include="mmpld\colour_type.h" />
     <ClInclude Include="mmpld\convert.h" />
+    <ClInclude Include="mmpld\count.h" />
     <ClInclude Include="mmpld\enum_dispatch.h" />
     <ClInclude Include="mmpld\enum_dispatch_list.h" />
     <ClInclude Include="mmpld\file.h" />
@@ -178,6 +179,7 @@
     <None Include="mmpld\cluster_info.inl" />
     <None Include="mmpld\colour_type.inl" />
     <None Include="mmpld\convert.inl" />
+    <None Include="mmpld\count.inl" />
     <None Include="mmpld\file.inl" />
     <None Include="mmpld\file_header.inl" />
     <None Include="mmpld\frame_header.inl" />

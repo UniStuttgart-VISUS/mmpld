@@ -1,5 +1,5 @@
 // <copyright file="convert.inl" company="Visualisierungsinstitut der Universität Stuttgart">
-// Copyright © 2018 - 2022 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+// Copyright © 2018 - 2023 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
 // </copyright>
 // <author>Christoph Müller</author>
 
@@ -175,6 +175,77 @@ namespace detail {
     typename std::enable_if<std::is_void<O>::value>::type convert_colour(
         const I *input, const size_t cnt_in, void *output,
         const size_t cnt_out) { }
+
+    /// <summary>
+    /// Perform a radius conversion in cases where, both, input and output have
+    /// an radius specified according to their type.
+    /// </summary>
+    template<class O, class I>
+    typename std::enable_if<!std::is_void<I>::value
+        && !std::is_void<O>::value>::type
+    convert_radius(const I *input, const float global_radius, O *output) {
+        if (output != nullptr) {
+            if (input == nullptr) {
+                // We have no valid offset for the source radius, so we
+                // need to copy the global radius to each particle.
+                *output = static_cast<O>(global_radius);
+            } else {
+                // We know that all radii are float, so we can just cast.
+                *output = static_cast<O>(*input);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Apply the global radius in lack of a per-vertex input.
+    /// </summary>
+    template<class O>
+    typename std::enable_if<!std::is_void<O>::value>::type
+    convert_radius(const void *input, const float global_radius, O *output) {
+        if (output != nullptr) {
+            // As we have no input, we must use the global radius.
+            *output = static_cast<O>(global_radius);
+        }
+    }
+
+    /// <summary>
+    /// Do nothing if no radius is requested in output.
+    /// </summary>
+    template<class I>
+    inline void convert_radius(const I *input, const float global_radius,
+            void *output) {
+        // As we have no output, there is nothing to do.
+    }
+
+    /// <summary>
+    /// Read and convert the specified particle list.
+    /// </summary>
+    template<class F, class O>
+    decltype(mmpld::list_header::particles) read_as(
+            F& file, const list_header& src_header,
+            O *dst, list_header& dst_header,
+            std::vector<std::uint8_t>& buffer) {
+        typedef detail::basic_io_traits<F> io_traits;
+        assert(buffer.size() > 0);
+
+        auto d_header = dst_header;
+        const auto dst_stride = get_stride<std::size_t>(dst_header);
+        const auto retval = (std::min)(src_header.particles, dst_header.particles);
+        const auto src_stride = get_stride<std::size_t>(src_header);
+        assert(buffer.size() >= src_stride);
+        const auto cnt_buffer = buffer.size() / src_stride;
+
+        for (std::decay<decltype(retval)>::type i = 0; i < retval;
+                i += cnt_buffer) {
+            auto c = (std::min)(cnt_buffer, retval - i);
+            auto d = reinterpret_cast<std::uint8_t *>(dst) + i * dst_stride;
+            d_header.particles = c;
+            io_traits::read(file, buffer.data(), c * src_stride);
+            convert(buffer.data(), src_header, d, d_header);
+        }
+
+        return retval;
+    }
 
     /// <summary>
     /// Generic base class for converting positions and colours.
@@ -480,7 +551,7 @@ decltype(mmpld::list_header::particles) mmpld::convert(
 
     const auto retval = (std::min)(header.particles, cnt);
     const auto dst_channels = dst_view::colour_traits::channels;
-    const auto dst_colour = dst_view::colour_traits::colour_type;
+    const auto dst_colour = dst_view::colour_traits::value;
     const auto dst_stride = dst_view::stride();
     const auto dst_vertex = dst_view::vertex_traits::value;
     const auto src_stride = get_stride<std::size_t>(header);
@@ -522,17 +593,10 @@ decltype(mmpld::list_header::particles) mmpld::convert(
                 pos_conv(src_pos, dst_pos);
             }
 
-            if (dst_rad != nullptr) {
-                if (src_rad == nullptr) {
-                    // We have no valid offset for the source radius, so we
-                    // need to copy the global radius to each particle.
-                    *dst_rad = static_cast<dst_vertex_scalar>(header.radius);
-                } else {
-                    // We know that all radii are float, so we can reinterpret
-                    // the source pointer.
-                    *dst_rad = *static_cast<const dst_vertex_scalar *>(src_rad);
-                }
-            }
+            // Delegate radius conversion to separate template that can handle 
+            // void input/output cases.
+            detail::convert_radius<dst_vertex_scalar>(src_rad, header.radius,
+                dst_rad);
 
             if (dst_col != nullptr) {
                 typedef typename dst_view::colour_value_type dst_type;
@@ -677,12 +741,11 @@ decltype(mmpld::list_header::particles) mmpld::read_as(
         decltype(list_header::particles) cnt_buffer) {
     typedef detail::basic_io_traits<F> io_traits;
 
-    const auto dst_stride = get_stride<std::size_t>(dst_header);
     const auto retval = (std::min)(src_header.particles, dst_header.particles);
     const auto src_stride = get_stride<std::size_t>(src_header);
 
     if (is_same_format(src_header, dst_header)) {
-        assert(src_stride == dst_stride);
+        assert(src_stride == get_stride<std::size_t>(dst_header));
         io_traits::read(file, dst, retval * src_stride);
 
     } else {
@@ -691,15 +754,7 @@ decltype(mmpld::list_header::particles) mmpld::read_as(
         }
 
         std::vector<std::uint8_t> buffer(cnt_buffer * src_stride);
-        auto d_header = dst_header;
-
-        for (std::size_t i = 0; i < retval; i += cnt_buffer) {
-            auto c = (std::min)(cnt_buffer, retval - i);
-            auto d = reinterpret_cast<std::uint8_t *>(dst) + i * dst_stride;
-            d_header.particles = c;
-            io_traits::read(file, buffer.data(), c * src_stride);
-            convert(buffer.data(), src_header, d, d_header);
-        }
+        detail::read_as(file, src_header, dst, dst_header, buffer);
     }
 
     return retval;
@@ -720,4 +775,89 @@ decltype(mmpld::list_header::particles) mmpld::read_as(
     dst_header.colour_type = T::colour_type();
     dst_header.particles = cnt;
     return read_as(file, header, dst, dst_header, cnt_buffer);
+}
+
+
+/*
+ * mmpld::read_as
+ */
+template<class F, class O>
+decltype(mmpld::list_header::particles) mmpld::read_as(
+        F& file, const frame_header& src_header,
+        const std::uint16_t file_version,
+        O *dst, list_header& dst_header,
+        const decltype(list_header::particles) cnt_buffer) {
+    typedef detail::basic_io_traits<F> io_traits;
+
+    const auto dst_stride = get_stride<std::size_t>(dst_header);
+
+    std::vector<std::uint8_t> buffer(0);
+    auto d = reinterpret_cast<std::uint8_t *>(dst);
+    list_header header;
+    auto rem = dst_header.particles;
+    auto retval = static_cast<decltype(mmpld::list_header::particles)>(0);
+
+    // Initialise the bounding box and the intensity range.
+    dst_header.bounding_box[0]
+        = dst_header.bounding_box[1]
+        = dst_header.bounding_box[2]
+        = dst_header.min_intensity
+        = (std::numeric_limits<float>::max)();
+    dst_header.bounding_box[3]
+        = dst_header.bounding_box[4]
+        = dst_header.bounding_box[5]
+        = dst_header.max_intensity
+        = (std::numeric_limits<float>::lowest)();
+
+    for (decltype(mmpld::frame_header::lists) i = 0; i < src_header.lists;
+            ++i) {
+        read_list_header(file, file_version, header);
+        const auto src_stride = get_stride<std::size_t>(header);
+
+        // Update global variables.
+        union_bounding_box(dst_header, header);
+        union_intensity_range(dst_header, header);
+
+        // Convert the particles.
+        if (is_same_format(header, dst_header)) {
+            // Format is as requested, so we can just copy.
+            assert(src_stride == dst_stride);
+            auto cnt = (std::min)(header.particles, rem);
+            io_traits::read(file, d + retval * dst_stride, cnt * src_stride);
+            retval += cnt;
+            rem -= cnt;
+
+        } else {
+            // A conversion is required for this list. Make sure that the buffer
+            // is either large enough to hold the whole frame or to hold the
+            // user-defined number of particles to be converted at once.
+            if (cnt_buffer > 0) {
+                const auto s = header.particles * src_stride;
+                if (buffer.size() < s) { 
+                    buffer.resize(s);
+                }
+
+            } else {
+                const auto s = dst_header.particles * src_stride;
+                if (buffer.size() < s) {
+                    buffer.resize(s);
+                }
+            }
+
+            dst_header.particles = (std::min)(header.particles, rem);
+            auto cnt = detail::read_as(file, header, d + retval * dst_stride,
+                dst_header, buffer);
+            retval += cnt;
+            rem -= cnt;
+        }
+
+        // Skip cluster info in MMPLD 1.1.
+        if (file_version == mmpld::make_version(1, 1)) {
+            mmpld::skip_cluster_info(file);
+        }
+    }
+
+    dst_header.particles = retval;
+
+    return retval;
 }

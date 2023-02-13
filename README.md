@@ -59,7 +59,7 @@ for (decltype(fileHeader.frames) i = 0; i < fileHeader.frames; ++i) {
         mmpld::read_list_header(hFile, fileHeader.version, listHeader);
 
         // Compute the number of bytes required for all particles.
-        auto rem = mmpld::get_size<std::size_t>(listHeader);
+        auto rem = mmpld::get_size<DWORD>(listHeader);
 
         // Allocate the buffer for all particles.
         particles.resize(rem);
@@ -70,7 +70,7 @@ for (decltype(fileHeader.frames) i = 0; i < fileHeader.frames; ++i) {
         // Read until we have all particles in memory.
         while (rem > 0) {
             DWORD cnt = 0;
-            if (!::ReadFile(file, ptr, rem, &cnt, nullptr)) { /* Handle error. */ }
+            if (!::ReadFile(hFile, ptr, rem, &cnt, nullptr)) { /* Handle error. */ }
             ptr += cnt;
             rem -= cnt;
         }
@@ -156,7 +156,8 @@ mmpld::read_file_header(file, fileHeader, seekTable);
 // Read the frame header of each frame in the file.
 for (decltype(fileHeader.frames) i = 0; i < fileHeader.frames; ++i) {
     // Seek to the begin of the frame using the offset from 'seekTable'.
-    if (!file.seekg(seekTable[i]) { /* Handle error. */ }
+    file.seekg(seekTable[i]);
+    if (!file.good()) { /* Handle error. */ }
 
     // Read the frame header.
     mmpld::read_frame_header(file, fileHeader.version, frameHeader);
@@ -165,13 +166,15 @@ for (decltype(fileHeader.frames) i = 0; i < fileHeader.frames; ++i) {
     for (decltype(frameHeader.lists) j = 0; j < frameHeader.lists; ++j) {
         mmpld::read_list_header(file, fileHeader.version, listHeader);
         const auto cnt = static_cast<std::size_t>(listHeader.particles);
+        const auto mem = mmpld::get_size<std::size_t>(listHeader);
 
         // Allocate the buffer for all particles.
-        buffer.resize(mmpld::get_size<std::size_t>(listHeader));
-        particles.resize(ParticleFormat::get_size(cnt));
+        buffer.resize(mem);
+        particles.resize(ParticleFormat::size(cnt));
 
         // Read the particles.
-        if (!file.read(buffer.data(), cnt)) { /* Handle error. */ }
+        file.read(buffer.data(), mem);
+        if (!file.good()) { /* Handle error. */ }
 
         // In MMPLD 1.1, a block of cluster information follows here. We need to
         // skip this, because otherwise, the next list would be bogus.
@@ -305,7 +308,7 @@ Beside the one-shot `read_particles` method illustrated above, `mmpld::file` pro
 mmpld::file<HANDLE, TCHAR> file(_T("test.mmpld"));
 
 // Iterate over all particle lists in the first frame.
-for (auto l = 0; l < file.frame_header().lists; ++l)
+for (auto l = 0; l < file.frame_header().lists; ++l) {
     mmpld::list_header listHeader;
 
     // Read the list header and skip the data (and potential cluster info).

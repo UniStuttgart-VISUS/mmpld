@@ -6,12 +6,14 @@
 #pragma once
 
 #include <algorithm>
+#include <cassert>
 #include <functional>
 #include <stdexcept>
 #include <unordered_map>
 #include <utility>
 #include <vector>
 
+#include "mmpld/frame_header.h"
 #include "mmpld/io.h"
 #include "mmpld/list_header.h"
 #include "mmpld/particle_traits.h"
@@ -26,8 +28,8 @@ namespace mmpld {
     /// the type defined by the <see cref="mmpld::particle_traits" />
     /// <typeparamref name="T" />.
     /// </summary>
-    /// <typeparam name="T">A particle view describing the desired output type.
-    /// </typeparam>
+    /// <typeparam name="T">An instance of <see cref="mmpld::particle_traits" />
+    /// describing the desired output type.</typeparam>
     /// <typeparam name="I">Type of the input pointer.</typeparam>
     /// <typeparam name="O">Type of the output pointer.</typeparam>
     /// <param name="src">A pointer to the source particles. Note that this must
@@ -92,6 +94,9 @@ namespace mmpld {
     /// <para>If the requested output format matches the actual format of the
     /// input, the data are read directly into the output buffer and no
     /// intermediate buffer is allocated.</para>
+    /// <para>Note: The current implementation will not update the list header
+    /// with global radius and colour if these attributes are not in the
+    /// requested format.</para>
     /// </remarks>
     /// <typeparam name="F">The type of the file handle.</typeparam>
     /// <typeparam name="O">Type of the output pointer.</typeparam>
@@ -150,6 +155,53 @@ namespace mmpld {
     decltype(list_header::particles) read_as(F& file, const list_header& header,
         O *dst, const decltype(list_header::particles) cnt,
         decltype(list_header::particles) cnt_buffer = 0);
+
+    /// <summary>
+    /// Read the frame described by <paramref name="src_header" /> from
+    /// the current position in <paramref name="file" /> and convert the data on
+    /// the fly to the format described in <paramref name="dst_header" /> and
+    /// coalesce all lists into one.
+    /// </summary>
+    /// <remarks>
+    /// <para>The function will read the input in batches and convert them via a
+    /// temporary buffer holding <paramref name="cnt_buffer" /> particles to the
+    /// requested output format. If no buffer size is specified, the whole data
+    /// are read at once.</para>
+    /// <para>If the requested output format matches the actual format of the
+    /// input, the data are read directly into the output buffer and no
+    /// intermediate buffer is allocated.</para>
+    /// <para>Note: The current implementation will not update the list header
+    /// with global radius and colour if these attributes are not in the
+    /// requested format.</para>
+    /// </remarks>
+    /// <typeparam name="F">The type of the file handle.</typeparam>
+    /// <typeparam name="O">Type of the output pointer.</typeparam>
+    /// <param name="file">An open file handle with the file pointer standing at
+    /// the begin of the the frame described by <paramref name="src_header" />.
+    /// </param>
+    /// <param name="src_header">The description of the frame to be read. The
+    /// format of the lists in the frame may differ.</param>
+    /// <param name="file_version">The version of the MMPLD file, retrieve from
+    /// the file header.</param>
+    /// <param name="dst">The buffer receiving the data. This buffer must be
+    /// able to hold at least <see cref="list_header::particles" /> particles
+    /// of the format described in <paramref name="dst_header" />.</param>
+    /// <param name="dst_header">Describes the target format and the size of
+    /// <paramref name="dst" />. Callers can use <see cref="mmpld::count" />
+    /// as a one-shot means to determine the overall number of particles in
+    /// a frame.</param>
+    /// <param name="cnt_buffer">The number of particles to be converted at
+    /// once. If this value is zero, which is its default, the method will
+    /// allocate a conversion buffer to hold all of the particles in the input
+    /// at once.</param>
+    /// <returns>The number of particles actually read, which might be less than
+    /// the number of particles specified in <paramref name="dst_header" /> if
+    /// the input was smaller.</returns>
+    template<class F, class O>
+    decltype(list_header::particles) read_as(F& file,
+        const frame_header& src_header, const std::uint16_t file_version,
+        O *dst, list_header& dst_header,
+        const decltype(list_header::particles) cnt_buffer = 0);
 
 } /* end namespace mmpld */
 

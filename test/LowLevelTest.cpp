@@ -1977,6 +1977,375 @@ namespace test {
             }
         }
 
+        TEST_METHOD(ReadFrameAs) {
+            mmpld::file_header fileHeader;
+            mmpld::frame_header frameHeader;
+            mmpld::list_header listHeader;
+            mmpld::seek_table seekTable;
+
+            // Open the file with your preferred API, in this case WIN32.
+            auto hFile = ::CreateFileW(L"test_xyz_double_int_double.mmpld",
+                GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING,
+                FILE_ATTRIBUTE_READONLY, NULL);
+            Assert::IsTrue(hFile != INVALID_HANDLE_VALUE, L"File open", LINE_INFO());
+
+            mmpld::read_file_header(hFile, fileHeader, seekTable);
+            Assert::AreNotEqual(int(mmpld::make_version(1, 1)), int(fileHeader.version), L"MMPLD version is not 1.1.", LINE_INFO());
+            Assert::AreEqual(std::uint32_t(1), fileHeader.frames, L"Number of expected frames matches.", LINE_INFO());
+
+            // Full read
+            {
+                LARGE_INTEGER offset;
+                offset.QuadPart = seekTable[0];
+                Assert::IsTrue(::SetFilePointerEx(hFile, offset, nullptr, FILE_BEGIN), L"Seek to frame", LINE_INFO());
+            }
+
+            mmpld::read_frame_header(hFile, fileHeader.version, frameHeader);
+            Assert::AreEqual(std::int32_t(4), frameHeader.lists, L"Frame #1 holds four particle lists.", LINE_INFO());
+
+            {
+                listHeader.particles = mmpld::count<std::uint64_t>(frameHeader, fileHeader.version, hFile);
+                Assert::AreEqual(std::uint64_t(4 + 5 + 5 + 5), listHeader.particles, L"Total number of particles", LINE_INFO());
+            }
+
+            listHeader.vertex_type = mmpld::vertex_type::float_xyzr;
+            listHeader.colour_type = mmpld::colour_type::intensity32;
+            std::vector<std::uint8_t> particles(listHeader.particles * mmpld::get_stride<std::size_t>(listHeader));
+
+            {
+                auto cnt = mmpld::read_as(hFile, frameHeader, fileHeader.version, particles.data(), listHeader);
+                Assert::AreEqual(std::uint64_t(4 + 5 + 5 + 5), cnt, L"All particles converted", LINE_INFO());
+                Assert::AreEqual(std::uint64_t(4 + 5 + 5 + 5), listHeader.particles, L"List header updated", LINE_INFO());
+            }
+
+            {
+                mmpld::particle_view<float> view(listHeader, reinterpret_cast<float *>(particles.data()));
+                Assert::AreEqual(0.0f, view.position()[0], 0.0001f, L"p0.x", LINE_INFO());
+                Assert::AreEqual(0.0f, view.position()[1], 0.0001f, L"p0.y", LINE_INFO());
+                Assert::AreEqual(0.0f, view.position()[2], 0.0001f, L"p0.z", LINE_INFO());
+                Assert::AreEqual(0.1f, view.position()[3], 0.0001f, L"p0.r", LINE_INFO());
+                Assert::AreEqual(255.0f, view.colour()[0], 0.0001f, L"p0.i", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(1.0f, view.position()[0], 0.0001f, L"p1.x", LINE_INFO());
+                Assert::AreEqual(0.0f, view.position()[1], 0.0001f, L"p1.y", LINE_INFO());
+                Assert::AreEqual(0.0f, view.position()[2], 0.0001f, L"p1.z", LINE_INFO());
+                Assert::AreEqual(0.1f, view.position()[3], 0.0001f, L"p1.r", LINE_INFO());
+                Assert::AreEqual(64.0f, view.colour()[0], 0.0001f, L"p1.i", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(0.0f, view.position()[0], 0.0001f, L"p2.x", LINE_INFO());
+                Assert::AreEqual(1.0f, view.position()[1], 0.0001f, L"p2.y", LINE_INFO());
+                Assert::AreEqual(0.0f, view.position()[2], 0.0001f, L"p2.z", LINE_INFO());
+                Assert::AreEqual(0.1f, view.position()[3], 0.0001f, L"p2.r", LINE_INFO());
+                Assert::AreEqual(128.0f, view.colour()[0], 0.0001f, L"p2.i", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(0.0f, view.position()[0], 0.0001f, L"p3.x", LINE_INFO());
+                Assert::AreEqual(0.0f, view.position()[1], 0.0001f, L"p3.y", LINE_INFO());
+                Assert::AreEqual(1.0f, view.position()[2], 0.0001f, L"p3.z", LINE_INFO());
+                Assert::AreEqual(0.1f, view.position()[3], 0.0001f, L"p3.r", LINE_INFO());
+                Assert::AreEqual(192.0f, view.colour()[0], 0.0001f, L"p3.i", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(2.0f, view.position()[0], 0.0001f, L"p4.x", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[1], 0.0001f, L"p4.y", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[2], 0.0001f, L"p4.z", LINE_INFO());
+                Assert::AreEqual(0.1f, view.position()[3], 0.0001f, L"p4.r", LINE_INFO());
+                // 0.21r + 0.72g + 0.07b
+                Assert::AreEqual(0.21f, view.colour()[0], 0.0001f, L"p4.i", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(1.8f, view.position()[0], 0.0001f, L"p5.x", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[1], 0.0001f, L"p5.y", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[2], 0.0001f, L"p5.z", LINE_INFO());
+                Assert::AreEqual(0.1f, view.position()[3], 0.0001f, L"p5.r", LINE_INFO());
+                Assert::AreEqual(0.21f, view.colour()[0], 0.0001f, L"p5.i", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(1.6f, view.position()[0], 0.0001f, L"p6.x", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[1], 0.0001f, L"p6.y", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[2], 0.0001f, L"p6.z", LINE_INFO());
+                Assert::AreEqual(0.1f, view.position()[3], 0.0001f, L"p6.r", LINE_INFO());
+                Assert::AreEqual(0.21f, view.colour()[0], 0.0001f, L"p6.i", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(1.4f, view.position()[0], 0.0001f, L"p7.x", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[1], 0.0001f, L"p7.y", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[2], 0.0001f, L"p7.z", LINE_INFO());
+                Assert::AreEqual(0.1f, view.position()[3], 0.0001f, L"p7.r", LINE_INFO());
+                Assert::AreEqual(0.21f, view.colour()[0], 0.0001f, L"p7.i", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(1.2f, view.position()[0], 0.0001f, L"p8.x", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[1], 0.0001f, L"p8.y", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[2], 0.0001f, L"p8.z", LINE_INFO());
+                Assert::AreEqual(0.1f, view.position()[3], 0.0001f, L"p8.r", LINE_INFO());
+                Assert::AreEqual(0.21f, view.colour()[0], 0.0001f, L"p8.i", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(-2.0f, view.position()[0], 0.0001f, L"p9.x", LINE_INFO());
+                Assert::AreEqual(2.0f, view.position()[1], 0.0001f, L"p9.y", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[2], 0.0001f, L"p9.z", LINE_INFO());
+                Assert::AreEqual(0.1f, view.position()[3], 0.0001f, L"p9.r", LINE_INFO());
+                // 0.21r + 0.72g + 0.07b
+                Assert::AreEqual(0.72f, view.colour()[0], 0.0001f, L"p9.i", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(-2.0f, view.position()[0], 0.0001f, L"p10.x", LINE_INFO());
+                Assert::AreEqual(1.8f, view.position()[1], 0.0001f, L"p10.y", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[2], 0.0001f, L"p10.z", LINE_INFO());
+                Assert::AreEqual(0.1f, view.position()[3], 0.0001f, L"p10.r", LINE_INFO());
+                Assert::AreEqual(0.72f, view.colour()[0], 0.0001f, L"p10.i", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(-2.0f, view.position()[0], 0.0001f, L"p11.x", LINE_INFO());
+                Assert::AreEqual(1.6f, view.position()[1], 0.0001f, L"p11.y", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[2], 0.0001f, L"p11.z", LINE_INFO());
+                Assert::AreEqual(0.1f, view.position()[3], 0.0001f, L"p11.r", LINE_INFO());
+                Assert::AreEqual(0.72f, view.colour()[0], 0.0001f, L"p11.i", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(-2.0f, view.position()[0], 0.0001f, L"p12.x", LINE_INFO());
+                Assert::AreEqual(1.4f, view.position()[1], 0.0001f, L"p12.y", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[2], 0.0001f, L"p12.z", LINE_INFO());
+                Assert::AreEqual(0.1f, view.position()[3], 0.0001f, L"p12.r", LINE_INFO());
+                Assert::AreEqual(0.72f, view.colour()[0], 0.0001f, L"p12.i", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(-2.0f, view.position()[0], 0.0001f, L"p13.x", LINE_INFO());
+                Assert::AreEqual(1.2f, view.position()[1], 0.0001f, L"p13.y", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[2], 0.0001f, L"p13.z", LINE_INFO());
+                Assert::AreEqual(0.1f, view.position()[3], 0.0001f, L"p13.r", LINE_INFO());
+                Assert::AreEqual(0.72f, view.colour()[0], 0.0001f, L"p13.i", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(-2.0f, view.position()[0], 0.0001f, L"p14.x", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[1], 0.0001f, L"p14.y", LINE_INFO());
+                Assert::AreEqual(2.0f, view.position()[2], 0.0001f, L"p14.z", LINE_INFO());
+                Assert::AreEqual(0.1f, view.position()[3], 0.0001f, L"p14.r", LINE_INFO());
+                // 0.21r + 0.72g + 0.07b
+                Assert::AreEqual(0.07f, view.colour()[0], 0.0001f, L"p14.i", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(-2.0f, view.position()[0], 0.0001f, L"p15.x", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[1], 0.0001f, L"p15.y", LINE_INFO());
+                Assert::AreEqual(1.8f, view.position()[2], 0.0001f, L"p15.z", LINE_INFO());
+                Assert::AreEqual(0.1f, view.position()[3], 0.0001f, L"p15.r", LINE_INFO());
+                Assert::AreEqual(0.07f, view.colour()[0], 0.0001f, L"p15.i", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(-2.0f, view.position()[0], 0.0001f, L"p16.x", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[1], 0.0001f, L"p16.y", LINE_INFO());
+                Assert::AreEqual(1.6f, view.position()[2], 0.0001f, L"p16.z", LINE_INFO());
+                Assert::AreEqual(0.1f, view.position()[3], 0.0001f, L"p16.r", LINE_INFO());
+                Assert::AreEqual(0.07f, view.colour()[0], 0.0001f, L"p16.i", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(-2.0f, view.position()[0], 0.0001f, L"p17.x", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[1], 0.0001f, L"p17.y", LINE_INFO());
+                Assert::AreEqual(1.4f, view.position()[2], 0.0001f, L"p17.z", LINE_INFO());
+                Assert::AreEqual(0.1f, view.position()[3], 0.0001f, L"p17.r", LINE_INFO());
+                Assert::AreEqual(0.07f, view.colour()[0], 0.0001f, L"p17.i", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(-2.0f, view.position()[0], 0.0001f, L"p18.x", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[1], 0.0001f, L"p18.y", LINE_INFO());
+                Assert::AreEqual(1.2f, view.position()[2], 0.0001f, L"p18.z", LINE_INFO());
+                Assert::AreEqual(0.1f, view.position()[3], 0.0001f, L"p18.r", LINE_INFO());
+                Assert::AreEqual(0.07f, view.colour()[0], 0.0001f, L"p18.i", LINE_INFO());
+            }
+
+            // Note: we cannot check the bbox union here, because our test file is MMPLD 1.2
+
+            Assert::AreEqual(0.0f, listHeader.min_intensity, L"minimum intensity", LINE_INFO());
+            Assert::AreEqual(255.0f, listHeader.max_intensity, L"maximum intensity", LINE_INFO());
+
+            // Buffered read
+            {
+                LARGE_INTEGER offset;
+                offset.QuadPart = seekTable[0];
+                Assert::IsTrue(::SetFilePointerEx(hFile, offset, nullptr, FILE_BEGIN), L"Seek to frame", LINE_INFO());
+            }
+
+            mmpld::read_frame_header(hFile, fileHeader.version, frameHeader);
+            Assert::AreEqual(std::int32_t(4), frameHeader.lists, L"Frame #1 holds four particle lists.", LINE_INFO());
+
+            {
+                listHeader.particles = mmpld::count<std::uint64_t>(frameHeader, fileHeader.version, hFile);
+                Assert::AreEqual(std::uint64_t(4 + 5 + 5 + 5), listHeader.particles, L"Total number of particles", LINE_INFO());
+            }
+
+            listHeader.vertex_type = mmpld::vertex_type::float_xyz;
+            listHeader.colour_type = mmpld::colour_type::rgb32;
+            particles.resize(listHeader.particles * mmpld::get_stride<std::size_t>(listHeader));
+
+            {
+                auto cnt = mmpld::read_as(hFile, frameHeader, fileHeader.version, particles.data(), listHeader, 2);
+                Assert::AreEqual(std::uint64_t(4 + 5 + 5 + 5), cnt, L"All particles converted", LINE_INFO());
+                Assert::AreEqual(std::uint64_t(4 + 5 + 5 + 5), listHeader.particles, L"List header updated", LINE_INFO());
+            }
+
+            {
+                mmpld::particle_view<float> view(listHeader, reinterpret_cast<float *>(particles.data()));
+                Assert::AreEqual(0.0f, view.position()[0], 0.0001f, L"p0.x", LINE_INFO());
+                Assert::AreEqual(0.0f, view.position()[1], 0.0001f, L"p0.y", LINE_INFO());
+                Assert::AreEqual(0.0f, view.position()[2], 0.0001f, L"p0.z", LINE_INFO());
+                Assert::AreEqual(255.0f, view.colour()[0], 0.0001f, L"p0.r", LINE_INFO());
+                Assert::AreEqual(255.0f, view.colour()[1], 0.0001f, L"p0.g", LINE_INFO());
+                Assert::AreEqual(255.0f, view.colour()[2], 0.0001f, L"p0.b", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(1.0f, view.position()[0], 0.0001f, L"p1.x", LINE_INFO());
+                Assert::AreEqual(0.0f, view.position()[1], 0.0001f, L"p1.y", LINE_INFO());
+                Assert::AreEqual(0.0f, view.position()[2], 0.0001f, L"p1.z", LINE_INFO());
+                Assert::AreEqual(64.0f, view.colour()[0], 0.0001f, L"p1.r", LINE_INFO());
+                Assert::AreEqual(64.0f, view.colour()[1], 0.0001f, L"p1.g", LINE_INFO());
+                Assert::AreEqual(64.0f, view.colour()[2], 0.0001f, L"p1.b", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(0.0f, view.position()[0], 0.0001f, L"p2.x", LINE_INFO());
+                Assert::AreEqual(1.0f, view.position()[1], 0.0001f, L"p2.y", LINE_INFO());
+                Assert::AreEqual(0.0f, view.position()[2], 0.0001f, L"p2.z", LINE_INFO());
+                Assert::AreEqual(128.0f, view.colour()[0], 0.0001f, L"p2.r", LINE_INFO());
+                Assert::AreEqual(128.0f, view.colour()[1], 0.0001f, L"p2.g", LINE_INFO());
+                Assert::AreEqual(128.0f, view.colour()[2], 0.0001f, L"p2.b", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(0.0f, view.position()[0], 0.0001f, L"p3.x", LINE_INFO());
+                Assert::AreEqual(0.0f, view.position()[1], 0.0001f, L"p3.y", LINE_INFO());
+                Assert::AreEqual(1.0f, view.position()[2], 0.0001f, L"p3.z", LINE_INFO());
+                Assert::AreEqual(192.0f, view.colour()[0], 0.0001f, L"p3.r", LINE_INFO());
+                Assert::AreEqual(192.0f, view.colour()[1], 0.0001f, L"p3.g", LINE_INFO());
+                Assert::AreEqual(192.0f, view.colour()[2], 0.0001f, L"p3.b", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(2.0f, view.position()[0], 0.0001f, L"p4.x", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[1], 0.0001f, L"p4.y", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[2], 0.0001f, L"p4.z", LINE_INFO());
+                Assert::AreEqual(1.0f, view.colour()[0], 0.0001f, L"p4.r", LINE_INFO());
+                Assert::AreEqual(0.0f, view.colour()[1], 0.0001f, L"p4.g", LINE_INFO());
+                Assert::AreEqual(0.0f, view.colour()[2], 0.0001f, L"p4.b", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(1.8f, view.position()[0], 0.0001f, L"p5.x", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[1], 0.0001f, L"p5.y", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[2], 0.0001f, L"p5.z", LINE_INFO());
+                Assert::AreEqual(1.0f, view.colour()[0], 0.0001f, L"p5.r", LINE_INFO());
+                Assert::AreEqual(0.0f, view.colour()[1], 0.0001f, L"p5.g", LINE_INFO());
+                Assert::AreEqual(0.0f, view.colour()[2], 0.0001f, L"p5.b", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(1.6f, view.position()[0], 0.0001f, L"p6.x", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[1], 0.0001f, L"p6.y", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[2], 0.0001f, L"p6.z", LINE_INFO());
+                Assert::AreEqual(1.0f, view.colour()[0], 0.0001f, L"p6.r", LINE_INFO());
+                Assert::AreEqual(0.0f, view.colour()[1], 0.0001f, L"p6.g", LINE_INFO());
+                Assert::AreEqual(0.0f, view.colour()[2], 0.0001f, L"p6.b", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(1.4f, view.position()[0], 0.0001f, L"p7.x", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[1], 0.0001f, L"p7.y", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[2], 0.0001f, L"p7.z", LINE_INFO());
+                Assert::AreEqual(1.0f, view.colour()[0], 0.0001f, L"p7.r", LINE_INFO());
+                Assert::AreEqual(0.0f, view.colour()[1], 0.0001f, L"p7.g", LINE_INFO());
+                Assert::AreEqual(0.0f, view.colour()[2], 0.0001f, L"p7.b", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(1.2f, view.position()[0], 0.0001f, L"p8.x", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[1], 0.0001f, L"p8.y", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[2], 0.0001f, L"p8.z", LINE_INFO());
+                Assert::AreEqual(1.0f, view.colour()[0], 0.0001f, L"p8.r", LINE_INFO());
+                Assert::AreEqual(0.0f, view.colour()[1], 0.0001f, L"p8.g", LINE_INFO());
+                Assert::AreEqual(0.0f, view.colour()[2], 0.0001f, L"p8.b", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(-2.0f, view.position()[0], 0.0001f, L"p9.x", LINE_INFO());
+                Assert::AreEqual(2.0f, view.position()[1], 0.0001f, L"p9.y", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[2], 0.0001f, L"p9.z", LINE_INFO());
+                Assert::AreEqual(0.0f, view.colour()[0], 0.0001f, L"p9.r", LINE_INFO());
+                Assert::AreEqual(1.0f, view.colour()[1], 0.0001f, L"p9.g", LINE_INFO());
+                Assert::AreEqual(0.0f, view.colour()[2], 0.0001f, L"p9.b", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(-2.0f, view.position()[0], 0.0001f, L"p10.x", LINE_INFO());
+                Assert::AreEqual(1.8f, view.position()[1], 0.0001f, L"p10.y", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[2], 0.0001f, L"p10.z", LINE_INFO());
+                Assert::AreEqual(0.0f, view.colour()[0], 0.0001f, L"p10.r", LINE_INFO());
+                Assert::AreEqual(1.0f, view.colour()[1], 0.0001f, L"p10.g", LINE_INFO());
+                Assert::AreEqual(0.0f, view.colour()[2], 0.0001f, L"p10.b", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(-2.0f, view.position()[0], 0.0001f, L"p11.x", LINE_INFO());
+                Assert::AreEqual(1.6f, view.position()[1], 0.0001f, L"p11.y", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[2], 0.0001f, L"p11.z", LINE_INFO());
+                Assert::AreEqual(0.0f, view.colour()[0], 0.0001f, L"p11.r", LINE_INFO());
+                Assert::AreEqual(1.0f, view.colour()[1], 0.0001f, L"p11.g", LINE_INFO());
+                Assert::AreEqual(0.0f, view.colour()[2], 0.0001f, L"p11.b", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(-2.0f, view.position()[0], 0.0001f, L"p12.x", LINE_INFO());
+                Assert::AreEqual(1.4f, view.position()[1], 0.0001f, L"p12.y", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[2], 0.0001f, L"p12.z", LINE_INFO());
+                Assert::AreEqual(0.0f, view.colour()[0], 0.0001f, L"p12.r", LINE_INFO());
+                Assert::AreEqual(1.0f, view.colour()[1], 0.0001f, L"p12.g", LINE_INFO());
+                Assert::AreEqual(0.0f, view.colour()[2], 0.0001f, L"p12.b", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(-2.0f, view.position()[0], 0.0001f, L"p13.x", LINE_INFO());
+                Assert::AreEqual(1.2f, view.position()[1], 0.0001f, L"p13.y", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[2], 0.0001f, L"p13.z", LINE_INFO());
+                Assert::AreEqual(0.0f, view.colour()[0], 0.0001f, L"p13.r", LINE_INFO());
+                Assert::AreEqual(1.0f, view.colour()[1], 0.0001f, L"p13.g", LINE_INFO());
+                Assert::AreEqual(0.0f, view.colour()[2], 0.0001f, L"p13.b", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(-2.0f, view.position()[0], 0.0001f, L"p14.x", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[1], 0.0001f, L"p14.y", LINE_INFO());
+                Assert::AreEqual(2.0f, view.position()[2], 0.0001f, L"p14.z", LINE_INFO());
+                Assert::AreEqual(0.0f, view.colour()[0], 0.0001f, L"p14.r", LINE_INFO());
+                Assert::AreEqual(0.0f, view.colour()[1], 0.0001f, L"p14.g", LINE_INFO());
+                Assert::AreEqual(1.0f, view.colour()[2], 0.0001f, L"p14.b", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(-2.0f, view.position()[0], 0.0001f, L"p15.x", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[1], 0.0001f, L"p15.y", LINE_INFO());
+                Assert::AreEqual(1.8f, view.position()[2], 0.0001f, L"p15.z", LINE_INFO());
+                Assert::AreEqual(0.0f, view.colour()[0], 0.0001f, L"p15.r", LINE_INFO());
+                Assert::AreEqual(0.0f, view.colour()[1], 0.0001f, L"p15.g", LINE_INFO());
+                Assert::AreEqual(1.0f, view.colour()[2], 0.0001f, L"p15.b", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(-2.0f, view.position()[0], 0.0001f, L"p16.x", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[1], 0.0001f, L"p16.y", LINE_INFO());
+                Assert::AreEqual(1.6f, view.position()[2], 0.0001f, L"p16.z", LINE_INFO());
+                Assert::AreEqual(0.0f, view.colour()[0], 0.0001f, L"p16.r", LINE_INFO());
+                Assert::AreEqual(0.0f, view.colour()[1], 0.0001f, L"p16.g", LINE_INFO());
+                Assert::AreEqual(1.0f, view.colour()[2], 0.0001f, L"p16.b", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(-2.0f, view.position()[0], 0.0001f, L"p17.x", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[1], 0.0001f, L"p17.y", LINE_INFO());
+                Assert::AreEqual(1.4f, view.position()[2], 0.0001f, L"p17.z", LINE_INFO());
+                Assert::AreEqual(0.0f, view.colour()[0], 0.0001f, L"p17.r", LINE_INFO());
+                Assert::AreEqual(0.0f, view.colour()[1], 0.0001f, L"p17.g", LINE_INFO());
+                Assert::AreEqual(1.0f, view.colour()[2], 0.0001f, L"p17.b", LINE_INFO());
+
+                view.advance();
+                Assert::AreEqual(-2.0f, view.position()[0], 0.0001f, L"p18.x", LINE_INFO());
+                Assert::AreEqual(-2.0f, view.position()[1], 0.0001f, L"p18.y", LINE_INFO());
+                Assert::AreEqual(1.2f, view.position()[2], 0.0001f, L"p18.z", LINE_INFO());
+                Assert::AreEqual(0.0f, view.colour()[0], 0.0001f, L"p18.r", LINE_INFO());
+                Assert::AreEqual(0.0f, view.colour()[1], 0.0001f, L"p18.g", LINE_INFO());
+                Assert::AreEqual(1.0f, view.colour()[2], 0.0001f, L"p18.b", LINE_INFO());
+            }
+
+            // Note: we cannot check the bbox union here, because our test file is MMPLD 1.2
+
+            Assert::AreEqual(0.0f, listHeader.min_intensity, L"minimum intensity", LINE_INFO());
+            Assert::AreEqual(255.0f, listHeader.max_intensity, L"maximum intensity", LINE_INFO());
+        }
+
         TEST_METHOD(TestRuntimeConvert) {
             {
                 typedef mmpld::particle_traits<mmpld::vertex_type::float_xyz, mmpld::colour_type::intensity> src_view;
@@ -2676,7 +3045,76 @@ namespace test {
             this->testRoundTrip<HANDLE, int>("test_xyz_double_rgba_short.mmpld");
         }
 
+        TEST_METHOD(TestCount) {
+            this->testCount<std::ifstream>("test_xyz_double_int_double.mmpld");
+            this->testCount<FILE *>("test_xyz_double_int_double.mmpld");
+            this->testCount<HANDLE>("test_xyz_double_int_double.mmpld");
+            this->testCount<int>("test_xyz_double_int_double.mmpld");
+        }
+
     private:
+
+        template<class F, class C> void testCount(const C *path) {
+            typedef F file_type;
+            typedef mmpld::detail::io_traits<F, C> io_type;
+
+            mmpld::file_header fileHeader;
+            mmpld::frame_header frameHeader;
+            file_type hFile;
+            mmpld::list_header listHeader;
+            mmpld::seek_table seekTable;
+            std::size_t totalCount = 0;
+
+            io_type::open_read(path, hFile);
+
+            mmpld::read_file_header(hFile, fileHeader, seekTable);
+            io_type::seek(hFile, static_cast<size_t>(seekTable[0]));
+            mmpld::read_frame_header(hFile, fileHeader.version, frameHeader);
+            Assert::AreEqual(std::int32_t(4), frameHeader.lists, L"Frame #1 holds four particle lists.", LINE_INFO());
+
+            mmpld::read_list_header(hFile, fileHeader.version, listHeader);
+            {
+                auto cnt = mmpld::count<std::size_t>(listHeader);
+                Assert::AreEqual(std::size_t(listHeader.particles), cnt, L"Count returns # of particles in list 1", LINE_INFO());
+                totalCount += cnt;
+            }
+            mmpld::skip_particles(hFile, listHeader);
+
+            mmpld::read_list_header(hFile, fileHeader.version, listHeader);
+            {
+                auto cnt = mmpld::count<std::size_t>(listHeader);
+                Assert::AreEqual(std::size_t(listHeader.particles), cnt, L"Count returns # of particles in list 2", LINE_INFO());
+                totalCount += cnt;
+            }
+            mmpld::skip_particles(hFile, listHeader);
+
+            mmpld::read_list_header(hFile, fileHeader.version, listHeader);
+            {
+                auto cnt = mmpld::count<std::size_t>(listHeader);
+                Assert::AreEqual(std::size_t(listHeader.particles), cnt, L"Count returns # of particles in list 3", LINE_INFO());
+                totalCount += cnt;
+            }
+            mmpld::skip_particles(hFile, listHeader);
+
+            mmpld::read_list_header(hFile, fileHeader.version, listHeader);
+            {
+                auto cnt = mmpld::count<std::size_t>(listHeader);
+                Assert::AreEqual(std::size_t(listHeader.particles), cnt, L"Count returns # of particles in list 4", LINE_INFO());
+                totalCount += cnt;
+            }
+            mmpld::skip_particles(hFile, listHeader);
+
+            io_type::seek(hFile, static_cast<size_t>(seekTable[0]));
+            mmpld::read_frame_header(hFile, fileHeader.version, frameHeader);
+            {
+                auto pos = io_type::tell(hFile);
+                auto cnt = mmpld::count<std::size_t>(frameHeader, fileHeader.version, hFile);
+                Assert::AreEqual(totalCount, cnt, L"Count on whole frame returns number over all lists", LINE_INFO());
+                Assert::AreEqual(pos, io_type::tell(hFile), L"File pointer returned to begin of frame", LINE_INFO());
+            }
+
+            io_type::close(hFile);
+        }
 
         template<class F, class G> void testRoundTrip(const char *path) {
             typedef F ifile_type;

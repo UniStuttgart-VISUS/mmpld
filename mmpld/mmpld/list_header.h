@@ -1,11 +1,12 @@
 // <copyright file="list_header.h" company="Visualisierungsinstitut der Universität Stuttgart">
-// Copyright © 2018 - 2019 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+// Copyright © 2018 - 2023 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
 // Copyright © 2017 SFB-TRR 161. Alle Rechte vorbehalten.
 // </copyright>
 // <author>Christoph Müller</author>
 
 #pragma once
 
+#include <algorithm>
 #include <limits>
 #include <type_traits>
 #include <vector>
@@ -201,6 +202,55 @@ namespace mmpld {
     template<class T>
     T& read_list_header(T& stream, const std::uint16_t fileVersion,
         list_header& header);
+
+    /// <summary>
+    /// Advance the stream such that all particles of the given list are
+    /// skipped.
+    /// </summary>
+    /// <remarks>
+    /// <para>This function only requires the file pointer in
+    /// <paramref name="stream" /> to point to the first particle of the list
+    /// described by <paramref name="header" />. If this precondition is not
+    /// met, the effect of the function is undefined.</para>
+    /// <para>Please note that an <se cref="mmpld::cluster_info" /> block after
+    /// the particles will <i>not</i> be skipped. The caller is responsible
+    /// for handling this if the file version is 1.1.</para>
+    /// </remarks>
+    /// <typeparam name="T">The type of stream, which can be an STL stream or a
+    /// file descriptor or <see cref="FILE" /> handle.</typeparam>
+    /// <param name="stream">The stream to read the header from. The stream must
+    /// be open and in binary mode.</param>
+    /// <param name="header">The description of the list to be skipped.</param>
+    /// <returns><paramref name="stream" />.</returns>
+    template<class T>
+    inline T& skip_particles(T& stream, const list_header& header) {
+        detail::skip(stream, get_size<std::size_t>(header));
+        return stream;
+    }
+
+    /// <summary>
+    /// Union the bounding box of the two list headers into the left one.
+    /// </summary>
+    /// <param name="lhs">The first list header.</param>
+    /// <param name="rhs">The second list header.</param>
+    inline void union_bounding_box(list_header& lhs, const list_header& rhs) {
+        lhs.bounding_box[0] = (std::min)(lhs.bounding_box[0], rhs.bounding_box[0]);
+        lhs.bounding_box[1] = (std::min)(lhs.bounding_box[1], rhs.bounding_box[1]);
+        lhs.bounding_box[2] = (std::min)(lhs.bounding_box[2], rhs.bounding_box[2]);
+        lhs.bounding_box[3] = (std::max)(lhs.bounding_box[3], rhs.bounding_box[3]);
+        lhs.bounding_box[4] = (std::max)(lhs.bounding_box[4], rhs.bounding_box[4]);
+        lhs.bounding_box[5] = (std::max)(lhs.bounding_box[5], rhs.bounding_box[5]);
+    }
+
+    /// <summary>
+    /// Union the intensity ranges of the two list headers into the left one.
+    /// </summary>
+    /// <param name="lhs">The first list header.</param>
+    /// <param name="rhs">The second list header.</param>
+    inline void union_intensity_range(list_header& lhs, const list_header& rhs) {
+        lhs.min_intensity = (std::min)(lhs.min_intensity, rhs.min_intensity);
+        lhs.max_intensity = (std::max)(lhs.max_intensity, rhs.max_intensity);
+    }
 
     /// <summary>
     /// Writes and MMPLD list header to the current location in the stream.

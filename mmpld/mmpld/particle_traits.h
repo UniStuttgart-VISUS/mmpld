@@ -1,7 +1,7 @@
-// <copyright file="particle_traits.h" company="Visualisierungsinstitut der Universit�t Stuttgart">
-// Copyright � 2018 -2022 Visualisierungsinstitut der Universit�t Stuttgart. Alle Rechte vorbehalten.
+// <copyright file="particle_traits.h" company="Visualisierungsinstitut der Universität Stuttgart">
+// Copyright © 2018 - 2023 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
 // </copyright>
-// <author>Christoph M�ller</author>
+// <author>Christoph Müller</author>
 
 #pragma once
 
@@ -134,7 +134,6 @@ namespace mmpld {
         /// <param name="data">A pointer to the begin of a particle.</param>
         /// <returns>The first position component.</returns>
         static inline vertex_value_type *position(void *data) noexcept {
-            assert(vertex_traits::size > 0);
             return (vertex_traits::size > 0)
                 ? static_cast<vertex_value_type *>(data)
                 : nullptr;
@@ -153,10 +152,11 @@ namespace mmpld {
         /// </summary>
         /// <param name="data">A pointer to the begin of a particle.</param>
         /// <returns>The radius or <c>nullptr</c>.</returns>
-        static inline  const vertex_value_type *radius(const void *data) {
-            auto cnt = vertex_traits::size / sizeof(vertex_value_type);
-            return (cnt == 4)
-                ? (static_cast<const vertex_value_type *>(data) + 3)
+        static inline const vertex_value_type *radius(const void *data) {
+            auto retval = static_cast<const std::uint8_t *>(data)
+                + vertex_traits::radius_offset;
+            return (vertex_traits::radius_offset < vertex_traits::size)
+                ? reinterpret_cast<const vertex_value_type *>(retval)
                 : nullptr;
         }
 
@@ -166,9 +166,10 @@ namespace mmpld {
         /// <param name="data">A pointer to the begin of a particle.</param>
         /// <returns>The radius or <c>nullptr</c>.</returns>
         static inline vertex_value_type *radius(void *data) {
-            auto cnt = vertex_traits::size / sizeof(vertex_value_type);
-            return (cnt == 4)
-                ? (static_cast<vertex_value_type *>(data) + 3)
+            auto retval = static_cast<std::uint8_t *>(data)
+                + vertex_traits::radius_offset;
+            return (vertex_traits::radius_offset < vertex_traits::size)
+                ? reinterpret_cast<vertex_value_type *>(retval)
                 : nullptr;
         }
 

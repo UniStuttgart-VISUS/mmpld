@@ -77,6 +77,9 @@
     <ClInclude Include="mmpld\cluster_info.h">
       <Filter>Header Files\mmpld</Filter>
     </ClInclude>
+    <ClInclude Include="mmpld\count.h">
+      <Filter>Header Files\mmpld</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="mmpld\file_header.inl">
@@ -110,5 +113,8 @@
       <Filter>Header Files\mmpld</Filter>
     </None>
     <None Include="mmpld.nuspec" />
+    <None Include="mmpld\count.inl">
+      <Filter>Header Files\mmpld</Filter>
+    </None>
   </ItemGroup>
 </Project>

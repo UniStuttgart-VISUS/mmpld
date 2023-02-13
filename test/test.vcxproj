@@ -165,6 +165,8 @@
     <ClInclude Include="util.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ExampleTest.cpp" />
+    <ClCompile Include="ReproTest.cpp" />
     <ClCompile Include="FileTest.cpp" />
     <ClCompile Include="FoundationTest.cpp" />
     <ClCompile Include="ReflectionTest.cpp" />

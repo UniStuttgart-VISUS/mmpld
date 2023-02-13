@@ -1,5 +1,5 @@
 // <copyright file="file.h" company="Visualisierungsinstitut der Universität Stuttgart">
-// Copyright © 2018 - 2022 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+// Copyright © 2018 - 2023 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
 // </copyright>
 // <author>Christoph Müller</author>
 
@@ -77,7 +77,7 @@ namespace mmpld {
 
         /// <summary>
         /// Gets the number of the currently opened frame.
-        /// <summary>
+        /// </summary>
         /// <returns>The number of the current frame.</returns>
         inline frame_number_type frame(void) const {
             return this->_frame;
