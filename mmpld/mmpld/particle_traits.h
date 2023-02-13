@@ -112,7 +112,7 @@ namespace mmpld {
         /// </summary>
         /// <returns>The type of the colour data.</returns>
         static inline mmpld::colour_type colour_type(void) noexcept {
-            return particle_traits::colour_traits::colour_type;
+            return particle_traits::colour_traits::value;
         }
 
         /// <summary>
