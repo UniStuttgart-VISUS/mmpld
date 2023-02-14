@@ -193,8 +193,8 @@ int main(const int argc, const char **argv) {
                     const auto cntRead = mmpld::read_as(input, inputHeader,
                         buffer.data(), outputHeader);
                     assert(cntRead == outputHeader.particles);
-                    bufferSize = cntRead * mmpld::get_stride<std::size_t>(
-                        outputHeader);
+                    bufferSize = static_cast<std::size_t>(cntRead)
+                        * mmpld::get_stride<std::size_t>(outputHeader);
                     output.write(buffer.data(), bufferSize);
 
                 } else {
@@ -210,8 +210,8 @@ int main(const int argc, const char **argv) {
                     while (cntConverted < outputHeader.particles) {
                         const auto cntRead = mmpld::read_as(input, inputHeader,
                             buffer.data(), convHeader);
-                        bufferSize = cntRead * mmpld::get_stride<std::size_t>(
-                            outputHeader);
+                        bufferSize = static_cast<std::size_t>(cntRead)
+                            * mmpld::get_stride<std::size_t>(outputHeader);
                         output.write(buffer.data(), bufferSize);
                         cntConverted += cntRead;
                         inputHeader.particles -= cntRead;

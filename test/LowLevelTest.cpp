@@ -2010,7 +2010,7 @@ namespace test {
 
             listHeader.vertex_type = mmpld::vertex_type::float_xyzr;
             listHeader.colour_type = mmpld::colour_type::intensity32;
-            std::vector<std::uint8_t> particles(listHeader.particles * mmpld::get_stride<std::size_t>(listHeader));
+            std::vector<std::uint8_t> particles(std::size_t(listHeader.particles) * mmpld::get_stride<std::size_t>(listHeader));
 
             {
                 auto cnt = mmpld::read_as(hFile, frameHeader, fileHeader.version, particles.data(), listHeader);
@@ -2178,7 +2178,7 @@ namespace test {
 
             listHeader.vertex_type = mmpld::vertex_type::float_xyz;
             listHeader.colour_type = mmpld::colour_type::rgb32;
-            particles.resize(listHeader.particles * mmpld::get_stride<std::size_t>(listHeader));
+            particles.resize(std::size_t(listHeader.particles) * mmpld::get_stride<std::size_t>(listHeader));
 
             {
                 auto cnt = mmpld::read_as(hFile, frameHeader, fileHeader.version, particles.data(), listHeader, 2);

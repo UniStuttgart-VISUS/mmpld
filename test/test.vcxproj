@@ -191,10 +191,10 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
     </CustomBuild>
     <CustomBuild Include="test_xyzr_float_none.mmpld">
       <DeploymentContent>true</DeploymentContent>
@@ -207,10 +207,10 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
     </CustomBuild>
     <CustomBuild Include="test_xyzr_float_rgba_byte.mmpld">
       <DeploymentContent>true</DeploymentContent>
@@ -223,10 +223,10 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
     </CustomBuild>
     <CustomBuild Include="test_xyzr_float_rgba_float.mmpld">
       <DeploymentContent>true</DeploymentContent>
@@ -239,10 +239,10 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
     </CustomBuild>
     <CustomBuild Include="test_xyzr_float_rgb_float.mmpld">
       <DeploymentContent>true</DeploymentContent>
@@ -255,10 +255,10 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
     </CustomBuild>
     <CustomBuild Include="test_xyz_float_int_float.mmpld">
       <DeploymentContent>true</DeploymentContent>
@@ -268,13 +268,13 @@
       <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">XCOPY /Q /Y "%(FullPath)" "$(OutDir)"</Command>
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">XCOPY /Q /Y "%(FullPath)" "$(OutDir)"</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
     </CustomBuild>
     <CustomBuild Include="test_xyz_float_none.mmpld">
       <DeploymentContent>true</DeploymentContent>
@@ -287,10 +287,10 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
     </CustomBuild>
     <CustomBuild Include="test_xyz_float_rgba_byte.mmpld">
       <DeploymentContent>true</DeploymentContent>
@@ -303,10 +303,10 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
     </CustomBuild>
     <CustomBuild Include="test_xyz_float_rgba_float.mmpld">
       <DeploymentContent>true</DeploymentContent>
@@ -319,10 +319,10 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
     </CustomBuild>
     <CustomBuild Include="test_xyz_float_rgb_float.mmpld">
       <DeploymentContent>true</DeploymentContent>
@@ -335,10 +335,10 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
@@ -353,10 +353,10 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
     </CustomBuild>
     <CustomBuild Include="test_xyz_double_int_float.mmpld">
       <DeploymentContent>true</DeploymentContent>
@@ -369,10 +369,10 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
     </CustomBuild>
     <CustomBuild Include="test_xyz_double_none.mmpld">
       <DeploymentContent>true</DeploymentContent>
@@ -385,10 +385,10 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
     </CustomBuild>
     <CustomBuild Include="test_xyz_double_rgba_byte.mmpld">
       <DeploymentContent>true</DeploymentContent>
@@ -401,10 +401,10 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
     </CustomBuild>
     <CustomBuild Include="test_xyz_double_rgba_float.mmpld">
       <DeploymentContent>true</DeploymentContent>
@@ -417,10 +417,10 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
     </CustomBuild>
     <CustomBuild Include="test_xyz_double_rgba_short.mmpld">
       <DeploymentContent>true</DeploymentContent>
@@ -433,10 +433,10 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
     </CustomBuild>
     <CustomBuild Include="test_xyz_double_rgb_float.mmpld">
       <DeploymentContent>true</DeploymentContent>
@@ -449,10 +449,10 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Copying "%(FullPath)" to "$(OutDir)" ...</Message>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(OutDir)%(Filename)%(Extension)</Outputs>
     </CustomBuild>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

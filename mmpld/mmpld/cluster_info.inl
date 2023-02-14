@@ -23,7 +23,7 @@ template<class F> mmpld::cluster_info mmpld::read_cluster_info(F& file) {
 
     retval._count = static_cast<std::size_t>(cnt);
 
-    retval._data.resize(size);
+    retval._data.resize(static_cast<std::size_t>(size));
     io_traits_type::read(file, retval._data.data(), retval._data.size());
 
     return retval;

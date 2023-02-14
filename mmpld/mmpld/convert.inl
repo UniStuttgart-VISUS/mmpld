@@ -230,14 +230,16 @@ namespace detail {
 
         auto d_header = dst_header;
         const auto dst_stride = get_stride<std::size_t>(dst_header);
-        const auto retval = (std::min)(src_header.particles, dst_header.particles);
+        const auto retval = (std::min)(src_header.particles,
+            dst_header.particles);
         const auto src_stride = get_stride<std::size_t>(src_header);
         assert(buffer.size() >= src_stride);
         const auto cnt_buffer = buffer.size() / src_stride;
 
         for (std::decay<decltype(retval)>::type i = 0; i < retval;
                 i += cnt_buffer) {
-            auto c = (std::min)(cnt_buffer, retval - i);
+            auto c = (std::min)(cnt_buffer,
+                static_cast<std::size_t>(retval - i));
             auto d = reinterpret_cast<std::uint8_t *>(dst) + i * dst_stride;
             d_header.particles = c;
             io_traits::read(file, buffer.data(), c * src_stride);
@@ -561,7 +563,7 @@ decltype(mmpld::list_header::particles) mmpld::convert(
     if (is_same_format<T>(header)) {
         /* Source and destination types are the same, copy at once. */
         assert(dst_stride == src_stride);
-        ::memcpy(d, s, retval * dst_stride);
+        ::memcpy(d, s, static_cast<std::size_t>(retval) * dst_stride);
 
     } else {
         /* Convert one particle at a time. */
@@ -638,7 +640,7 @@ decltype(mmpld::list_header::particles) mmpld::convert(
     if (is_same_format(src_header, dst_header)) {
         /* Source and destination types are the same, copy at once. */
         assert(src_stride == dst_stride);
-        ::memcpy(dst, src, retval * dst_stride);
+        ::memcpy(dst, src, static_cast<std::size_t>(retval) * dst_stride);
 
     } else {
         const auto col_conv = detail::get_colour_converter(
@@ -753,7 +755,8 @@ decltype(mmpld::list_header::particles) mmpld::read_as(
             cnt_buffer = retval;
         }
 
-        std::vector<std::uint8_t> buffer(cnt_buffer * src_stride);
+        std::vector<std::uint8_t> buffer(static_cast<std::size_t>(cnt_buffer)
+            * src_stride);
         detail::read_as(file, src_header, dst, dst_header, buffer);
     }
 
@@ -832,13 +835,15 @@ decltype(mmpld::list_header::particles) mmpld::read_as(
             // is either large enough to hold the whole frame or to hold the
             // user-defined number of particles to be converted at once.
             if (cnt_buffer > 0) {
-                const auto s = header.particles * src_stride;
+                const auto s = static_cast<std::size_t>(header.particles
+                    * src_stride);
                 if (buffer.size() < s) { 
                     buffer.resize(s);
                 }
 
             } else {
-                const auto s = dst_header.particles * src_stride;
+                const auto s = static_cast<std::size_t>(dst_header.particles
+                    * src_stride);
                 if (buffer.size() < s) {
                     buffer.resize(s);
                 }
