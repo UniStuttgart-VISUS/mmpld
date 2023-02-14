@@ -255,7 +255,7 @@ for (decltype(fileHeader.frames) i = 0; i < fileHeader.frames; ++i) {
 
         // You could specify the size of the conversion buffer here like this,
         // which would instruct the API to allocate a temporary buffer for 16
-        // particles and read and convert the input in baches of 16.
+        // particles and read and convert the input in bachtes of 16.
         // mmpld::read_as(hFile, listHeader, ptr, targetListHeader, 16);
 
         // In MMPLD 1.1, a block of cluster information follows here. We need to
