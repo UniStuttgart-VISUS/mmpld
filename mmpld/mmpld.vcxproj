@@ -158,7 +158,10 @@
     <ClInclude Include="mmpld\cluster_info.h" />
     <ClInclude Include="mmpld\colour_properties.h" />
     <ClInclude Include="mmpld\colour_type.h" />
+    <ClInclude Include="mmpld\conversion_table.h" />
     <ClInclude Include="mmpld\convert.h" />
+    <ClInclude Include="mmpld\convert_colour.h" />
+    <ClInclude Include="mmpld\convert_position.h" />
     <ClInclude Include="mmpld\count.h" />
     <ClInclude Include="mmpld\enum_dispatch.h" />
     <ClInclude Include="mmpld\enum_dispatch_list.h" />
@@ -171,6 +174,7 @@
     <ClInclude Include="mmpld\particle_properties.h" />
     <ClInclude Include="mmpld\particle_traits.h" />
     <ClInclude Include="mmpld\particle_view.h" />
+    <ClInclude Include="mmpld\runtime_converter.h" />
     <ClInclude Include="mmpld\vertex_properties.h" />
     <ClInclude Include="mmpld\vertex_type.h" />
   </ItemGroup>

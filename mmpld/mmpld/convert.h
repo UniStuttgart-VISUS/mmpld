@@ -9,10 +9,10 @@
 #include <cassert>
 #include <functional>
 #include <stdexcept>
-#include <unordered_map>
 #include <utility>
 #include <vector>
 
+#include "mmpld/conversion_table.h"
 #include "mmpld/frame_header.h"
 #include "mmpld/io.h"
 #include "mmpld/list_header.h"

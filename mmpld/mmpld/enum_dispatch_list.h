@@ -19,7 +19,8 @@ namespace detail {
     /// <remarks>
     /// The intended use of this class is the definition of a dispatch list type
     /// for an enumeration type <c>et</c> like this
-    /// <c>template<et... V> using et_list_t = enum_dispatch_list<et, V...>;</c>
+    /// <c>template&lt;et... V&gt; using et_list_t
+    /// = enum_dispatch_list&lt;et, V...&gt;;</c>
     /// </remarks>
     /// <typeparam name="E">The type of the enumeration.</typeparam>
     /// <typeparam name="Vs">The enumeration values.</typeparam>

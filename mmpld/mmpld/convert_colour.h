@@ -1,0 +1,177 @@
+// <copyright file="convert_colour.h" company="Visualisierungsinstitut der Universität Stuttgart">
+// Copyright © 2018 - 2023 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+// </copyright>
+// <author>Christoph Müller</author>
+
+#pragma once
+
+#include "mmpld/colour_properties.h"
+#include "mmpld/runtime_converter.h"
+
+
+namespace mmpld {
+namespace detail {
+
+
+    /// <summary>
+    /// Convert <paramref name="colour" /> to grey-scale.
+    /// </summary>
+    template<class O, class I> O to_grey(const I *colour, const size_t cnt) {
+        typedef typename std::conditional<std::is_floating_point<O>::value,
+            O, float>::type intermediate_type;
+        intermediate_type retval = 0;
+
+        switch (cnt) {
+            case 0:
+                // No source colour, return black.
+                retval = 0.0f;
+                break;
+
+            case 1:
+                // Source is already grey.
+                retval = static_cast<intermediate_type>(*colour);
+                break;
+
+            case 3:
+            case 4:
+                // Source is colour.
+                retval = static_cast<intermediate_type>(0.21)
+                    * static_cast<intermediate_type>(colour[0])
+                    + static_cast<intermediate_type>(0.72)
+                    * static_cast<intermediate_type>(colour[1])
+                    + static_cast<intermediate_type>(0.07f)
+                    * static_cast<intermediate_type>(colour[2]);
+                break;
+
+            default:
+                throw std::logic_error("More than four colour channels are "
+                    "not supported.");
+        }
+
+        if (!std::is_floating_point<O>::value) {
+            // We compute the grey-scale data as float as the formula requires
+            // us to do so. However, if the requested output is not a
+            // floating-point type, we need to scale it to the maximum valid
+            // value to prevent everything from becoming black.
+            retval *= static_cast<float>((std::numeric_limits<O>::max)());
+        }
+
+        return static_cast<O>(retval);
+    }
+
+    /// <summary>
+    /// Perform a colour conversion.
+    /// </summary>
+    template<class O, class I>
+    typename std::enable_if<!std::is_void<O>::value>::type convert_colour(
+            const I *input, const size_t cnt_in, void *output,
+            const size_t cnt_out) {
+        if (cnt_out == 0) {
+            // Nothing to do.
+
+        } else if (cnt_out == 1) {
+            // Convert output to grey-scale.
+            *static_cast<O *>(output) = to_grey<O>(input, cnt_in);
+
+        } else {
+            // Create or convert colour.
+            constexpr const auto float_in = std::is_floating_point<I>::value;
+            constexpr const auto float_out = std::is_floating_point<O>::value;
+
+            for (size_t i = 0; i < cnt_out; ++i) {
+                if (float_in && !float_out) {
+                    // Input is floating point, but output is not: Scale values
+                    // to maximum of output type.
+                    auto w = static_cast<I>(1);
+                    auto b = static_cast<I>(0);
+                    // Determine the fallback colour 'f': For alpha (i == 3),
+                    // use white 'w', otherwise splat the grey value 'g', which
+                    // is black if we have no grey value from the input.
+                    auto g = (cnt_in == 1) ? input[0] : b;
+                    auto f = (i == 3) ? w : g;
+                    auto c = (i < cnt_in) ? input[i] : f;
+                    c *= static_cast<I>((std::numeric_limits<O>::max)());
+                    static_cast<O *>(output)[i] = static_cast<O>(c);
+
+                } else if (!float_in && float_out) {
+                    // Input is no floating point, but output is: Scale values
+                    // to maximum of input type.
+                    auto w = static_cast<O>((std::numeric_limits<I>::max)());
+                    auto b = static_cast<O>(0);
+                    // Determine the fallback colour: For alpha (i == 3), use
+                    // white, otherwise splat the grey value or use black.
+                    auto g = (cnt_in == 1) ? static_cast<O>(input[0]) : b;
+                    auto f = (i == 3) ? w : g;
+                    auto c = (i < cnt_in) ? static_cast<O>(input[i]) : f;
+                    c /= w;
+                    static_cast<O *>(output)[i] = c;
+
+                } else {
+                    // Input and output are of the same type (integral or
+                    // floating point): Just cast it.
+                    auto w = float_out
+                        ? static_cast<O>(1)
+                        : (std::numeric_limits<O>::max)();
+                    auto b = static_cast<O>(0);
+                    // Determine the fallback colour: For alpha (i == 3), use
+                    // white, otherwise splat the grey value or use black.
+                    auto g = (cnt_in == 1) ? static_cast<O>(input[0]) : b;
+                    auto f = (i == 3) ? w : g;
+                    auto c = (i < cnt_in) ? static_cast<O>(input[i]) : f;
+                    static_cast<O *>(output)[i] = c;
+                }
+            } /* end for (size_t i = 0; i < cnt_out; ++i) */
+        } /* end if (cnt_out == 0) */
+    }
+
+    /// <summary>
+    /// Convert nothing if the output type is invalid (<c>void</c>).
+    /// </summary>
+    template<class O, class I>
+    typename std::enable_if<std::is_void<O>::value>::type convert_colour(
+        const I *input, const size_t cnt_in, void *output,
+        const size_t cnt_out) { }
+
+    /// <summary>
+    /// Specialised conversion for colours, which redirects the conversion to
+    /// <see cref="convert_colour" />.
+    /// </summary>
+    template<colour_type O, colour_type I>
+    struct runtime_converter<colour_type, O, I> {
+        typedef colour_traits<O> output_traits;
+        typedef colour_traits<I> input_traits;
+
+        static inline void convert(const void *src, void *dst) {
+            auto s = static_cast<const typename input_traits::value_type *>(src);
+            convert_colour<typename output_traits::value_type>(
+                s, input_traits::channels, dst, output_traits::channels);
+        }
+    };
+
+    /// <summary>
+    /// Further specialisation for conversion of no colour.
+    /// </summary>
+    template<> struct runtime_converter<colour_type, colour_type::none,
+            colour_type::none> {
+        static inline void convert(const void *src, void *dst) { }
+    };
+
+    /// <summary>
+    /// Further specialisation generating a medium grey for missing colour
+    /// input.
+    /// </summary>
+    template<colour_type O>
+    struct runtime_converter<colour_type, O, colour_type::none> {
+        typedef colour_traits<O> output_traits;
+
+        static inline void convert(const void *src, void *dst) {
+            static constexpr std::array<std::uint8_t, 4> GREY {
+                128, 128, 128, 255
+            };
+            convert_colour<typename output_traits::value_type>(GREY.data(),
+                GREY.size(), dst, output_traits::channels);
+        }
+    };
+
+} /* end namespace detail */
+} /* end namespace mmpld */
