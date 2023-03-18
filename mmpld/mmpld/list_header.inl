@@ -1,8 +1,8 @@
-// <copyright file="list_header.inl" company="Visualisierungsinstitut der Universit�t Stuttgart">
-// Copyright � 2018 - 2022 Visualisierungsinstitut der Universit�t Stuttgart. Alle Rechte vorbehalten.
-// Copyright � 2017 SFB-TRR 161. Alle Rechte vorbehalten.
+﻿// <copyright file="list_header.inl" company="Visualisierungsinstitut der Universität Stuttgart">
+// Copyright © 2018 - 2022 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+// Copyright © 2017 SFB-TRR 161. Alle Rechte vorbehalten.
 // </copyright>
-// <author>Christoph M�ller</author>
+// <author>Christoph Müller</author>
 
 
 #if defined(MMPLD_WITH_DIRECT3D)

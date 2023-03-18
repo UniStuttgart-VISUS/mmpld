@@ -1,8 +1,8 @@
-// <copyright file="list_header.h" company="Visualisierungsinstitut der Universität Stuttgart">
-// Copyright © 2018 - 2023 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
-// Copyright © 2017 SFB-TRR 161. Alle Rechte vorbehalten.
+ï»¿// <copyright file="list_header.h" company="Visualisierungsinstitut der UniversitÃ¤t Stuttgart">
+// Copyright Â© 2018 - 2023 Visualisierungsinstitut der UniversitÃ¤t Stuttgart. Alle Rechte vorbehalten.
+// Copyright Â© 2017 SFB-TRR 161. Alle Rechte vorbehalten.
 // </copyright>
-// <author>Christoph Müller</author>
+// <author>Christoph MÃ¼ller</author>
 
 #pragma once
 
@@ -54,14 +54,16 @@ namespace mmpld {
         /// <summary>
         /// The maximum intensity found in the list if
         /// <see cref="list_header::colour_type" /> is
-        /// <see cref="colour_type::float_i" />.
+        /// <see cref="colour_type::intensity32" /> or
+        /// <see cref="colour_type::intensity64" />.
         /// </summary>
         float max_intensity;
 
         /// <summary>
         /// The minimum intensity found in the list if
         /// <see cref="list_header::colour_type" /> is
-        /// <see cref="colour_type::float_i" />.
+        /// <see cref="colour_type::intensity32" /> or
+        /// <see cref="colour_type::intensity64" />.
         /// </summary>
         float min_intensity;
 
@@ -250,6 +252,21 @@ namespace mmpld {
     inline void union_intensity_range(list_header& lhs, const list_header& rhs) {
         lhs.min_intensity = (std::min)(lhs.min_intensity, rhs.min_intensity);
         lhs.max_intensity = (std::max)(lhs.max_intensity, rhs.max_intensity);
+    }
+
+    /// <summary>
+    /// Answer whether the intensity range in the given list header is valid.
+    /// </summary>
+    /// <remarks>
+    /// The intensity range is considered invalid if the maximum is less than
+    /// the minimum. This should only be the case for files that do not use
+    /// intensity values.
+    /// </remarks>
+    /// <param name="header">The list header to check.</param>
+    /// <returns><c>true</c> if the intensity range is valid, <c>false</c>
+    /// otherwise.</returns>
+    inline bool valid_intensity_range(const list_header &header) {
+        return (header.max_intensity >= header.min_intensity);
     }
 
     /// <summary>

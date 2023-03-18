@@ -14,7 +14,7 @@ struct std::hash<std::pair<mmpld::vertex_type, mmpld::vertex_type>> {
     typedef std::pair<mmpld::vertex_type, mmpld::vertex_type> value_type;
 
     inline std::size_t operator ()(const value_type& value) const noexcept {
-        static_assert(std::is_same< value_type::first_type,
+        static_assert(std::is_same<value_type::first_type,
             value_type::second_type>::value, "Both types of the conversion "
             "map must be identical.");
         static constexpr std::hash<value_type::first_type> hash;
@@ -33,7 +33,7 @@ struct std::hash<std::pair<mmpld::colour_type, mmpld::colour_type>> {
     typedef std::pair<mmpld::colour_type, mmpld::colour_type> value_type;
 
     inline std::size_t operator ()(const value_type& value) const noexcept {
-        static_assert(std::is_same< value_type::first_type,
+        static_assert(std::is_same<value_type::first_type,
             value_type::second_type>::value, "Both types of the conversion "
             "map must be identical.");
         static constexpr std::hash<value_type::first_type> hash;
@@ -129,8 +129,9 @@ namespace detail {
                     // to maximum of output type.
                     auto w = static_cast<I>(1);
                     auto b = static_cast<I>(0);
-                    // Determine the fallback colour: For alpha (i == 3), use
-                    // white, otherwise splat the grey value or use black.
+                    // Determine the fallback colour 'f': For alpha (i == 3),
+                    // use white 'w', otherwise splat the grey value 'g', which
+                    // is black if we have no grey value from the input.
                     auto g = (cnt_in == 1) ? input[0] : b;
                     auto f = (i == 3) ? w : g;
                     auto c = (i < cnt_in) ? input[i] : f;
@@ -175,6 +176,47 @@ namespace detail {
     typename std::enable_if<std::is_void<O>::value>::type convert_colour(
         const I *input, const size_t cnt_in, void *output,
         const size_t cnt_out) { }
+
+    /// <summary>
+    /// Determines what will be the intensity range of the output based on the
+    /// destination colour format specified in <paramref name="dst_header" />
+    /// and the source format specified in <paramref name="src_header" />.
+    /// </summary>
+    inline void convert_intensity_range(const list_header &src_header,
+        list_header &dst_header) {
+        switch (dst_header.colour_type) {
+            case mmpld::colour_type::intensity32:
+            case mmpld::colour_type::intensity64:
+                switch (src_header.colour_type) {
+                    case mmpld::colour_type::intensity32:
+                    case mmpld::colour_type::intensity64:
+                        // If we copy intensity to intensity, just keep the
+                        // range, because it is always float and will not change
+                        // even if we convert between different floating-point
+                        // types.
+                        dst_header.min_intensity = src_header.min_intensity;
+                        dst_header.max_intensity = src_header.max_intensity;
+                        break;
+
+                    default:
+                        // If we want to have intensity as output, but the
+                        // input had no colour or actual colour, the output
+                        // format will be grey scale within [0, 1].
+                        dst_header.min_intensity = 0.0f;
+                        dst_header.max_intensity = 1.0f;
+                        break;
+                }
+                break;
+
+            default:
+                // If the target format is neither of the intensity formats, the
+                // intensity range is not relevant, so we mark it as invalid by
+                // setting the maximum lower than the minimum.
+                dst_header.min_intensity = 0.0f;
+                dst_header.max_intensity = -1.0f;
+                break;
+        }
+    }
 
     /// <summary>
     /// Perform a radius conversion in cases where, both, input and output have
@@ -225,6 +267,7 @@ namespace detail {
             F& file, const list_header& src_header,
             O *dst, list_header& dst_header,
             std::vector<std::uint8_t>& buffer) {
+        typedef std::decay<decltype(src_header.particles)>::type count_type;
         typedef detail::basic_io_traits<F> io_traits;
         assert(buffer.size() > 0);
 
@@ -236,8 +279,7 @@ namespace detail {
         assert(buffer.size() >= src_stride);
         const auto cnt_buffer = buffer.size() / src_stride;
 
-        for (std::decay<decltype(retval)>::type i = 0; i < retval;
-                i += cnt_buffer) {
+        for (count_type i = 0; i < retval; i += cnt_buffer) {
             auto c = (std::min)(cnt_buffer,
                 static_cast<std::size_t>(retval - i));
             auto d = reinterpret_cast<std::uint8_t *>(dst) + i * dst_stride;
@@ -337,7 +379,7 @@ namespace detail {
     };
 
     /// <summary>
-    /// Further specialisation generating a medium grey for missing position
+    /// Further specialisation generating a medium grey for missing colour
     /// input.
     /// </summary>
     template<colour_type O>
@@ -595,7 +637,7 @@ decltype(mmpld::list_header::particles) mmpld::convert(
                 pos_conv(src_pos, dst_pos);
             }
 
-            // Delegate radius conversion to separate template that can handle 
+            // Delegate radius conversion to separate template that can handle
             // void input/output cases.
             detail::convert_radius<dst_vertex_scalar>(src_rad, header.radius,
                 dst_rad);
@@ -665,6 +707,9 @@ decltype(mmpld::list_header::particles) mmpld::convert(
                 }
             }
         }
+
+        /* Adjust the intensity range in the destination header. */
+        detail::convert_intensity_range(src_header, dst_header);
 
         /* Convert one particle at a time. */
         for (std::size_t i = 0; i < retval; ++i) {
