@@ -135,12 +135,14 @@ decltype(mmpld::list_header::particles) mmpld::convert(
                 if (src_col == nullptr) {
                     // We have no valid offset for the source colour, so we
                     // need to use the global colour from the header.
-                    global_col_conv(header.colour, dst_col);
+                    global_col_conv(header.colour, dst_col,
+                        header.min_intensity, header.max_intensity);
 
                 } else {
                     // There is a per-vertex colour that needs to be converted.
                     assert(col_conv != nullptr);
-                    col_conv(src_col, dst_col);
+                    col_conv(src_col, dst_col, header.min_intensity,
+                        header.max_intensity);
                 }
             }
 
@@ -244,12 +246,14 @@ decltype(mmpld::list_header::particles) mmpld::convert(
                     // We have no valid offset for the source colour, so we
                     // need to use the global colour from the header.
                     assert(global_col_conv != nullptr);
-                    global_col_conv(src_header.colour, dst_col);
+                    global_col_conv(src_header.colour, dst_col,
+                        src_header.min_intensity, src_header.max_intensity);
 
                 } else {
                     // There is a per-vertex colour that needs to be converted.
                     assert(col_conv != nullptr);
-                    col_conv(src_col, dst_col);
+                    col_conv(src_col, dst_col, src_header.min_intensity,
+                        src_header.max_intensity);
                 }
             }
 

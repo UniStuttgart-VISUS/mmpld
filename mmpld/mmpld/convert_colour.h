@@ -12,11 +12,16 @@
 namespace mmpld {
 namespace detail {
 
+    template<class O, class I> O from_grey(const I grey) {
+
+    }
+
 
     /// <summary>
-    /// Convert <paramref name="colour" /> to grey-scale.
+    /// Convert <paramref name="colour" /> to a floating-point grey-scale value.
     /// </summary>
-    template<class O, class I> O to_grey(const I *colour, const size_t cnt) {
+    template<class O, class I>
+    O to_intensity(const I *colour, const size_t cnt) {
         typedef typename std::conditional<std::is_floating_point<O>::value,
             O, float>::type intermediate_type;
         intermediate_type retval = 0;
@@ -28,7 +33,10 @@ namespace detail {
                 break;
 
             case 1:
-                // Source is already grey.
+                // Source is already grey, just cast to intermediate type. We
+                // do not scale the range (from [min_intensity, max_intensity]
+                // to [0, 1]) here, because we are converting between floats
+                // and the target header has already copied the correct range.
                 retval = static_cast<intermediate_type>(*colour);
                 break;
 
@@ -64,14 +72,15 @@ namespace detail {
     /// </summary>
     template<class O, class I>
     typename std::enable_if<!std::is_void<O>::value>::type convert_colour(
-            const I *input, const size_t cnt_in, void *output,
-            const size_t cnt_out) {
+            const I *input, const size_t cnt_in,
+            void *output, const size_t cnt_out,
+            const float min_intensity, const float max_intensity) {
         if (cnt_out == 0) {
             // Nothing to do.
 
         } else if (cnt_out == 1) {
             // Convert output to grey-scale.
-            *static_cast<O *>(output) = to_grey<O>(input, cnt_in);
+            *static_cast<O *>(output) = to_intensity<O>(input, cnt_in);
 
         } else {
             // Create or convert colour.
@@ -129,8 +138,9 @@ namespace detail {
     /// </summary>
     template<class O, class I>
     typename std::enable_if<std::is_void<O>::value>::type convert_colour(
-        const I *input, const size_t cnt_in, void *output,
-        const size_t cnt_out) { }
+        const I *input, const size_t cnt_in,
+        void *output, const size_t cnt_out,
+        const float min_intensity, const float max_intensity) { }
 
     /// <summary>
     /// Specialised conversion for colours, which redirects the conversion to
@@ -141,10 +151,13 @@ namespace detail {
         typedef colour_traits<O> output_traits;
         typedef colour_traits<I> input_traits;
 
-        static inline void convert(const void *src, void *dst) {
+        static inline void convert(const void *src, void *dst,
+                const float min_intensity, const float max_intensity) {
             auto s = static_cast<const typename input_traits::value_type *>(src);
             convert_colour<typename output_traits::value_type>(
-                s, input_traits::channels, dst, output_traits::channels);
+                s, input_traits::channels,
+                dst, output_traits::channels,
+                min_intensity, max_intensity);
         }
     };
 
@@ -153,7 +166,8 @@ namespace detail {
     /// </summary>
     template<> struct runtime_converter<colour_type, colour_type::none,
             colour_type::none> {
-        static inline void convert(const void *src, void *dst) { }
+        static inline void convert(const void *, void *,
+            const float, const float) { }
     };
 
     /// <summary>
@@ -164,12 +178,13 @@ namespace detail {
     struct runtime_converter<colour_type, O, colour_type::none> {
         typedef colour_traits<O> output_traits;
 
-        static inline void convert(const void *src, void *dst) {
+        static inline void convert(const void *src, void *dst,
+                const float, const float) {
             static constexpr std::array<std::uint8_t, 4> GREY {
                 128, 128, 128, 255
             };
             convert_colour<typename output_traits::value_type>(GREY.data(),
-                GREY.size(), dst, output_traits::channels);
+                GREY.size(), dst, output_traits::channels, 0.0f, 0.0f);
         }
     };
 

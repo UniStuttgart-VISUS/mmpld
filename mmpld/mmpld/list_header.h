@@ -255,6 +255,23 @@ namespace mmpld {
     }
 
     /// <summary>
+    /// Answer whether the given intensity range is valid.
+    /// </summary>
+    /// <remarks>
+    /// The intensity range is considered invalid if the maximum is less than
+    /// the minimum. This should only be the case for files that do not use
+    /// intensity values.
+    /// </remarks>
+    /// <param name="minimum">The minimal intensity.</param>
+    /// <param name="maximum">The maximum intensity.</param>
+    /// <returns><c>true</c> if the intensity range is valid, <c>false</c>
+    /// otherwise.</returns>
+    inline constexpr bool valid_intensity_range(const float minimum,
+            const float maximum) {
+        return (minimum <= maximum);
+    }
+
+    /// <summary>
     /// Answer whether the intensity range in the given list header is valid.
     /// </summary>
     /// <remarks>
@@ -265,8 +282,9 @@ namespace mmpld {
     /// <param name="header">The list header to check.</param>
     /// <returns><c>true</c> if the intensity range is valid, <c>false</c>
     /// otherwise.</returns>
-    inline bool valid_intensity_range(const list_header &header) {
-        return (header.max_intensity >= header.min_intensity);
+    inline constexpr bool valid_intensity_range(const list_header& header) {
+        return valid_intensity_range(header.min_intensity,
+            header.max_intensity);
     }
 
     /// <summary>

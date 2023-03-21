@@ -54,13 +54,24 @@ template<> struct std::hash<std::pair<mmpld::colour_type, mmpld::colour_type>> {
 namespace mmpld {
 namespace detail {
 
-    typedef void (*conversion_function)(const void *, void *);
+    /// <summary>
+    /// Signature of a colour conversion function receiveing the pointer to and
+    /// input and an output along with the range of an input intensity, if any.
+    /// </summary>
+    typedef void (*colour_conversion_function)(const void *, void *,
+        const float, const float);
 
     /// <summary>
     /// Identifies a colour conversion from type <c>second</c> to
     /// <c>first</c>.
     /// </summary>
     typedef std::pair<colour_type, colour_type> colour_pair;
+
+    /// <summary>
+    /// Signature of a vertex conversion function receiving the pointer to an
+    /// input and an output.
+    /// </summary>
+    typedef void (*vertex_conversion_function)(const void *, void *);
 
     /// <summary>
     /// Identifies a position conversion from type <c>second</c> to
@@ -191,10 +202,10 @@ namespace detail {
     /// two <see cref="colour_type" />s.
     /// </summary>
     /// <returns></returns>
-    inline const std::unordered_map<colour_pair, conversion_function>&
+    inline const std::unordered_map<colour_pair, colour_conversion_function>&
     make_colour_conversion_table() {
         // Note: compile-time table cannot be typedef'd!
-        typedef std::unordered_map<colour_pair, conversion_function>
+        typedef std::unordered_map<colour_pair, colour_conversion_function>
             runtime_table_type;
         static const auto retval = make_conversion_table1<runtime_table_type>(
             make_conversion_table3<colour_type, colour_traits>(
@@ -207,10 +218,10 @@ namespace detail {
     /// two <see cref="vertex_type" />s.
     /// </summary>
     /// <returns></returns>
-    inline const std::unordered_map<vertex_pair, conversion_function>&
+    inline const std::unordered_map<vertex_pair, vertex_conversion_function>&
     make_vertex_conversion_table() {
         // Note: compile-time table cannot be typedef'd!
-        typedef std::unordered_map<vertex_pair, conversion_function>
+        typedef std::unordered_map<vertex_pair, vertex_conversion_function>
             runtime_table_type;
         static const auto retval = make_conversion_table1<runtime_table_type>(
             make_conversion_table3<vertex_type, vertex_traits>(
@@ -224,8 +235,8 @@ namespace detail {
     /// <param name="dst"></param>
     /// <param name="src"></param>
     /// <returns></returns>
-    inline conversion_function get_colour_converter(const colour_type dst,
-            const colour_type src) {
+    inline colour_conversion_function get_colour_converter(
+            const colour_type dst, const colour_type src) {
         static const auto& TABLE = detail::make_colour_conversion_table();
         auto it = TABLE.find(std::make_pair(dst, src));
         if (it != TABLE.end()) {
@@ -243,8 +254,8 @@ namespace detail {
     /// <param name="dst"></param>
     /// <param name="src"></param>
     /// <returns></returns>
-    inline conversion_function get_vertex_converter(const vertex_type dst,
-            const vertex_type src) {
+    inline vertex_conversion_function get_vertex_converter(
+            const vertex_type dst, const vertex_type src) {
         static const auto& TABLE = detail::make_vertex_conversion_table();
         auto it = TABLE.find(std::make_pair(dst, src));
         if (it != TABLE.end()) {
