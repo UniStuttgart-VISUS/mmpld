@@ -6,16 +6,37 @@
 #pragma once
 
 #include "mmpld/colour_properties.h"
+#include "mmpld/list_header.h"
 #include "mmpld/runtime_converter.h"
 
 
 namespace mmpld {
 namespace detail {
 
-    template<class O, class I> O from_grey(const I grey) {
-
+    /// <summary>
+    /// Normalise the given intensity to the range of [0, 1].
+    /// </summary>
+    template<class T> inline T normalise_intensity(const T intensity,
+            const float min_intensity, const float max_intensity) {
+        const auto mi = static_cast<T>(min_intensity);
+        const auto ma = static_cast<T>(max_intensity);
+        return intensity / (ma - mi) + mi;
     }
 
+    /// <summary>
+    /// Normalise the given intensity to the range of [0, 1] if the total number
+    /// of channels is one and the type is a floating-point number.
+    /// </summary>
+    template<class T> inline T normalise_intensity(const T intensity,
+            const std::size_t cnt_channels, const float min_intensity,
+            const float max_intensity) {
+        if (std::is_floating_point<T>::value && (cnt_channels == 1)
+                && valid_intensity_range(min_intensity, max_intensity)) {
+            return normalise_intensity(intensity, min_intensity, max_intensity);
+        } else {
+            return intensity;
+        }
+    }
 
     /// <summary>
     /// Convert <paramref name="colour" /> to a floating-point grey-scale value.
@@ -99,6 +120,8 @@ namespace detail {
                     auto g = (cnt_in == 1) ? input[0] : b;
                     auto f = (i == 3) ? w : g;
                     auto c = (i < cnt_in) ? input[i] : f;
+                    c = normalise_intensity(c, cnt_in, min_intensity,
+                        max_intensity);
                     c *= static_cast<I>((std::numeric_limits<O>::max)());
                     static_cast<O *>(output)[i] = static_cast<O>(c);
 
@@ -112,6 +135,9 @@ namespace detail {
                     auto g = (cnt_in == 1) ? static_cast<O>(input[0]) : b;
                     auto f = (i == 3) ? w : g;
                     auto c = (i < cnt_in) ? static_cast<O>(input[i]) : f;
+                    // No intensity scaling here, because intensities are all
+                    // float and therefore this code path cannot be reached for
+                    // this kind of data.
                     c /= w;
                     static_cast<O *>(output)[i] = c;
 
@@ -127,6 +153,8 @@ namespace detail {
                     auto g = (cnt_in == 1) ? static_cast<O>(input[0]) : b;
                     auto f = (i == 3) ? w : g;
                     auto c = (i < cnt_in) ? static_cast<O>(input[i]) : f;
+                    c = normalise_intensity(c, cnt_in, min_intensity,
+                        max_intensity);
                     static_cast<O *>(output)[i] = c;
                 }
             } /* end for (size_t i = 0; i < cnt_out; ++i) */

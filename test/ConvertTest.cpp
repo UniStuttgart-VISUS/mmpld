@@ -601,9 +601,9 @@ namespace test {
                 Assert::AreEqual(std::int16_t(0), pos[0], L"First position x", LINE_INFO());
                 Assert::AreEqual(std::int16_t(0), pos[1], L"First position y", LINE_INFO());
                 Assert::AreEqual(std::int16_t(0), pos[2], L"First position z", LINE_INFO());
-                Assert::AreEqual(255.0f, col[0], L"First intensity r", LINE_INFO());
-                Assert::AreEqual(255.0f, col[1], L"First intensity g", LINE_INFO());
-                Assert::AreEqual(255.0f, col[2], L"First intensity b", LINE_INFO());
+                Assert::AreEqual(255.0f / 255.0f, col[0], L"First intensity r", LINE_INFO());
+                Assert::AreEqual(255.0f / 255.0f, col[1], L"First intensity g", LINE_INFO());
+                Assert::AreEqual(255.0f / 255.0f, col[2], L"First intensity b", LINE_INFO());
             }
 
             {
@@ -612,9 +612,9 @@ namespace test {
                 Assert::AreEqual(std::int16_t(1), pos[0], L"Second position x", LINE_INFO());
                 Assert::AreEqual(std::int16_t(0), pos[1], L"Second position y", LINE_INFO());
                 Assert::AreEqual(std::int16_t(0), pos[2], L"Second position z", LINE_INFO());
-                Assert::AreEqual(64.0f, col[0], L"Second intensity r", LINE_INFO());
-                Assert::AreEqual(64.0f, col[1], L"Second intensity g", LINE_INFO());
-                Assert::AreEqual(64.0f, col[2], L"Second intensity b", LINE_INFO());
+                Assert::AreEqual(64.0f / 255.0f, col[0], L"Second intensity r", LINE_INFO());
+                Assert::AreEqual(64.0f / 255.0f, col[1], L"Second intensity g", LINE_INFO());
+                Assert::AreEqual(64.0f / 255.0f, col[2], L"Second intensity b", LINE_INFO());
             }
 
             {
@@ -623,9 +623,9 @@ namespace test {
                 Assert::AreEqual(std::int16_t(0), pos[0], L"Third position x", LINE_INFO());
                 Assert::AreEqual(std::int16_t(1), pos[1], L"Third position y", LINE_INFO());
                 Assert::AreEqual(std::int16_t(0), pos[2], L"Third position z", LINE_INFO());
-                Assert::AreEqual(128.0f, col[0], L"Third intensity r", LINE_INFO());
-                Assert::AreEqual(128.0f, col[1], L"Third intensity g", LINE_INFO());
-                Assert::AreEqual(128.0f, col[2], L"Third intensity b", LINE_INFO());
+                Assert::AreEqual(128.0f / 255.0f, col[0], L"Third intensity r", LINE_INFO());
+                Assert::AreEqual(128.0f / 255.0f, col[1], L"Third intensity g", LINE_INFO());
+                Assert::AreEqual(128.0f / 255.0f, col[2], L"Third intensity b", LINE_INFO());
             }
 
             {
@@ -634,9 +634,9 @@ namespace test {
                 Assert::AreEqual(std::int16_t(0), pos[0], L"Fourth position x", LINE_INFO());
                 Assert::AreEqual(std::int16_t(0), pos[1], L"Fourth position y", LINE_INFO());
                 Assert::AreEqual(std::int16_t(1), pos[2], L"Fourth position z", LINE_INFO());
-                Assert::AreEqual(192.0f, col[0], L"Fourth intensity r", LINE_INFO());
-                Assert::AreEqual(192.0f, col[1], L"Fourth intensity g", LINE_INFO());
-                Assert::AreEqual(192.0f, col[2], L"Fourth intensity b", LINE_INFO());
+                Assert::AreEqual(192.0f / 255.0f, col[0], L"Fourth intensity r", LINE_INFO());
+                Assert::AreEqual(192.0f / 255.0f, col[1], L"Fourth intensity g", LINE_INFO());
+                Assert::AreEqual(192.0f / 255.0f, col[2], L"Fourth intensity b", LINE_INFO());
             }
         }
 
@@ -1387,33 +1387,33 @@ namespace test {
                 Assert::AreEqual(0.0f, view.position()[0], 0.0001f, L"p0.x", LINE_INFO());
                 Assert::AreEqual(0.0f, view.position()[1], 0.0001f, L"p0.y", LINE_INFO());
                 Assert::AreEqual(0.0f, view.position()[2], 0.0001f, L"p0.z", LINE_INFO());
-                Assert::AreEqual(255.0f, view.colour()[0], 0.0001f, L"p0.r", LINE_INFO());
-                Assert::AreEqual(255.0f, view.colour()[1], 0.0001f, L"p0.g", LINE_INFO());
-                Assert::AreEqual(255.0f, view.colour()[2], 0.0001f, L"p0.b", LINE_INFO());
+                Assert::AreEqual(255.0f / 255.0f, view.colour()[0], 0.0001f, L"p0.r", LINE_INFO());
+                Assert::AreEqual(255.0f / 255.0f, view.colour()[1], 0.0001f, L"p0.g", LINE_INFO());
+                Assert::AreEqual(255.0f / 255.0f, view.colour()[2], 0.0001f, L"p0.b", LINE_INFO());
 
                 view.advance();
                 Assert::AreEqual(1.0f, view.position()[0], 0.0001f, L"p1.x", LINE_INFO());
                 Assert::AreEqual(0.0f, view.position()[1], 0.0001f, L"p1.y", LINE_INFO());
                 Assert::AreEqual(0.0f, view.position()[2], 0.0001f, L"p1.z", LINE_INFO());
-                Assert::AreEqual(64.0f, view.colour()[0], 0.0001f, L"p1.r", LINE_INFO());
-                Assert::AreEqual(64.0f, view.colour()[1], 0.0001f, L"p1.g", LINE_INFO());
-                Assert::AreEqual(64.0f, view.colour()[2], 0.0001f, L"p1.b", LINE_INFO());
+                Assert::AreEqual(64.0f / 255.0f, view.colour()[0], 0.0001f, L"p1.r", LINE_INFO());
+                Assert::AreEqual(64.0f / 255.0f, view.colour()[1], 0.0001f, L"p1.g", LINE_INFO());
+                Assert::AreEqual(64.0f / 255.0f, view.colour()[2], 0.0001f, L"p1.b", LINE_INFO());
 
                 view.advance();
                 Assert::AreEqual(0.0f, view.position()[0], 0.0001f, L"p2.x", LINE_INFO());
                 Assert::AreEqual(1.0f, view.position()[1], 0.0001f, L"p2.y", LINE_INFO());
                 Assert::AreEqual(0.0f, view.position()[2], 0.0001f, L"p2.z", LINE_INFO());
-                Assert::AreEqual(128.0f, view.colour()[0], 0.0001f, L"p2.r", LINE_INFO());
-                Assert::AreEqual(128.0f, view.colour()[1], 0.0001f, L"p2.g", LINE_INFO());
-                Assert::AreEqual(128.0f, view.colour()[2], 0.0001f, L"p2.b", LINE_INFO());
+                Assert::AreEqual(128.0f / 255.0f, view.colour()[0], 0.0001f, L"p2.r", LINE_INFO());
+                Assert::AreEqual(128.0f / 255.0f, view.colour()[1], 0.0001f, L"p2.g", LINE_INFO());
+                Assert::AreEqual(128.0f / 255.0f, view.colour()[2], 0.0001f, L"p2.b", LINE_INFO());
 
                 view.advance();
                 Assert::AreEqual(0.0f, view.position()[0], 0.0001f, L"p3.x", LINE_INFO());
                 Assert::AreEqual(0.0f, view.position()[1], 0.0001f, L"p3.y", LINE_INFO());
                 Assert::AreEqual(1.0f, view.position()[2], 0.0001f, L"p3.z", LINE_INFO());
-                Assert::AreEqual(192.0f, view.colour()[0], 0.0001f, L"p3.r", LINE_INFO());
-                Assert::AreEqual(192.0f, view.colour()[1], 0.0001f, L"p3.g", LINE_INFO());
-                Assert::AreEqual(192.0f, view.colour()[2], 0.0001f, L"p3.b", LINE_INFO());
+                Assert::AreEqual(192.0f / 255.0f, view.colour()[0], 0.0001f, L"p3.r", LINE_INFO());
+                Assert::AreEqual(192.0f / 255.0f, view.colour()[1], 0.0001f, L"p3.g", LINE_INFO());
+                Assert::AreEqual(192.0f / 255.0f, view.colour()[2], 0.0001f, L"p3.b", LINE_INFO());
 
                 view.advance();
                 Assert::AreEqual(2.0f, view.position()[0], 0.0001f, L"p4.x", LINE_INFO());
