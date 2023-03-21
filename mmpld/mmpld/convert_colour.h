@@ -28,10 +28,11 @@ namespace detail {
     /// of channels is one and the type is a floating-point number.
     /// </summary>
     template<class T> inline T normalise_intensity(const T intensity,
-            const std::size_t cnt_channels, const float min_intensity,
-            const float max_intensity) {
+            const std::size_t cur_channel, const std::size_t cnt_channels,
+            const float min_intensity, const float max_intensity) {
         if (std::is_floating_point<T>::value && (cnt_channels == 1)
-                && valid_intensity_range(min_intensity, max_intensity)) {
+                && valid_intensity_range(min_intensity, max_intensity)
+                && (cur_channel < 3)) {
             return normalise_intensity(intensity, min_intensity, max_intensity);
         } else {
             return intensity;
@@ -120,7 +121,7 @@ namespace detail {
                     auto g = (cnt_in == 1) ? input[0] : b;
                     auto f = (i == 3) ? w : g;
                     auto c = (i < cnt_in) ? input[i] : f;
-                    c = normalise_intensity(c, cnt_in, min_intensity,
+                    c = normalise_intensity(c, i, cnt_in, min_intensity,
                         max_intensity);
                     c *= static_cast<I>((std::numeric_limits<O>::max)());
                     static_cast<O *>(output)[i] = static_cast<O>(c);
@@ -153,7 +154,7 @@ namespace detail {
                     auto g = (cnt_in == 1) ? static_cast<O>(input[0]) : b;
                     auto f = (i == 3) ? w : g;
                     auto c = (i < cnt_in) ? static_cast<O>(input[i]) : f;
-                    c = normalise_intensity(c, cnt_in, min_intensity,
+                    c = normalise_intensity(c, i, cnt_in, min_intensity,
                         max_intensity);
                     static_cast<O *>(output)[i] = c;
                 }
