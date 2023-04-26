@@ -317,7 +317,7 @@ namespace detail {
 #endif /* defined(_WIN32) */
 #endif /* !defined(MMPLD_WITHOUT_POSIX_IO) */
 
-#if defined(_WIN32)
+#if (defined(_WIN32) && !defined(MMPLD_WITHOUT_WIN32_IO))
     template<> struct basic_io_traits<HANDLE> {
         typedef HANDLE file_type;
         typedef decltype(LARGE_INTEGER::QuadPart) size_type;
@@ -404,7 +404,7 @@ namespace detail {
             }
         }
     };
-#endif /* defined(_WIN32) */
+#endif /* (defined(_WIN32) && !defined(MMPLD_WITHOUT_WIN32_IO)) */
 
     /// <summary>
     /// Reads an element of <typeparamref name="T" /> from
