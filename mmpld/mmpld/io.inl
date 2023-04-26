@@ -113,7 +113,7 @@ mmpld::detail::basic_io_traits<int>::write(file_type& file, const void *dst,
 #endif /* !defined(MMPLD_WITHOUT_POSIX_IO) */
 
 
-#if defined(_WIN32)
+#if (defined(_WIN32) && !defined(MMPLD_WITHOUT_WIN32_IO))
 /*
  * mmpld::detail::basic_io_traits<HANDLE>::read
  */
@@ -139,10 +139,10 @@ mmpld::detail::basic_io_traits<HANDLE>::read(file_type& file, void *dst,
 
     return (cnt - rem);
 }
-#endif /* defined(_WIN32) */
+#endif /* (defined(_WIN32) && !defined(MMPLD_WITHOUT_WIN32_IO)) */
 
 
-#if defined(_WIN32)
+#if (defined(_WIN32) && !defined(MMPLD_WITHOUT_WIN32_IO))
 /*
  * mmpld::detail::basic_io_traits<HANDLE>::write
  */
@@ -164,4 +164,4 @@ mmpld::detail::basic_io_traits<HANDLE>::write(file_type& file, const void *dst,
 
     return (cnt - rem);
 }
-#endif /* defined(_WIN32) */
+#endif /* (defined(_WIN32) && !defined(MMPLD_WITHOUT_WIN32_IO)) */
