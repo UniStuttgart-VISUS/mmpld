@@ -1,7 +1,7 @@
 # mmpld
 
 [![Build Status](https://visualisierungsinstitut.visualstudio.com/mmpld/_apis/build/status/UniStuttgart-VISUS.mmpld?branchName=master)](https://visualisierungsinstitut.visualstudio.com/mmpld/_build/latest?definitionId=1&branchName=master)
-[![MMPLD Version](https://buildstats.info/nuget/mmpld)](https://www.nuget.org/packages/mmpld)
+[![MMPLD Version](https://img.shields.io/nuget/v/mmpld.svg)](https://www.nuget.org/packages/mmpld)
 
 This is a C++ header-only library for loading MegaMol's MMPLD particle files.
 
