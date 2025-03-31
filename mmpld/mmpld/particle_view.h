@@ -1,5 +1,6 @@
-// <copyright file="particle_view.h" company="Visualisierungsinstitut der Universität Stuttgart">
-// Copyright © 2018 - 2022 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+﻿// <copyright file="particle_view.h" company="Visualisierungsinstitut der Universität Stuttgart">
+// Copyright © 2018 - 2025 Visualisierungsinstitut der Universität Stuttgart.
+// Licensed under the MIT licence. See LICENCE file for details.
 // </copyright>
 // <author>Christoph Müller</author>
 

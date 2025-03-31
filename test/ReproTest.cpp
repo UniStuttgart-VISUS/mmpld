@@ -215,5 +215,41 @@ namespace test {
                 Assert::AreEqual(1.0f, pos[2], L"p3.z", LINE_INFO());
             }
         }
+
+        /// <summary>
+        /// Tests for a bug reported by Michael that the reader would crash if
+        /// a frame does neither have positions nor colours.
+        /// </summary>
+        TEST_METHOD(TestBecher001Crash) {
+            mmpld::file_header fileHeader { 0 };
+            mmpld::list_header listHeader { 0 };
+            mmpld::seek_table seekTable;
+
+            {
+                mmpld::set_magic_identifier(fileHeader);
+                mmpld::set_version(fileHeader, 1, 0);
+                fileHeader.frames = 1;
+
+                seekTable.push_back(sizeof(fileHeader) + sizeof(mmpld::seek_table::value_type));
+
+                std::ofstream output("testbecher001crash.mmpld", std::ios::trunc);
+                mmpld::write_file_header(fileHeader, seekTable, output);
+
+                listHeader.colour_type = mmpld::colour_type::none;
+                listHeader.vertex_type = mmpld::vertex_type::none;
+                listHeader.particles = 42;
+                Assert::AreEqual(0, mmpld::get_stride<int>(listHeader), L"Stride", LINE_INFO());
+                mmpld::write_list_header(listHeader, fileHeader.version, output);
+            }
+
+            {
+                mmpld::file<HANDLE, char> input("testbecher001crash.mmpld");
+                Assert::AreEqual(std::uint32_t(1), input.file_header().frames, L"One frame", LINE_INFO());
+                input.open_frame(0);
+                Assert::AreEqual(std::uint32_t(0), input.frame(), L"First frame open", LINE_INFO());
+                auto parts = input.read_particles(listHeader, nullptr);
+                Assert::IsTrue(parts.empty(), L"Particle lsit empty", LINE_INFO());
+            }
+        }
     };
 }

@@ -1,7 +1,7 @@
-// <copyright file="convertmmpld.cpp" company="Visualisierungsinstitut der Universität Stuttgart">
-// Copyright © 2022 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+ï»¿// <copyright file="convertmmpld.cpp" company="Visualisierungsinstitut der UniversitÃ¤t Stuttgart">
+// Copyright Â© 2022 - 2023 Visualisierungsinstitut der UniversitÃ¤t Stuttgart. Alle Rechte vorbehalten.
 // </copyright>
-// <author>Christoph Müller</author>
+// <author>Christoph MÃ¼ller</author>
 
 #include "stdafx.h"
 
@@ -69,7 +69,7 @@ int main(const int argc, const char **argv) {
             std::cout << "convertmmpld " << MMPLD_API_MAJOR_VERSION << "."
                 << MMPLD_API_MINOR_VERSION << std::endl;
             std::cout << "Copyright (C) 2022 Visualisierungsinstitut der "
-                "Universität Stuttgart." << std::endl;
+                "UniversitÃ¤t Stuttgart." << std::endl;
             std::cout << "Alle Rechte vorbehalten." << std::endl;
             std::cout << std::endl;
         }
@@ -79,6 +79,7 @@ int main(const int argc, const char **argv) {
         std::size_t batchSize = 0;          // # of particles to read at once.
         std::vector<char> buffer;           // Buffer for conversion.
         mmpld::colour_type colourType;      // Output colour type.
+        int frame = -1;                     // Limit to single frame.
         mmpld::file_header fileHeader;      // MMPLD file header.
         std::ifstream input;                // Input stream.
         std::string inputPath, outputPath;  // Path to the streams.
@@ -137,6 +138,14 @@ int main(const int argc, const char **argv) {
                 "--batch-size");
             if (it != CMD_LINE.end()) {
                 batchSize = ::atoi(it->c_str());
+            }
+        }
+
+        {
+            auto it = ::FindArgument(CMD_LINE.begin(), CMD_LINE.end(),
+                "--frame");
+            if (it != CMD_LINE.end()) {
+                frame = ::atoi(it->c_str());
             }
         }
 

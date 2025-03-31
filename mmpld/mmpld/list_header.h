@@ -1,6 +1,7 @@
 ﻿// <copyright file="list_header.h" company="Visualisierungsinstitut der Universität Stuttgart">
-// Copyright © 2018 - 2023 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
-// Copyright © 2017 SFB-TRR 161. Alle Rechte vorbehalten.
+// Copyright © 2018 - 2025 Visualisierungsinstitut der Universität Stuttgart.
+// Copyright © 2017 SFB-TRR 161.
+// Licensed under the MIT licence. See LICENCE file for details.
 // </copyright>
 // <author>Christoph Müller</author>
 

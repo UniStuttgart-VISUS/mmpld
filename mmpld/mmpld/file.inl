@@ -1,5 +1,6 @@
-// <copyright file="file.inl" company="Visualisierungsinstitut der Universität Stuttgart">
-// Copyright © 2018 - 2023 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
+﻿// <copyright file="file.inl" company="Visualisierungsinstitut der Universität Stuttgart">
+// Copyright © 2018 - 2025 Visualisierungsinstitut der Universität Stuttgart.
+// Licensed under the MIT licence. See LICENCE file for details.
 // </copyright>
 // <author>Christoph Müller</author>
 
@@ -92,8 +93,13 @@ template<class F, class C>
 typename mmpld::file<F, C>::size_type mmpld::file<F, C>::read_particles(
         const list_header& header, void *dst, const size_type cnt) {
     auto stride = mmpld::get_stride<size_type>(header);
-    auto retval = static_cast<size_type>(cnt / stride);
+    if (stride < 1) {
+        // If the stride is zero, there is neither a position nor a colour in
+        // the list, so there cannot be a particle either.
+        return 0;
+    }
 
+    auto retval = static_cast<size_type>(cnt / stride);
     if (retval > header.particles) {
         retval = static_cast<size_type>(header.particles);
     }

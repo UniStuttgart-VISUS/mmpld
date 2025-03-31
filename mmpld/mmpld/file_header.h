@@ -1,8 +1,9 @@
-// <copyright file="file_header.h" company="Visualisierungsinstitut der Universität Stuttgart">
-// Copyright © 2018 Visualisierungsinstitut der Universität Stuttgart. Alle Rechte vorbehalten.
-// Copyright © 2017 SFB-TRR 161. Alle Rechte vorbehalten.
+ï»¿// <copyright file="file_header.h" company="Visualisierungsinstitut der UniversitÃ¤t Stuttgart">
+// Copyright Â© 2018 - 2025 Visualisierungsinstitut der UniversitÃ¤t Stuttgart.
+// Copyright Â© 2017 SFB-TRR 161.
+// Licensed under the MIT licence. See LICENCE file for details.
 // </copyright>
-// <author>Christoph Müller</author>
+// <author>Christoph MÃ¼ller</author>
 
 #pragma once
 
@@ -101,6 +102,31 @@ namespace mmpld {
         std::div_t v = std::div(version, 100);
         major = v.quot;
         minor = v.rem;
+    }
+
+    /// <summary>
+    /// Makes sure that the MMPLD magic identifier is set in the given file
+    ///  header.
+    /// </summary>
+    /// <param name="header">The header to set the magic identifier in.</param>
+    inline void set_magic_identifier(file_header& header) noexcept {
+#if defined(_MSC_VER)
+        ::strcpy_s(header.magic_identifier, "MMPLD");
+#else /* defined(_MSC_VER) */
+        ::strcpy(header.magic_identifier, "MMPLD");
+#endif /* defined(_MSC_VER) */
+    }
+
+    /// <summary>
+    /// Sets the MMPLD version in the given file header.
+    /// </summary>
+    /// <param name="header">The header to update.</param>
+    /// <param name="major">The major version.</param>
+    /// <param name="minor">The minor version.</param>
+    inline void set_version(file_header& header,
+            const std::uint16_t major,
+            const std::uint16_t minor) noexcept {
+        header.version = make_version(major, minor);
     }
 
     /// <summary>
