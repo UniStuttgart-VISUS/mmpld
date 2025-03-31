@@ -248,8 +248,47 @@ namespace test {
                 input.open_frame(0);
                 Assert::AreEqual(std::uint32_t(0), input.frame(), L"First frame open", LINE_INFO());
                 auto parts = input.read_particles(listHeader, nullptr);
-                Assert::IsTrue(parts.empty(), L"Particle lsit empty", LINE_INFO());
+                Assert::IsTrue(parts.empty(), L"Particle list empty", LINE_INFO());
             }
+        }
+
+        /// <summary>
+        /// Tests for a bug reported by Michael that the converter would crash
+        /// if the source has neither a position nor colour.
+        /// </summary>
+        TEST_METHOD(TestBecher002Crash) {
+            mmpld::file_header fileHeader { 0 };
+            mmpld::list_header listHeader { 0 };
+            mmpld::seek_table seekTable;
+
+            {
+                mmpld::set_magic_identifier(fileHeader);
+                mmpld::set_version(fileHeader, 1, 0);
+                fileHeader.frames = 1;
+
+                seekTable.push_back(sizeof(fileHeader) + sizeof(mmpld::seek_table::value_type));
+
+                std::ofstream output("testbecher002crash.mmpld", std::ios::trunc);
+                mmpld::write_file_header(fileHeader, seekTable, output);
+
+                listHeader.colour_type = mmpld::colour_type::none;
+                listHeader.vertex_type = mmpld::vertex_type::none;
+                listHeader.particles = 42;
+                Assert::AreEqual(0, mmpld::get_stride<int>(listHeader), L"Stride", LINE_INFO());
+                mmpld::write_list_header(listHeader, fileHeader.version, output);
+            }
+
+            mmpld::file<HANDLE, char> input("testbecher002crash.mmpld");
+            Assert::AreEqual(std::uint32_t(1), input.file_header().frames, L"One frame", LINE_INFO());
+            input.open_frame(0);
+            Assert::AreEqual(std::uint32_t(0), input.frame(), L"First frame open", LINE_INFO());
+            auto parts = input.read_particles(listHeader, nullptr);
+            Assert::IsTrue(parts.empty(), L"Particle lsit empty", LINE_INFO());
+
+            auto dstListHeader = listHeader;
+            dstListHeader.vertex_type = mmpld::vertex_type::float_xyz;
+            auto cntConv = mmpld::convert(parts.data(), listHeader, static_cast<std::uint8_t *>(nullptr), dstListHeader);
+            Assert::AreEqual(std::uint64_t(0), cntConv, L"Nothing converted", LINE_INFO());
         }
     };
 }

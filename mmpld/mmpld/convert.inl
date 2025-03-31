@@ -90,6 +90,11 @@ decltype(mmpld::list_header::particles) mmpld::convert(
     auto d = reinterpret_cast<std::uint8_t *>(dst);
     auto s = reinterpret_cast<const std::uint8_t *>(src);
 
+    if ((src == nullptr) || (dst == nullptr) || (retval < 1)) {
+        /* If either of the pointers is invalid, we cannot convert anything. */
+        return 0;
+    }
+
     if (is_same_format<T>(header)) {
         /* Source and destination types are the same, copy at once. */
         assert(dst_stride == src_stride);
@@ -163,11 +168,14 @@ template<class I, class O>
 decltype(mmpld::list_header::particles) mmpld::convert(
         const I *src, const list_header& src_header,
         O *dst, list_header& dst_header) {
-    assert(src != nullptr);
-    assert(dst != nullptr);
     const auto dst_stride = get_stride<std::size_t>(dst_header);
     const auto retval = (std::min)(src_header.particles, dst_header.particles);
     const auto src_stride = get_stride<std::size_t>(src_header);
+
+    if ((src == nullptr) || (dst == nullptr) || (retval < 1)) {
+        /* If either of the pointers is invalid, we cannot convert anything. */
+        return 0;
+    }
 
     if (is_same_format(src_header, dst_header)) {
         /* Source and destination types are the same, copy at once. */
