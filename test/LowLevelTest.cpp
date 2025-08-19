@@ -1149,9 +1149,9 @@ namespace test {
                     for (decltype(expectedFrameHeader.back().lists) l = 0; l < expectedFrameHeader.back().lists; ++l) {
                         expectedListHeader.emplace_back();
                         mmpld::read_list_header(inFile, expectedFileHeader.version, expectedListHeader.back());
-                        iio_type::seek(inFile, iio_type::tell(inFile) + mmpld::get_size<iio_type::size_type>(expectedListHeader.back()));
+                        iio_type::seek(inFile, iio_type::tell(inFile) + mmpld::get_size<typename iio_type::size_type>(expectedListHeader.back()));
                         mmpld::write_list_header(expectedListHeader.back(), expectedFileHeader.version, outFile);
-                        oio_type::seek(outFile, oio_type::tell(outFile) + mmpld::get_size<oio_type::size_type>(expectedListHeader.back()));
+                        oio_type::seek(outFile, oio_type::tell(outFile) + mmpld::get_size<typename oio_type::size_type>(expectedListHeader.back()));
                     }
                 }
 
@@ -1174,7 +1174,7 @@ namespace test {
 
                     for (decltype(roundtripFrameHeader.lists) l = 0; l < roundtripFrameHeader.lists; ++l) {
                         mmpld::read_list_header(hFile, roundtripFileHeader.version, roundtripListHeader);
-                        iio_type::seek(hFile, iio_type::tell(hFile) + mmpld::get_size<iio_type::size_type>(expectedListHeader[el]));
+                        iio_type::seek(hFile, iio_type::tell(hFile) + mmpld::get_size<typename iio_type::size_type>(expectedListHeader[el]));
                         Assert::AreEqual(0, ::memcmp(&expectedListHeader[el], &roundtripListHeader, sizeof(roundtripListHeader)), L"List headers are identical", LINE_INFO());
                         ++el;
                     }
@@ -1241,20 +1241,20 @@ namespace test {
 
             mmpld::read_list_header(hFile, fileHeader.version, listHeader);
             Assert::AreEqual(std::uint64_t(4), listHeader.particles, L"First list holds four particles.", LINE_INFO());
-            io_type::seek(hFile, io_type::tell(hFile) + mmpld::get_size<io_type::size_type>(listHeader));
+            io_type::seek(hFile, io_type::tell(hFile) + mmpld::get_size<typename io_type::size_type>(listHeader));
             retval = listHeader;
 
             mmpld::read_list_header(hFile, fileHeader.version, listHeader);
             Assert::AreEqual(std::uint64_t(5), listHeader.particles, L"Second list holds five particles.", LINE_INFO());
-            io_type::seek(hFile, io_type::tell(hFile) + mmpld::get_size<io_type::size_type>(listHeader));
+            io_type::seek(hFile, io_type::tell(hFile) + mmpld::get_size<typename io_type::size_type>(listHeader));
 
             mmpld::read_list_header(hFile, fileHeader.version, listHeader);
             Assert::AreEqual(std::uint64_t(5), listHeader.particles, L"Third list holds five particles.", LINE_INFO());
-            io_type::seek(hFile, io_type::tell(hFile) + mmpld::get_size<io_type::size_type>(listHeader));
+            io_type::seek(hFile, io_type::tell(hFile) + mmpld::get_size<typename io_type::size_type>(listHeader));
 
             mmpld::read_list_header(hFile, fileHeader.version, listHeader);
             Assert::AreEqual(std::uint64_t(5), listHeader.particles, L"Fourth list holds five particles.", LINE_INFO());
-            io_type::seek(hFile, io_type::tell(hFile) + mmpld::get_size<io_type::size_type>(listHeader));
+            io_type::seek(hFile, io_type::tell(hFile) + mmpld::get_size<typename io_type::size_type>(listHeader));
 
             io_type::close(hFile);
 
