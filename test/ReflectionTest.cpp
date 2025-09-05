@@ -221,7 +221,6 @@ public:
                 header.colour_type = mmpld::colour_type::intensity32;
 
                 int offPos, offRad, offCol;
-                auto invalid = mmpld::get_offsets(header, offPos, offRad, offCol);
 
                 Assert::AreEqual(offPos, 0, L"Position is at 0.", LINE_INFO());
                 Assert::AreEqual(offRad, 12, L"Radius is at 12.", LINE_INFO());
@@ -243,7 +242,6 @@ public:
                 header.colour_type = mmpld::colour_type::rgb8;
 
                 int offPos, offRad, offCol;
-                auto invalid = mmpld::get_offsets(header, offPos, offRad, offCol);
 
                 Assert::AreEqual(offPos, 0, L"Position is at 0.", LINE_INFO());
                 Assert::AreEqual(offRad, 12, L"Radius is at 12.", LINE_INFO());
@@ -264,7 +262,6 @@ public:
                 header.colour_type = mmpld::colour_type::intensity64;
 
                 int offPos, offRad, offCol;
-                auto invalid = mmpld::get_offsets(header, offPos, offRad, offCol);
 
                 Assert::AreEqual(offPos, 0, L"Position is at 0.", LINE_INFO());
                 Assert::AreEqual(offRad, 12, L"Radius is at 12.", LINE_INFO());

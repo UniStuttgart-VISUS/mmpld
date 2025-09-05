@@ -1,9 +1,11 @@
 ﻿// <copyright file="literal.h" company="Visualisierungsinstitut der Universität Stuttgart">
-// Copyright © 2017 - 2014 Visualisierungsinstitut der Universität Stuttgart.
+// Copyright © 2017 - 2025 Visualisierungsinstitut der Universität Stuttgart.
 // Licensed under the MIT licence. See LICENCE file for details.
 // </copyright>
 // <author>Christoph Müller</author>
 
+#if !defined(_MMPLD_LITERAL_H)
+#define _MMPLD_LITERAL_H
 #pragma once
 
 
@@ -16,20 +18,20 @@ namespace detail {
 
     template<> struct literal_selector<char> {
         typedef char char_type;
-        static const char_type select(const char n, const wchar_t w) {
+        static const char_type select(const char n, const wchar_t) {
             return n;
         }
-        static const char_type *select(const char *n, const wchar_t *w) {
+        static const char_type *select(const char *n, const wchar_t *) {
             return n;
         }
     };
 
     template<> struct literal_selector<wchar_t> {
         typedef wchar_t char_type;
-        static const char_type select(const char n, const wchar_t w) {
+        static const char_type select(const char, const wchar_t w) {
             return w;
         }
-        static const char_type *select(const char *n, const wchar_t *w) {
+        static const char_type *select(const char *, const wchar_t *w) {
             return w;
         }
     };
@@ -38,3 +40,5 @@ namespace detail {
 } /* end namespace mmpld */
 
 #define MMPLD_TPL_LITERAL(T, l) mmpld::detail::literal_selector<T>::select(l, L##l)
+
+#endif /* !defined(_MMPLD_LITERAL_H) */

@@ -14,6 +14,7 @@
 /// Entry point of the DLL.
 /// </summary>
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID reserved) {
+    UNREFERENCED_PARAMETER(reserved);
 
     switch (reason) {
         case DLL_PROCESS_ATTACH:

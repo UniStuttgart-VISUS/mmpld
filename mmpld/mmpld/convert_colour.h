@@ -4,6 +4,8 @@
 // </copyright>
 // <author>Christoph Müller</author>
 
+#if !defined(_MMPLD_CONVERT_COLOUR_H)
+#define _MMPLD_CONVERT_COLOUR_H
 #pragma once
 
 #include "mmpld/colour_properties.h"
@@ -107,11 +109,13 @@ namespace detail {
 
         } else {
             // Create or convert colour.
-            constexpr const auto float_in = std::is_floating_point<I>::value;
-            constexpr const auto float_out = std::is_floating_point<O>::value;
+            constexpr auto float_in = std::is_floating_point<I>::value;
+            constexpr auto float_out = std::is_floating_point<O>::value;
+            constexpr auto float_to_int = float_in && !float_out;
+            constexpr auto int_to_float = !float_in && float_out;
 
             for (size_t i = 0; i < cnt_out; ++i) {
-                if (float_in && !float_out) {
+                if (float_to_int) {
                     // Input is floating point, but output is not: Scale values
                     // to maximum of output type.
                     auto w = static_cast<I>(1);
@@ -127,7 +131,7 @@ namespace detail {
                     c *= static_cast<I>((std::numeric_limits<O>::max)());
                     static_cast<O *>(output)[i] = static_cast<O>(c);
 
-                } else if (!float_in && float_out) {
+                } else if (int_to_float) {
                     // Input is no floating point, but output is: Scale values
                     // to maximum of input type.
                     auto w = static_cast<O>((std::numeric_limits<I>::max)());
@@ -168,9 +172,9 @@ namespace detail {
     /// </summary>
     template<class O, class I>
     typename std::enable_if<std::is_void<O>::value>::type convert_colour(
-        const I *input, const size_t cnt_in,
-        void *output, const size_t cnt_out,
-        const float min_intensity, const float max_intensity) { }
+        const I *, const size_t,
+        void *, const size_t,
+        const float, const float) { }
 
     /// <summary>
     /// Specialised conversion for colours, which redirects the conversion to
@@ -208,8 +212,8 @@ namespace detail {
     struct runtime_converter<colour_type, O, colour_type::none> {
         typedef colour_traits<O> output_traits;
 
-        static inline void convert(const void *src, void *dst,
-                const float, const float) {
+        static inline void convert(const void *, void *dst, const float,
+                const float) {
             static constexpr std::array<std::uint8_t, 4> GREY {
                 128, 128, 128, 255
             };
@@ -220,3 +224,5 @@ namespace detail {
 
 } /* end namespace detail */
 } /* end namespace mmpld */
+
+#endif /* !defined(_MMPLD_CONVERT_COLOUR_H) */

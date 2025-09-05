@@ -82,7 +82,6 @@ decltype(mmpld::list_header::particles) mmpld::convert(
     typedef typename dst_view::vertex_value_type dst_vertex_scalar;
 
     const auto retval = (std::min)(header.particles, cnt);
-    const auto dst_channels = dst_view::colour_traits::channels;
     const auto dst_colour = dst_view::colour_traits::value;
     const auto dst_stride = dst_view::stride();
     const auto dst_vertex = dst_view::vertex_traits::value;

@@ -4,6 +4,8 @@
 // </copyright>
 // <author>Christoph Müller</author>
 
+#if !defined(_MMPLD_IO_H)
+#define _MMPLD_IO_H
 #pragma once
 
 #include <cassert>
@@ -234,8 +236,7 @@ namespace detail {
         }
 
         // Note: must be inline to prevent code generation in library.
-        static inline size_type read(file_type& file, void *dst,
-            const size_type cnt);
+        static inline size_type read(file_type& file, void *dst, size_type cnt);
 
         static inline void seek(file_type& file, const size_type offset) {
 #if defined(_WIN32)
@@ -282,7 +283,6 @@ namespace detail {
             if (::_sopen_s(&file, path, _O_BINARY | _O_CREAT | _O_RDWR,
                     _SH_DENYWR, _S_IREAD | _S_IWRITE) != 0) {
                 file = -1;
-                auto e = errno;
                 throw std::system_error(errno, std::system_category());
             }
 #else /* defined(_WIN32) */
@@ -446,3 +446,5 @@ namespace detail {
 } /* end namespace mmpld */
 
 #include "mmpld/io.inl"
+
+#endif /* !defined(_MMPLD_IO_H) */

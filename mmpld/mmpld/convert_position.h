@@ -4,6 +4,8 @@
 // </copyright>
 // <author>Christoph Müller</author>
 
+#if !defined(_MMPLD_CONVERT_POSITION_H)
+#define _MMPLD_CONVERT_POSITION_H
 #pragma once
 
 #include "mmpld/runtime_converter.h"
@@ -38,7 +40,7 @@ namespace detail {
     /// </summary>
     template<class O>
     typename std::enable_if<!std::is_void<O>::value>::type
-    convert_radius(const void *input, const float global_radius, O *output) {
+    convert_radius(const void *, const float global_radius, O *output) {
         if (output != nullptr) {
             // As we have no input, we must use the global radius.
             *output = static_cast<O>(global_radius);
@@ -49,8 +51,7 @@ namespace detail {
     /// Do nothing if no radius is requested in output.
     /// </summary>
     template<class I>
-    inline void convert_radius(const I *input, const float global_radius,
-            void *output) {
+    inline void convert_radius(const I *, const float, void *) {
         // As we have no output, there is nothing to do.
     }
 
@@ -77,7 +78,7 @@ namespace detail {
     /// </summary>
     template<> struct runtime_converter<vertex_type, vertex_type::none,
             vertex_type::none> {
-        static inline void convert(const void *src, void *dst) { }
+        static inline void convert(const void *, void *) { }
     };
 
     /// <summary>
@@ -85,7 +86,7 @@ namespace detail {
     /// </summary>
     template<vertex_type I>
     struct runtime_converter<vertex_type, vertex_type::none, I> {
-        static inline void convert(const void *src, void *dst) { }
+        static inline void convert(const void *, void *) { }
     };
 
     /// <summary>
@@ -95,7 +96,7 @@ namespace detail {
     struct runtime_converter<vertex_type, O, vertex_type::none> {
         typedef vertex_traits<O> output_traits;
 
-        static inline void convert(const void *src, void *dst) {
+        static inline void convert(const void *, void *dst) {
             auto d = static_cast<typename output_traits::value_type *>(dst);
             d[0] = static_cast<typename output_traits::value_type>(0);
             d[1] = static_cast<typename output_traits::value_type>(0);
@@ -105,3 +106,5 @@ namespace detail {
 
 } /* end namespace detail */
 } /* end namespace mmpld */
+
+#endif // !defined(_MMPLD_CONVERT_POSITION_H)

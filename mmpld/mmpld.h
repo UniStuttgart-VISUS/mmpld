@@ -5,10 +5,12 @@
 // </copyright>
 // <author>Christoph Müller</author>
 
+#if !defined(_MMPLD_H)
+#define _MMPLD_H
 #pragma once
 
 #define MMPLD_API_MAJOR_VERSION (1)
-#define MMPLD_API_MINOR_VERSION (12)
+#define MMPLD_API_MINOR_VERSION (17)
 
 #include "mmpld/cluster_info.h"
 #include "mmpld/colour_properties.h"
@@ -21,3 +23,5 @@
 #include "mmpld/particle_traits.h"
 #include "mmpld/particle_view.h"
 #include "mmpld/vertex_properties.h"
+
+#endif /* _MMPLD_H */
