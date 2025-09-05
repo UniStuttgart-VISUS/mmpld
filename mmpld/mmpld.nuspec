@@ -13,7 +13,7 @@
     <description>This library allows for processing and converting binary particle files used by the MegaMol framework.</description>
     <!--<readme>docs\README.md</readme>-->
     <summary>A C++ header-only library for loading MegaMol's MMPLD particle files.</summary>
-    <releaseNotes>Improved resilience against broken particle lists.</releaseNotes>
+    <releaseNotes>Fix warning issued for unused parameters at /W4.</releaseNotes>
     <copyright>Copyright © 2018 - 2025 Visualisierungsinstitut der Universität Stuttgart</copyright>
     <tags>native mmpld particles</tags>
   </metadata>
