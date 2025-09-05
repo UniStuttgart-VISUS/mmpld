@@ -9,9 +9,6 @@
 #define _MMPLD_H
 #pragma once
 
-#define MMPLD_API_MAJOR_VERSION (1)
-#define MMPLD_API_MINOR_VERSION (17)
-
 #include "mmpld/cluster_info.h"
 #include "mmpld/colour_properties.h"
 #include "mmpld/convert.h"

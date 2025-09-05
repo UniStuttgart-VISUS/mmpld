@@ -6,10 +6,11 @@
 
 
 /*
- * mmpld::detail::basic_io_traits<FILE *>::read
+ * MMPLD_DETAIL_NAMESPACE::basic_io_traits<FILE *>::read
  */
-mmpld::detail::basic_io_traits<FILE *>::size_type
-mmpld::detail::basic_io_traits<FILE *>::read(file_type& file, void *dst,
+MMPLD_DETAIL_NAMESPACE::basic_io_traits<FILE *>::size_type
+MMPLD_DETAIL_NAMESPACE::basic_io_traits<FILE *>::read(file_type& file,
+        void *dst,
         const size_type cnt) {
     assert(cnt < (std::numeric_limits<unsigned int>::max)());
     auto ptr = reinterpret_cast<std::uint8_t *>(dst);
@@ -32,10 +33,11 @@ mmpld::detail::basic_io_traits<FILE *>::read(file_type& file, void *dst,
 
 
 /*
- * mmpld::detail::basic_io_traits<FILE *>::write
+ * MMPLD_DETAIL_NAMESPACE::basic_io_traits<FILE *>::write
  */
-mmpld::detail::basic_io_traits<FILE *>::size_type
-mmpld::detail::basic_io_traits<FILE *>::write(file_type& file, const void *src,
+MMPLD_DETAIL_NAMESPACE::basic_io_traits<FILE *>::size_type
+MMPLD_DETAIL_NAMESPACE::basic_io_traits<FILE *>::write(file_type& file,
+        const void *src,
         const size_type cnt) {
     assert(cnt < (std::numeric_limits<unsigned int>::max)());
     auto ptr = reinterpret_cast<const std::uint8_t *>(src);
@@ -56,10 +58,11 @@ mmpld::detail::basic_io_traits<FILE *>::write(file_type& file, const void *src,
 
 #if !defined(MMPLD_WITHOUT_POSIX_IO)
 /*
- * mmpld::detail::basic_io_traits<int>::read
+ * MMPLD_DETAIL_NAMESPACE::basic_io_traits<int>::read
  */
-mmpld::detail::basic_io_traits<int>::size_type
-mmpld::detail::basic_io_traits<int>::read(file_type& file, void *dst,
+MMPLD_DETAIL_NAMESPACE::basic_io_traits<int>::size_type
+MMPLD_DETAIL_NAMESPACE::basic_io_traits<int>::read(file_type& file,
+        void *dst,
         size_type cnt) {
     auto ptr = reinterpret_cast<std::uint8_t *>(dst);
     auto rem = cnt;
@@ -87,10 +90,11 @@ mmpld::detail::basic_io_traits<int>::read(file_type& file, void *dst,
 
 
 /*
- * mmpld::detail::basic_io_traits<int>::write
+ * MMPLD_DETAIL_NAMESPACE::basic_io_traits<int>::write
  */
-mmpld::detail::basic_io_traits<int>::size_type
-mmpld::detail::basic_io_traits<int>::write(file_type& file, const void *dst,
+MMPLD_DETAIL_NAMESPACE::basic_io_traits<int>::size_type
+MMPLD_DETAIL_NAMESPACE::basic_io_traits<int>::write(file_type& file,
+        const void *dst,
         const size_type cnt) {
     auto ptr = reinterpret_cast<const std::uint8_t *>(dst);
     auto rem = cnt;
@@ -116,10 +120,11 @@ mmpld::detail::basic_io_traits<int>::write(file_type& file, const void *dst,
 
 #if (defined(_WIN32) && !defined(MMPLD_WITHOUT_WIN32_IO))
 /*
- * mmpld::detail::basic_io_traits<HANDLE>::read
+ * MMPLD_DETAIL_NAMESPACE::basic_io_traits<HANDLE>::read
  */
-mmpld::detail::basic_io_traits<HANDLE>::size_type
-mmpld::detail::basic_io_traits<HANDLE>::read(file_type& file, void *dst,
+MMPLD_DETAIL_NAMESPACE::basic_io_traits<HANDLE>::size_type
+MMPLD_DETAIL_NAMESPACE::basic_io_traits<HANDLE>::read(file_type& file,
+        void *dst,
         const size_type cnt) {
     assert(cnt < (std::numeric_limits<DWORD>::max)());
     auto ptr = reinterpret_cast<std::uint8_t *>(dst);
@@ -145,10 +150,11 @@ mmpld::detail::basic_io_traits<HANDLE>::read(file_type& file, void *dst,
 
 #if (defined(_WIN32) && !defined(MMPLD_WITHOUT_WIN32_IO))
 /*
- * mmpld::detail::basic_io_traits<HANDLE>::write
+ * MMPLD_DETAIL_NAMESPACE::basic_io_traits<HANDLE>::write
  */
-mmpld::detail::basic_io_traits<HANDLE>::size_type
-mmpld::detail::basic_io_traits<HANDLE>::write(file_type& file, const void *dst,
+MMPLD_DETAIL_NAMESPACE::basic_io_traits<HANDLE>::size_type
+MMPLD_DETAIL_NAMESPACE::basic_io_traits<HANDLE>::write(file_type& file,
+        const void *dst,
         const size_type cnt) {
     assert(cnt < (std::numeric_limits<DWORD>::max)());
     auto ptr = reinterpret_cast<const std::uint8_t *>(dst);

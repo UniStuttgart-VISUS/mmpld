@@ -6,9 +6,10 @@
 
 
 /*
- * mmpld::file<F, C>::file
+ * MMPLD_NAMESPACE::file<F, C>::file
  */
-template<class F, class C> mmpld::file<F, C>::file(const char_type *path) {
+template<class F, class C>
+MMPLD_NAMESPACE::file<F, C>::file(const char_type *path) {
     detail::zero_memory(this->_file_header);
     detail::zero_memory(this->_frame_header);
 
@@ -22,18 +23,18 @@ template<class F, class C> mmpld::file<F, C>::file(const char_type *path) {
 
 
 /*
- * mmpld::file<F, C>::~file
+ * MMPLD_NAMESPACE::file<F, C>::~file
  */
-template<class F, class C> mmpld::file<F, C>::~file(void) {
+template<class F, class C> MMPLD_NAMESPACE::file<F, C>::~file(void) {
     io_traits_type::close(this->_file);
 }
 
 
 /*
- * mmpld::file<F, C>::open_frame
+ * MMPLD_NAMESPACE::file<F, C>::open_frame
  */
 template<class F, class C>
-void mmpld::file<F, C>::open_frame(const frame_number_type frame) {
+void MMPLD_NAMESPACE::file<F, C>::open_frame(const frame_number_type frame) {
     if (frame >= this->_seek_table.size()) {
         throw std::invalid_argument("The index of the requested frame is out "
             "of range.");
@@ -48,12 +49,13 @@ void mmpld::file<F, C>::open_frame(const frame_number_type frame) {
 
 
 /*
- * mmpld::file<F, C>::read_cluster_info
+ * MMPLD_NAMESPACE::file<F, C>::read_cluster_info
  */
 template<class F, class C>
-mmpld::cluster_info mmpld::file<F, C>::read_cluster_info(void) {
-    if (this->_file_header.version == mmpld::make_version(1, 1)) {
-        return mmpld::read_cluster_info(this->_file);
+MMPLD_NAMESPACE::cluster_info MMPLD_NAMESPACE::file<F, C>::read_cluster_info(
+        void) {
+    if (this->_file_header.version == MMPLD_NAMESPACE::make_version(1, 1)) {
+        return MMPLD_NAMESPACE::read_cluster_info(this->_file);
     } else {
         return cluster_info();
     }
@@ -61,24 +63,27 @@ mmpld::cluster_info mmpld::file<F, C>::read_cluster_info(void) {
 
 
 /*
- * mmpld::file<F, C>::read_particles
+ * MMPLD_NAMESPACE::file<F, C>::read_particles
  */
 template<class F, class C>
-typename mmpld::file<F, C>::size_type mmpld::file<F, C>::read_particles(
-        const bool skip_remaining, list_header& header, void *dst,
+typename MMPLD_NAMESPACE::file<F, C>::size_type
+MMPLD_NAMESPACE::file<F, C>::read_particles(
+        const bool skip_remaining,
+        list_header& header,
+        void *dst,
         const size_type cnt) {
-    mmpld::read_list_header(this->_file, this->_file_header.version, header);
+    MMPLD_NAMESPACE::read_list_header(this->_file, this->_file_header.version, header);
     auto retval =  this->read_particles(header, dst, cnt);
 
     if (skip_remaining && (retval <= header.particles)) {
-        auto stride = mmpld::get_stride<size_t>(header);
+        auto stride = MMPLD_NAMESPACE::get_stride<size_t>(header);
         auto cur = io_traits_type::tell(this->_file);
         auto rem = (header.particles - retval) * stride;
         io_traits_type::seek(this->_file, cur + rem);
 
-        if (this->_file_header.version == mmpld::make_version(1, 1)) {
+        if (this->_file_header.version == MMPLD_NAMESPACE::make_version(1, 1)) {
             // MMPLD 1.1 needs to skip the cluster information block as well.
-            mmpld::skip_cluster_info(this->_file);
+            MMPLD_NAMESPACE::skip_cluster_info(this->_file);
         }
     }
 
@@ -87,12 +92,15 @@ typename mmpld::file<F, C>::size_type mmpld::file<F, C>::read_particles(
 
 
 /*
- * mmpld::file<F, C>::read_particles
+ * MMPLD_NAMESPACE::file<F, C>::read_particles
  */
 template<class F, class C>
-typename mmpld::file<F, C>::size_type mmpld::file<F, C>::read_particles(
-        const list_header& header, void *dst, const size_type cnt) {
-    auto stride = mmpld::get_stride<size_type>(header);
+typename MMPLD_NAMESPACE::file<F, C>::size_type
+MMPLD_NAMESPACE::file<F, C>::read_particles(
+        const list_header& header,
+        void *dst,
+        const size_type cnt) {
+    auto stride = MMPLD_NAMESPACE::get_stride<size_type>(header);
     if (stride < 1) {
         // If the stride is zero, there is neither a position nor a colour in
         // the list, so there cannot be a particle either.
@@ -118,13 +126,13 @@ typename mmpld::file<F, C>::size_type mmpld::file<F, C>::read_particles(
 
 
 /*
- *  mmpld::file<F, C>::read_particles
+ *  MMPLD_NAMESPACE::file<F, C>::read_particles
  */
 template<class F, class C>
-std::vector<std::uint8_t> mmpld::file<F, C>::read_particles(
+std::vector<std::uint8_t> MMPLD_NAMESPACE::file<F, C>::read_particles(
         list_header& header, cluster_info *clusters) {
     this->read_particles(false, header, nullptr, 0);
-    auto size = mmpld::get_size<std::size_t>(header);
+    auto size = MMPLD_NAMESPACE::get_size<std::size_t>(header);
 
     std::vector<std::uint8_t> retval(size);
     this->read_particles(header, retval.data(), size);
@@ -140,12 +148,11 @@ std::vector<std::uint8_t> mmpld::file<F, C>::read_particles(
 
 
 /*
- * mmpld::file<F, C>::skip_cluster_info
+ * MMPLD_NAMESPACE::file<F, C>::skip_cluster_info
  */
 template<class F, class C>
-void mmpld::file<F, C>::skip_cluster_info(void) {
-    if (this->_file_header.version == mmpld::make_version(1, 1)) {
-        return mmpld::skip_cluster_info(this->_file);
+void MMPLD_NAMESPACE::file<F, C>::skip_cluster_info(void) {
+    if (this->_file_header.version == make_version(1, 1)) {
+        return MMPLD_NAMESPACE::skip_cluster_info(this->_file);
     }
 }
-

@@ -6,12 +6,15 @@
 
 
 /*
- * mmpld::particle_view<T>::particle_view
+ * MMPLD_NAMESPACE::particle_view<T>::particle_view
  */
 template<class T>
-mmpld::particle_view<T>::particle_view(const mmpld::vertex_type vertex_type,
-        const mmpld::colour_type colour_type, pointer_type data) : _data(data) {
-    mmpld::list_header dummy;
+MMPLD_NAMESPACE::particle_view<T>::particle_view(
+        const MMPLD_NAMESPACE::vertex_type vertex_type,
+        const MMPLD_NAMESPACE::colour_type colour_type,
+        pointer_type data)
+        : _data(data) {
+    MMPLD_NAMESPACE::list_header dummy;
     dummy.colour_type = colour_type;
     dummy.vertex_type = vertex_type;
     this->set_properties(dummy);
@@ -19,21 +22,23 @@ mmpld::particle_view<T>::particle_view(const mmpld::vertex_type vertex_type,
 
 
 /*
- * mmpld::particle_view<T>::particle_view
+ * MMPLD_NAMESPACE::particle_view<T>::particle_view
  */
 template<class T>
-mmpld::particle_view<T>::particle_view(const mmpld::list_header& header,
-        pointer_type data) : _data(data) {
+MMPLD_NAMESPACE::particle_view<T>::particle_view(
+        const MMPLD_NAMESPACE::list_header& header,
+        pointer_type data)
+        : _data(data) {
     this->set_properties(header);
 }
 
 
 /*
- * mmpld::particle_view<T>::colour
+ * MMPLD_NAMESPACE::particle_view<T>::colour
  */
 template<class T>
-typename mmpld::particle_view<T>::pointer_type mmpld::particle_view<T>::colour(
-        void) {
+typename MMPLD_NAMESPACE::particle_view<T>::pointer_type
+MMPLD_NAMESPACE::particle_view<T>::colour(void) {
     auto retval = this->byte_data();
 
     if (this->_colour_offset != this->_invalid_offset) {
@@ -47,11 +52,11 @@ typename mmpld::particle_view<T>::pointer_type mmpld::particle_view<T>::colour(
 
 
 /*
- * mmpld::particle_view<T>::position
+ * MMPLD_NAMESPACE::particle_view<T>::position
  */
 template<class T>
-typename mmpld::particle_view<T>::pointer_type
-mmpld::particle_view<T>::position(void) {
+typename MMPLD_NAMESPACE::particle_view<T>::pointer_type
+MMPLD_NAMESPACE::particle_view<T>::position(void) {
     auto retval = this->byte_data();
 
     if (this->_position_offset != this->_invalid_offset) {
@@ -65,11 +70,11 @@ mmpld::particle_view<T>::position(void) {
 
 
 /*
- * mmpld::particle_view<T>::radius
+ * MMPLD_NAMESPACE::particle_view<T>::radius
  */
 template<class T>
-typename mmpld::particle_view<T>::pointer_type mmpld::particle_view<T>::radius(
-        void) {
+typename MMPLD_NAMESPACE::particle_view<T>::pointer_type
+MMPLD_NAMESPACE::particle_view<T>::radius(void) {
     auto retval = this->byte_data();
 
     if (this->_radius_offset != this->_invalid_offset) {
@@ -83,10 +88,11 @@ typename mmpld::particle_view<T>::pointer_type mmpld::particle_view<T>::radius(
 
 
 /*
- * mmpld::particle_view<T>::operator =
+ * MMPLD_NAMESPACE::particle_view<T>::operator =
  */
 template<class T>
-mmpld::particle_view<T>& mmpld::particle_view<T>::operator =(
+MMPLD_NAMESPACE::particle_view<T>&
+MMPLD_NAMESPACE::particle_view<T>::operator =(
         const particle_view& rhs) {
     if (this != std::addressof(rhs)) {
         this->_colour_offset = rhs._colour_offset;
@@ -103,17 +109,18 @@ mmpld::particle_view<T>& mmpld::particle_view<T>::operator =(
 
 
 /*
- * mmpld::particle_view<T>::operator =
+ * MMPLD_NAMESPACE::particle_view<T>::operator =
  */
 template<class T>
-mmpld::particle_view<T>& mmpld::particle_view<T>::operator =(
+MMPLD_NAMESPACE::particle_view<T>&
+MMPLD_NAMESPACE::particle_view<T>::operator =(
         particle_view&& rhs) {
     if (this != std::addressof(rhs)) {
         const auto invalid_offset = rhs._invalid_offset;
         this->_colour_offset = rhs._colour_offset;
         rhs._colour_offset = invalid_offset;
         this->_colour_type = rhs._colour_type;
-        rhs._colour_type = mmpld::colour_type::none;
+        rhs._colour_type = MMPLD_NAMESPACE::colour_type::none;
         this->_data = rhs._data;
         rhs._data = nullptr;
         this->_invalid_offset = rhs._invalid_offset;
@@ -125,20 +132,21 @@ mmpld::particle_view<T>& mmpld::particle_view<T>::operator =(
         this->_stride = rhs._stride;
         rhs._stride = 0;
         this->_vertex_type = rhs._vertex_type;
-        rhs._vertex_type = mmpld::vertex_type::none;
+        rhs._vertex_type = MMPLD_NAMESPACE::vertex_type::none;
     }
     return *this;
 }
 
 
 /*
- * mmpld::particle_view<T>::set_properties
+ * MMPLD_NAMESPACE::particle_view<T>::set_properties
  */
 template<class T>
-void mmpld::particle_view<T>::set_properties(const mmpld::list_header& header) {
+void MMPLD_NAMESPACE::particle_view<T>::set_properties(
+        const MMPLD_NAMESPACE::list_header& header) {
     this->_colour_type = header.colour_type;
-    this->_invalid_offset = mmpld::get_offsets<size_type>(header,
+    this->_invalid_offset = MMPLD_NAMESPACE::get_offsets<size_type>(header,
         this->_position_offset, this->_radius_offset, this->_colour_offset);
-    this->_stride = mmpld::get_stride<size_type>(header);
+    this->_stride = MMPLD_NAMESPACE::get_stride<size_type>(header);
     this->_vertex_type = header.vertex_type;
 }

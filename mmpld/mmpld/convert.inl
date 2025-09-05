@@ -5,77 +5,75 @@
 // <author>Christoph Müller</author>
 
 
-namespace mmpld {
-namespace detail {
+MMPLD_DETAIL_NAMESPACE_BEGIN
 
-    /// <summary>
-    /// If <paramref name="offset" /> is not <paramref name="invalid" />, return
-    /// a pointer <paramref name="offset" /> bytes after
-    /// <paramref name="base" />.
-    /// </summary>
-    template<class P, class O> inline const void *apply_offset(const P *base,
-            const O offset, const O invalid) {
-        auto retval = (offset != invalid) ? base + offset : nullptr;
-        return static_cast<const void *>(retval);
+/// <summary>
+/// If <paramref name="offset" /> is not <paramref name="invalid" />, return
+/// a pointer <paramref name="offset" /> bytes after
+/// <paramref name="base" />.
+/// </summary>
+template<class P, class O> inline const void *apply_offset(const P *base,
+        const O offset, const O invalid) {
+    auto retval = (offset != invalid) ? base + offset : nullptr;
+    return static_cast<const void *>(retval);
+}
+
+/// <summary>
+/// Read and convert the specified particle list from a file handle of
+/// type <paramref name="F" />.
+/// </summary>
+template<class F, class O>
+decltype(MMPLD_NAMESPACE::list_header::particles) read_as(
+        F& file, const list_header& src_header,
+        O *dst, list_header& dst_header,
+        std::vector<std::uint8_t>& buffer) {
+    typedef std::decay<decltype(src_header.particles)>::type count_type;
+    typedef detail::basic_io_traits<F> io_traits;
+    assert(buffer.size() > 0);
+
+    auto d_header = dst_header;
+    const auto dst_stride = get_stride<std::size_t>(dst_header);
+    const auto retval = (std::min)(src_header.particles,
+        dst_header.particles);
+    const auto src_stride = get_stride<std::size_t>(src_header);
+    assert(buffer.size() >= src_stride);
+    const auto cnt_buffer = buffer.size() / src_stride;
+
+    for (count_type i = 0; i < retval; i += cnt_buffer) {
+        auto c = (std::min)(cnt_buffer,
+            static_cast<std::size_t>(retval - i));
+        auto d = reinterpret_cast<std::uint8_t *>(dst) + i * dst_stride;
+        d_header.particles = c;
+        io_traits::read(file, buffer.data(), c * src_stride);
+        convert(buffer.data(), src_header, d, d_header);
     }
 
-    /// <summary>
-    /// Read and convert the specified particle list from a file handle of
-    /// type <paramref name="F" />.
-    /// </summary>
-    template<class F, class O>
-    decltype(mmpld::list_header::particles) read_as(
-            F& file, const list_header& src_header,
-            O *dst, list_header& dst_header,
-            std::vector<std::uint8_t>& buffer) {
-        typedef std::decay<decltype(src_header.particles)>::type count_type;
-        typedef detail::basic_io_traits<F> io_traits;
-        assert(buffer.size() > 0);
+    return retval;
+}
 
-        auto d_header = dst_header;
-        const auto dst_stride = get_stride<std::size_t>(dst_header);
-        const auto retval = (std::min)(src_header.particles,
-            dst_header.particles);
-        const auto src_stride = get_stride<std::size_t>(src_header);
-        assert(buffer.size() >= src_stride);
-        const auto cnt_buffer = buffer.size() / src_stride;
+/// <summary>
+/// Incrementally computes the mean of a series of numbers.
+/// </summary>
+/// <typeparam name="T">The type of the numbers.</typeparam>
+/// <typeparam name="C">The type of the counter.</typeparam>
+/// <param name="mean">A reference to the incrementally computed mean.
+/// This variable must be initialised with zero.</param>
+/// <param name="count">The number of already accumulated values, not
+/// including the one that is added now.</param>
+/// <param name="n">The next number to be added to the mean.</param>
+template<class T, class C>
+inline void incremental_mean(T& mean, const C count, T n) {
+    mean += (n - mean) / (count + 1);
+}
 
-        for (count_type i = 0; i < retval; i += cnt_buffer) {
-            auto c = (std::min)(cnt_buffer,
-                static_cast<std::size_t>(retval - i));
-            auto d = reinterpret_cast<std::uint8_t *>(dst) + i * dst_stride;
-            d_header.particles = c;
-            io_traits::read(file, buffer.data(), c * src_stride);
-            convert(buffer.data(), src_header, d, d_header);
-        }
-
-        return retval;
-    }
-
-    /// <summary>
-    /// Incrementally computes the mean of a series of numbers.
-    /// </summary>
-    /// <typeparam name="T">The type of the numbers.</typeparam>
-    /// <typeparam name="C">The type of the counter.</typeparam>
-    /// <param name="mean">A reference to the incrementally computed mean.
-    /// This variable must be initialised with zero.</param>
-    /// <param name="count">The number of already accumulated values, not
-    /// including the one that is added now.</param>
-    /// <param name="n">The next number to be added to the mean.</param>
-    template<class T, class C>
-    inline void incremental_mean(T& mean, const C count, T n) {
-        mean += (n - mean) / (count + 1);
-    }
-
-} /* end namespace detail */
-} /* end namespace mmpld */
+MMPLD_DETAIL_NAMESPACE_END
 
 
 /*
- * mmpld::convert
+ * MMPLD_NAMESPACE::convert
  */
 template<class T, class I, class O>
-decltype(mmpld::list_header::particles) mmpld::convert(
+decltype(MMPLD_NAMESPACE::list_header::particles) MMPLD_NAMESPACE::convert(
         const I *src, const list_header& header,
         O *dst, const decltype(list_header::particles) cnt) {
     typedef T dst_view;
@@ -161,10 +159,10 @@ decltype(mmpld::list_header::particles) mmpld::convert(
 
 
 /*
- * mmpld::convert
+ * MMPLD_NAMESPACE::convert
  */
 template<class I, class O>
-decltype(mmpld::list_header::particles) mmpld::convert(
+decltype(MMPLD_NAMESPACE::list_header::particles) MMPLD_NAMESPACE::convert(
         const I *src, const list_header& src_header,
         O *dst, list_header& dst_header) {
     const auto dst_stride = get_stride<std::size_t>(dst_header);
@@ -275,10 +273,10 @@ decltype(mmpld::list_header::particles) mmpld::convert(
 
 
 /*
- * mmpld::read_as
+ * MMPLD_NAMESPACE::read_as
  */
 template<class F, class O>
-decltype(mmpld::list_header::particles) mmpld::read_as(
+decltype(MMPLD_NAMESPACE::list_header::particles) MMPLD_NAMESPACE::read_as(
         F& file, const list_header& src_header,
         O *dst, list_header& dst_header,
         decltype(list_header::particles) cnt_buffer) {
@@ -306,10 +304,10 @@ decltype(mmpld::list_header::particles) mmpld::read_as(
 
 
 /*
- * mmpld::read_as
+ * MMPLD_NAMESPACE::read_as
  */
 template<class T, class F, class O>
-decltype(mmpld::list_header::particles) mmpld::read_as(
+decltype(MMPLD_NAMESPACE::list_header::particles) MMPLD_NAMESPACE::read_as(
         F& file, const list_header& header,
         O *dst, const decltype(list_header::particles) cnt,
         decltype(list_header::particles) cnt_buffer) {
@@ -323,10 +321,10 @@ decltype(mmpld::list_header::particles) mmpld::read_as(
 
 
 /*
- * mmpld::read_as
+ * MMPLD_NAMESPACE::read_as
  */
 template<class F, class O>
-decltype(mmpld::list_header::particles) mmpld::read_as(
+decltype(MMPLD_NAMESPACE::list_header::particles) MMPLD_NAMESPACE::read_as(
         F& file, const frame_header& src_header,
         const std::uint16_t file_version,
         O *dst, list_header& dst_header,
@@ -339,7 +337,7 @@ decltype(mmpld::list_header::particles) mmpld::read_as(
     auto d = reinterpret_cast<std::uint8_t *>(dst);
     list_header header;
     auto rem = dst_header.particles;
-    auto retval = static_cast<decltype(mmpld::list_header::particles)>(0);
+    auto retval = static_cast<decltype(list_header::particles)>(0);
 
     // Initialise the bounding box and the intensity range.
     dst_header.bounding_box[0]
@@ -353,7 +351,7 @@ decltype(mmpld::list_header::particles) mmpld::read_as(
         = dst_header.max_intensity
         = (std::numeric_limits<float>::lowest)();
 
-    for (decltype(mmpld::frame_header::lists) i = 0; i < src_header.lists;
+    for (decltype(MMPLD_NAMESPACE::frame_header::lists) i = 0; i < src_header.lists;
             ++i) {
         read_list_header(file, file_version, header);
         const auto src_stride = get_stride<std::size_t>(header);
@@ -398,8 +396,8 @@ decltype(mmpld::list_header::particles) mmpld::read_as(
         }
 
         // Skip cluster info in MMPLD 1.1.
-        if (file_version == mmpld::make_version(1, 1)) {
-            mmpld::skip_cluster_info(file);
+        if (file_version == MMPLD_NAMESPACE::make_version(1, 1)) {
+            MMPLD_NAMESPACE::skip_cluster_info(file);
         }
     }
 

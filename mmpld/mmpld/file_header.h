@@ -5,6 +5,8 @@
 // </copyright>
 // <author>Christoph Müller</author>
 
+#if !defined(_MMPLD_FILE_HEADER_H)
+#define _MMPLD_FILE_HEADER_H
 #pragma once
 
 #include <cinttypes>
@@ -15,149 +17,151 @@
 #include "mmpld/io.h"
 
 
-namespace mmpld {
+MMPLD_NAMESPACE_BEGIN
 
 #pragma pack(push, 1)
+/// <summary>
+/// The header at the beginning of any MMPLD file.
+/// </summary>
+struct file_header {
+
     /// <summary>
-    /// The header at the beginning of any MMPLD file.
+    /// A magic identifier for the MMPLD file type.
     /// </summary>
-    struct file_header {
+    char magic_identifier[6];
 
-        /// <summary>
-        /// A magic identifier for the MMPLD file type.
-        /// </summary>
-        char magic_identifier[6];
+    /// <summary>
+    /// The version of the MMPLD file type.
+    /// </summary>
+    std::uint16_t version;
 
-        /// <summary>
-        /// The version of the MMPLD file type.
-        /// </summary>
-        std::uint16_t version;
+    /// <summary>
+    /// The number of frames stored in the file.
+    /// </summary>
+    std::uint32_t frames;
 
-        /// <summary>
-        /// The number of frames stored in the file.
-        /// </summary>
-        std::uint32_t frames;
+    /// <summary>
+    /// The bounding box of the data in the file.
+    /// </summary>
+    /// <remarks>
+    /// The order is: x-, y- and z-component of the begin of the bounding
+    /// box followed by x-, y- and z-component of the end position.
+    /// </remarks>
+    float bounding_box[6];
 
-        /// <summary>
-        /// The bounding box of the data in the file.
-        /// </summary>
-        /// <remarks>
-        /// The order is: x-, y- and z-component of the begin of the bounding
-        /// box followed by x-, y- and z-component of the end position.
-        /// </remarks>
-        float bounding_box[6];
-
-        /// <summary>
-        /// The suggested clipping box for the data in the file.
-        /// </summary>
-        /// <remarks>
-        /// The order is: x-, y- and z-component of the begin of the bounding
-        /// box followed by x-, y- and z-component of the end position.
-        /// </remarks>
-        float clipping_box[6];
-    };
+    /// <summary>
+    /// The suggested clipping box for the data in the file.
+    /// </summary>
+    /// <remarks>
+    /// The order is: x-, y- and z-component of the begin of the bounding
+    /// box followed by x-, y- and z-component of the end position.
+    /// </remarks>
+    float clipping_box[6];
+};
 #pragma pack(pop)
 
-    /// <summary>
-    /// The seek table which contains the offsets (in bytes from the beginning
-    /// of the file) of individual particle lists in the file.
-    /// </summary>
-    typedef std::vector<std::uint64_t> seek_table;
+/// <summary>
+/// The seek table which contains the offsets (in bytes from the beginning
+/// of the file) of individual particle lists in the file.
+/// </summary>
+typedef std::vector<std::uint64_t> seek_table;
 
-    /// <summary>
-    /// Creates a a file version from the given major and minor version.
-    /// </summary>
-    /// <param name="major">The major version.</param>
-    /// <param name="minor">The minor version.</param>
-    /// <returns>The version number as it appears in an MMPLD file.</returns>
-    inline constexpr std::uint16_t make_version(const std::uint16_t major,
-            const std::uint16_t minor) noexcept {
-        assert(minor < 100);
-        return (major * 100) + minor;
-    }
+/// <summary>
+/// Creates a a file version from the given major and minor version.
+/// </summary>
+/// <param name="major">The major version.</param>
+/// <param name="minor">The minor version.</param>
+/// <returns>The version number as it appears in an MMPLD file.</returns>
+inline constexpr std::uint16_t make_version(const std::uint16_t major,
+        const std::uint16_t minor) noexcept {
+    assert(minor < 100);
+    return (major * 100) + minor;
+}
 
-    /// <summary>
-    /// Reads the MMPLD header and the seek table from the given stream (at its
-    /// current location).
-    /// </summary>
-    /// <typeparam name="T">The type of stream, which can be an STL stream or a
-    /// file descriptor or <see cref="FILE" /> handle.</typeparam>
-    /// <param name="stream">The stream to read the header from. The stream must
-    /// be open and in binary mode.</param>
-    /// <param name="header">Receives the header.</param>
-    /// <param name="seek_table">Receives the seek table.</param>
-    /// <returns><paramref name="stream" />.</returns>
-    template<class T>
-    T& read_file_header(T& stream, file_header& header, seek_table& seek_table);
+/// <summary>
+/// Reads the MMPLD header and the seek table from the given stream (at its
+/// current location).
+/// </summary>
+/// <typeparam name="T">The type of stream, which can be an STL stream or a
+/// file descriptor or <see cref="FILE" /> handle.</typeparam>
+/// <param name="stream">The stream to read the header from. The stream must
+/// be open and in binary mode.</param>
+/// <param name="header">Receives the header.</param>
+/// <param name="seek_table">Receives the seek table.</param>
+/// <returns><paramref name="stream" />.</returns>
+template<class T>
+T& read_file_header(T& stream, file_header& header, seek_table& seek_table);
 
-    /// <summary>
-    /// Split a file version of an MMPLD file into major and minor version.
-    /// </summary>
-    /// <param name="version">The version number to be split into their parts.
-    /// </param>
-    /// <param name="major">Receives the major version.</param>
-    /// <param name="minor">Receives the minor version.</param>
-    inline void parse_version(const std::uint16_t version, unsigned int& major,
-            unsigned int& minor) {
-        std::div_t v = std::div(version, 100);
-        major = v.quot;
-        minor = v.rem;
-    }
+/// <summary>
+/// Split a file version of an MMPLD file into major and minor version.
+/// </summary>
+/// <param name="version">The version number to be split into their parts.
+/// </param>
+/// <param name="major">Receives the major version.</param>
+/// <param name="minor">Receives the minor version.</param>
+inline void parse_version(const std::uint16_t version, unsigned int& major,
+        unsigned int& minor) {
+    std::div_t v = std::div(version, 100);
+    major = v.quot;
+    minor = v.rem;
+}
 
-    /// <summary>
-    /// Makes sure that the MMPLD magic identifier is set in the given file
-    ///  header.
-    /// </summary>
-    /// <param name="header">The header to set the magic identifier in.</param>
-    inline void set_magic_identifier(file_header& header) noexcept {
+/// <summary>
+/// Makes sure that the MMPLD magic identifier is set in the given file
+///  header.
+/// </summary>
+/// <param name="header">The header to set the magic identifier in.</param>
+inline void set_magic_identifier(file_header& header) noexcept {
 #if defined(_MSC_VER)
-        ::strcpy_s(header.magic_identifier, "MMPLD");
+    ::strcpy_s(header.magic_identifier, "MMPLD");
 #else /* defined(_MSC_VER) */
-        ::strcpy(header.magic_identifier, "MMPLD");
+    ::strcpy(header.magic_identifier, "MMPLD");
 #endif /* defined(_MSC_VER) */
-    }
+}
 
-    /// <summary>
-    /// Sets the MMPLD version in the given file header.
-    /// </summary>
-    /// <param name="header">The header to update.</param>
-    /// <param name="major">The major version.</param>
-    /// <param name="minor">The minor version.</param>
-    inline void set_version(file_header& header,
-            const std::uint16_t major,
-            const std::uint16_t minor) noexcept {
-        header.version = make_version(major, minor);
-    }
+/// <summary>
+/// Sets the MMPLD version in the given file header.
+/// </summary>
+/// <param name="header">The header to update.</param>
+/// <param name="major">The major version.</param>
+/// <param name="minor">The minor version.</param>
+inline void set_version(file_header& header,
+        const std::uint16_t major,
+        const std::uint16_t minor) noexcept {
+    header.version = make_version(major, minor);
+}
 
-    /// <summary>
-    /// Writes the given MMPLD file header to the current location in the given
-    /// stream.
-    /// </summary>
-    /// <typeparam name="T">The type of stream, which can be an STL stream or a
-    /// file descriptor or <see cref="FILE" /> handle.</typeparam>
-    /// <param name="header">The file header to be written.</param>
-    /// <param name="stream">The stream to read the header from. The stream must
-    /// be open and in binary mode.</param>
-    /// <returns><paramref name="stream" />.</returns>
-    template<class T>
-    T& write_file_header(const file_header& header, T& stream);
+/// <summary>
+/// Writes the given MMPLD file header to the current location in the given
+/// stream.
+/// </summary>
+/// <typeparam name="T">The type of stream, which can be an STL stream or a
+/// file descriptor or <see cref="FILE" /> handle.</typeparam>
+/// <param name="header">The file header to be written.</param>
+/// <param name="stream">The stream to read the header from. The stream must
+/// be open and in binary mode.</param>
+/// <returns><paramref name="stream" />.</returns>
+template<class T>
+T& write_file_header(const file_header& header, T& stream);
 
-    /// <summary>
-    /// Writes the given MMPLD file header and seek table to the current
-    /// location in the given stream.
-    /// </summary>
-    /// <typeparam name="T">The type of stream, which can be an STL stream or a
-    /// file descriptor or <see cref="FILE" /> handle.</typeparam>
-    /// <param name="header">The file header to be written.</param>
-    /// <param name="seek_table">The seek table to be added after the header.
-    /// </param>
-    /// <param name="stream">The stream to read the header from. The stream must
-    /// be open and in binary mode.</param>
-    /// <returns><paramref name="stream" />.</returns>
-    template<class T>
-    T& write_file_header(const file_header& header,
-        const seek_table& seek_table, T& stream);
+/// <summary>
+/// Writes the given MMPLD file header and seek table to the current
+/// location in the given stream.
+/// </summary>
+/// <typeparam name="T">The type of stream, which can be an STL stream or a
+/// file descriptor or <see cref="FILE" /> handle.</typeparam>
+/// <param name="header">The file header to be written.</param>
+/// <param name="seek_table">The seek table to be added after the header.
+/// </param>
+/// <param name="stream">The stream to read the header from. The stream must
+/// be open and in binary mode.</param>
+/// <returns><paramref name="stream" />.</returns>
+template<class T>
+T& write_file_header(const file_header& header, const seek_table& seek_table,
+    T& stream);
 
-} /* end namespace mmpld */
+MMPLD_NAMESPACE_END
 
 #include "mmpld/file_header.inl"
+
+#endif /* !defined(_MMPLD_FILE_HEADER_H) */

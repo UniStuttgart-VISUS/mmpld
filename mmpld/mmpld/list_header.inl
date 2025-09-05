@@ -8,10 +8,10 @@
 
 #if defined(MMPLD_WITH_DIRECT3D)
 /*
- * mmpld::get_input_layout
+ * MMPLD_NAMESPACE::get_input_layout
  */
 template<class T>
-std::vector<T> mmpld::get_input_layout(const list_header& header) {
+std::vector<T> MMPLD_NAMESPACE::get_input_layout(const list_header& header) {
     T element;
     UINT offset = 0;
     std::vector<T> retval;
@@ -82,9 +82,9 @@ std::vector<T> mmpld::get_input_layout(const list_header& header) {
 
 
 /*
- * mmpld::get_offsets
+ * MMPLD_NAMESPACE::get_offsets
  */
-template<class T> T mmpld::get_offsets(const list_header& header,
+template<class T> T MMPLD_NAMESPACE::get_offsets(const list_header& header,
         T& pos, T& rad, T& col) noexcept {
     const auto retval = std::is_signed<T>::value
         ? std::numeric_limits<T>::lowest()
@@ -117,30 +117,31 @@ template<class T> T mmpld::get_offsets(const list_header& header,
 
 
 /*
- * mmpld::get_properties
+ * MMPLD_NAMESPACE::get_properties
  */
-template<class T> T mmpld::get_properties(const list_header& header) noexcept {
-    static_assert(sizeof(T) >= sizeof(mmpld::particle_properties), "Output "
-        "type for particle properties is too small.");
-    auto retval = mmpld::particle_properties::none;
+template<class T>
+T MMPLD_NAMESPACE::get_properties(const list_header& header) noexcept {
+    static_assert(sizeof(T) >= sizeof(MMPLD_NAMESPACE::particle_properties),
+        "Output type for particle properties is too small.");
+    auto retval = MMPLD_NAMESPACE::particle_properties::none;
     colour_properties colourProps;
     vertex_properties vertexProps;
 
     if (get_properties(header.vertex_type, vertexProps)) {
         if (vertexProps.has_radius) {
-            retval |= mmpld::particle_properties::per_particle_radius;
+            retval |= MMPLD_NAMESPACE::particle_properties::per_particle_radius;
         }
     }
 
     if (get_properties(header.colour_type, colourProps)) {
         if (colourProps.channels == 1) {
-            retval |= mmpld::particle_properties::per_particle_intensity;
+            retval |= MMPLD_NAMESPACE::particle_properties::per_particle_intensity;
         } else if (colourProps.channels > 1) {
-            retval |= mmpld::particle_properties::per_particle_colour;
+            retval |= MMPLD_NAMESPACE::particle_properties::per_particle_colour;
         }
 
         if (colourProps.is_float) {
-            retval |= mmpld::particle_properties::float_colour;
+            retval |= MMPLD_NAMESPACE::particle_properties::float_colour;
         }
     }
 
@@ -149,9 +150,10 @@ template<class T> T mmpld::get_properties(const list_header& header) noexcept {
 
 
 /*
- * mmpld::get_stride
+ * MMPLD_NAMESPACE::get_stride
  */
-template<class T> T mmpld::get_stride(const vertex_type vertexType,
+template<class T> T MMPLD_NAMESPACE::get_stride(
+        const vertex_type vertexType,
         const colour_type colourType) noexcept {
     std::size_t retval = 0;
     colour_properties colourProps;
@@ -170,10 +172,12 @@ template<class T> T mmpld::get_stride(const vertex_type vertexType,
 
 
 /*
- * mmpld::read_list_header
+ * MMPLD_NAMESPACE::read_list_header
  */
 template<class T>
-T& mmpld::read_list_header(T& stream, const std::uint16_t fileVersion,
+T& MMPLD_NAMESPACE::read_list_header(
+        T& stream,
+        const std::uint16_t fileVersion,
         list_header& header) {
     static const auto MAX_COLOUR = static_cast<float>(
         (std::numeric_limits<std::uint8_t>::max)());
@@ -195,7 +199,7 @@ T& mmpld::read_list_header(T& stream, const std::uint16_t fileVersion,
     }
 
     switch (header.colour_type) {
-        case mmpld::colour_type::none: {
+        case MMPLD_NAMESPACE::colour_type::none: {
             std::uint8_t rgba[4];
             detail::read(stream, rgba);
             for (size_t i = 0; i < 4; ++i) {
@@ -205,8 +209,8 @@ T& mmpld::read_list_header(T& stream, const std::uint16_t fileVersion,
             header.max_intensity = -1.0f;
             } break;
 
-        case mmpld::colour_type::intensity32:
-        case mmpld::colour_type::intensity64:
+        case MMPLD_NAMESPACE::colour_type::intensity32:
+        case MMPLD_NAMESPACE::colour_type::intensity64:
             // 32-bit and 64-bit intensity values both use 32-bit ranges. This
             // is a specification bug of MMPLD 1.3, which we need to keep for
             // compatibility with existing files.
@@ -238,11 +242,13 @@ T& mmpld::read_list_header(T& stream, const std::uint16_t fileVersion,
 
 
 /*
- * mmpld::write_list_header
+ * MMPLD_NAMESPACE::write_list_header
  */
 template<class T>
-T& mmpld::write_list_header(const list_header& header,
-        const std::uint16_t fileVersion, T& stream) {
+T& MMPLD_NAMESPACE::write_list_header(
+        const list_header& header,
+        const std::uint16_t fileVersion,
+        T& stream) {
     static const auto MAX_COLOUR = static_cast<float>(
         (std::numeric_limits<std::uint8_t>::max)());
 
@@ -262,15 +268,15 @@ T& mmpld::write_list_header(const list_header& header,
     }
 
     switch (header.colour_type) {
-        case mmpld::colour_type::none:
+        case MMPLD_NAMESPACE::colour_type::none:
             for (size_t i = 0; i < 4; ++i) {
                 detail::write(static_cast<std::uint8_t>(
                     header.colour[i] * MAX_COLOUR), stream);
             }
             break;
 
-        case mmpld::colour_type::intensity32:
-        case mmpld::colour_type::intensity64:
+        case MMPLD_NAMESPACE::colour_type::intensity32:
+        case MMPLD_NAMESPACE::colour_type::intensity64:
             // 32-bit and 64-bit intensity values both use 32-bit ranges. This
             // is a specification bug of MMPLD 1.3, which we need to keep for
             // compatibility with existing files.

@@ -7,12 +7,14 @@
 
 
 /*
- * mmpld::read_frame_header
+ * MMPLD_NAMESPACE::read_frame_header
  */
-template<class T> T& mmpld::read_frame_header(T& stream,
-        const std::uint16_t version, frame_header& header) {
+template<class T> T& MMPLD_NAMESPACE::read_frame_header(
+        T& stream,
+        const std::uint16_t version,
+        frame_header& header) {
     unsigned int major, minor;
-    mmpld::parse_version(version, major, minor);
+    MMPLD_NAMESPACE::parse_version(version, major, minor);
 
     // Clear everything because some information is optional.
     detail::zero_memory(header);
@@ -30,12 +32,14 @@ template<class T> T& mmpld::read_frame_header(T& stream,
 
 
 /*
- * mmpld::write_frame_header
+ * MMPLD_NAMESPACE::write_frame_header
  */
-template<class T> T& mmpld::write_frame_header(const frame_header& header,
-        const std::uint16_t version, T& stream) {
+template<class T> T& MMPLD_NAMESPACE::write_frame_header(
+        const frame_header& header,
+        const std::uint16_t version,
+        T& stream) {
     unsigned int major, minor;
-    mmpld::parse_version(version, major, minor);
+    MMPLD_NAMESPACE::parse_version(version, major, minor);
 
     // Version 1.2 and above has a frame timestamp.
     if ((major > 1) || (minor >= 2)) {

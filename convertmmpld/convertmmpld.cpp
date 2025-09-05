@@ -66,10 +66,10 @@ int main(const int argc, const char **argv) {
     {
         auto it = ::FindSwitch(CMD_LINE.begin(), CMD_LINE.end(), "--no-logo");
         if (it == CMD_LINE.end()) {
-            std::cout << "convertmmpld " << MMPLD_API_MAJOR_VERSION << "."
-                << MMPLD_API_MINOR_VERSION << std::endl;
-            std::cout << "Copyright (C) 2022 Visualisierungsinstitut der "
-                "Universität Stuttgart." << std::endl;
+            std::cout << "convertmmpld " << MMPLD_ABI_MAJOR << "."
+                << MMPLD_ABI_MINOR << std::endl;
+            std::cout << "Copyright (C) 2022 - 2025 Visualisierungsinstitut "
+                "der Universität Stuttgart." << std::endl;
             std::cout << "Alle Rechte vorbehalten." << std::endl;
             std::cout << std::endl;
         }

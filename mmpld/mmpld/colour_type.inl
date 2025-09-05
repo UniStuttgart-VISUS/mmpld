@@ -6,11 +6,11 @@
 
 
 /*
- * mmpld::to_string
+ * MMPLD_NAMESPACE::to_string
  */
 template<class C>
-std::basic_string<C> mmpld::to_string(const colour_type value) {
-#define __MMPLD_TO_STRING_CASE(v) case mmpld::colour_type::v:\
+std::basic_string<C> MMPLD_NAMESPACE::to_string(const colour_type value) {
+#define __MMPLD_TO_STRING_CASE(v) case colour_type::v:\
     return MMPLD_TPL_LITERAL(C, #v);
 
     switch (value) {

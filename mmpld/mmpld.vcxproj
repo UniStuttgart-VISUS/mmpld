@@ -155,6 +155,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mmpld.h" />
+    <ClInclude Include="mmpld\abi.h" />
     <ClInclude Include="mmpld\cluster_info.h" />
     <ClInclude Include="mmpld\colour_properties.h" />
     <ClInclude Include="mmpld\colour_type.h" />

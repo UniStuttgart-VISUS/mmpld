@@ -7,9 +7,10 @@
 
 
 /*
- * mmpld::read_file_header
+ * MMPLD_NAMESPACE::read_file_header
  */
-template<class T> T& mmpld::read_file_header(T& stream, file_header& header,
+template<class T> T& MMPLD_NAMESPACE::read_file_header(T& stream,
+        file_header& header,
         seek_table& seek_table) {
     std::uint64_t offset = 0;
 
@@ -33,20 +34,20 @@ template<class T> T& mmpld::read_file_header(T& stream, file_header& header,
 
 
 /*
- * mmpld::write_file_header
+ * MMPLD_NAMESPACE::write_file_header
  */
 template<class T>
-T& mmpld::write_file_header(const file_header& header, T& stream) {
+T& MMPLD_NAMESPACE::write_file_header(const file_header& header, T& stream) {
     detail::write(header, stream);
     return stream;
 }
 
 
 /*
- * mmpld::write_file_header
+ * MMPLD_NAMESPACE::write_file_header
  */
 template<class T>
-T& mmpld::write_file_header(const file_header& header,
+T& MMPLD_NAMESPACE::write_file_header(const file_header& header,
         const seek_table& seek_table, T& stream) {
     write_file_header(header, stream);
 
@@ -56,4 +57,3 @@ T& mmpld::write_file_header(const file_header& header,
 
     return stream;
 }
-

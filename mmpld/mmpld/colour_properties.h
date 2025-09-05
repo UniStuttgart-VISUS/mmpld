@@ -4,6 +4,8 @@
 // </copyright>
 // <author>Christoph Müller</author>
 
+#if !defined(_MMPLD_COLOUR_PROPERTIES_H)
+#define _MMPLD_COLOUR_PROPERTIES_H
 #pragma once
 
 #include <stdexcept>
@@ -11,81 +13,89 @@
 #include "mmpld/colour_type.h"
 
 
-namespace mmpld {
+MMPLD_NAMESPACE_BEGIN
+
+/// <summary>
+/// Combines run-time information that can be obtained for a
+/// <see cref="colour_type" />.
+/// </summary>
+struct colour_properties {
 
     /// <summary>
-    /// Combines run-time information that can be obtained for a
-    /// <see cref="colour_type" />.
+    /// The number of colour channels.
     /// </summary>
-    struct colour_properties {
-
-        /// <summary>
-        /// The number of colour channels.
-        /// </summary>
-        std::size_t channels;
-
-        /// <summary>
-        /// Indicates whether the colour type uses floating point numbers or
-        /// not.
-        /// </summary>
-        bool is_float;
-
-        /// <summary>
-        /// The overall size of the colour component in bytes.
-        /// </summary>
-        std::size_t size;
-    };
-
-namespace detail {
+    std::size_t channels;
 
     /// <summary>
-    /// Tests all members of <see cref="colour_dispatch_list" /> for the
-    /// given runtime type and fills <paramref name="properties" /> if the type
-    /// was found.
+    /// Indicates whether the colour type uses floating point numbers or
+    /// not.
     /// </summary>
-    template<colour_type C, colour_type... Cs>
-    bool get_properties(enum_dispatch_list<colour_type, C, Cs...>,
-            const colour_type type, colour_properties& properties) {
-        if (type == C) {
-            typedef colour_traits<C> traits_type;
-            properties.channels = traits_type::channels;
-            properties.is_float = std::is_floating_point<
-                typename traits_type::value_type>::value;
-            properties.size = traits_type::size;
-
-            return (type != colour_type::none);
-
-        } else {
-            return get_properties(enum_dispatch_list<colour_type, Cs...> {},
-                type, properties);
-        }
-    }
+    bool is_float;
 
     /// <summary>
-    /// Recursion stop for <see cref="get_properties" />.
+    /// The overall size of the colour component in bytes.
     /// </summary>
-    inline bool get_properties(enum_dispatch_list<colour_type>,
-            const colour_type, colour_properties&) {
-        throw std::runtime_error("The properties of the given colour_type "
-            "could not be retrieved. Make sure that the colour_type is valid "
-            "and that all valid colour types have been registered in the "
-            "enum_dispatch_list.");
-    }
+    std::size_t size;
+};
 
-} /* end namespace detail */
+MMPLD_NAMESPACE_END
 
-    /// <summary>
-    /// Retrieves the properties of the given <see cref="colour_type" />.
-    /// </summary>
-    /// <param name="type">The identifier for the colour component to retrieve
-    /// the properties for.</param>
-    /// <param name="properties">The structure receiving the result.</param>
-    /// <returns><c>true</c> if <paramref name="type" /> is not
-    /// <see cref="colour_type::none" />, <c>false</c> otherwise.</returns>
-    inline bool get_properties(const colour_type type,
-            colour_properties& properties) {
-        return detail::get_properties(detail::colour_dispatch_list {},
+
+MMPLD_DETAIL_NAMESPACE_BEGIN
+
+/// <summary>
+/// Tests all members of <see cref="colour_dispatch_list" /> for the
+/// given runtime type and fills <paramref name="properties" /> if the type
+/// was found.
+/// </summary>
+template<colour_type C, colour_type... Cs>
+bool get_properties(enum_dispatch_list<colour_type, C, Cs...>,
+        const colour_type type, colour_properties& properties) {
+    if (type == C) {
+        typedef colour_traits<C> traits_type;
+        properties.channels = traits_type::channels;
+        properties.is_float = std::is_floating_point<
+            typename traits_type::value_type>::value;
+        properties.size = traits_type::size;
+
+        return (type != colour_type::none);
+
+    } else {
+        return get_properties(enum_dispatch_list<colour_type, Cs...> {},
             type, properties);
     }
+}
 
-} /* end namespace mmpld */
+/// <summary>
+/// Recursion stop for <see cref="get_properties" />.
+/// </summary>
+inline bool get_properties(enum_dispatch_list<colour_type>,
+        const colour_type, colour_properties&) {
+    throw std::runtime_error("The properties of the given colour_type "
+        "could not be retrieved. Make sure that the colour_type is valid "
+        "and that all valid colour types have been registered in the "
+        "enum_dispatch_list.");
+}
+
+MMPLD_DETAIL_NAMESPACE_END
+
+
+MMPLD_NAMESPACE_BEGIN
+
+/// <summary>
+/// Retrieves the properties of the given <see cref="colour_type" />.
+/// </summary>
+/// <param name="type">The identifier for the colour component to retrieve
+/// the properties for.</param>
+/// <param name="properties">The structure receiving the result.</param>
+/// <returns><c>true</c> if <paramref name="type" /> is not
+/// <see cref="colour_type::none" />, <c>false</c> otherwise.</returns>
+inline bool get_properties(const colour_type type,
+        colour_properties& properties) {
+    return detail::get_properties(detail::colour_dispatch_list { },
+        type, properties);
+}
+
+MMPLD_NAMESPACE_END
+
+#endif /* !defined(_MMPLD_COLOUR_PROPERTIES_H) */

@@ -92,6 +92,9 @@
     <ClInclude Include="mmpld\runtime_converter.h">
       <Filter>Header Files\mmpld</Filter>
     </ClInclude>
+    <ClInclude Include="mmpld\abi.h">
+      <Filter>Header Files\mmpld</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="mmpld\file_header.inl">

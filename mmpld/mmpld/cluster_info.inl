@@ -6,9 +6,10 @@
 
 
 /*
- * mmpld::read_cluster_info
+ * MMPLD_NAMESPACE::read_cluster_info
  */
-template<class F> mmpld::cluster_info mmpld::read_cluster_info(F& file) {
+template<class F>
+MMPLD_NAMESPACE::cluster_info MMPLD_NAMESPACE::read_cluster_info(F& file) {
     typedef detail::basic_io_traits<F> io_traits_type;
     std::uint32_t cnt = 0;
     std::uint64_t size = 0; // HAZARD: This is just a guess. The original code
@@ -32,9 +33,9 @@ template<class F> mmpld::cluster_info mmpld::read_cluster_info(F& file) {
 
 
 /*
- * mmpld::skip_cluster_info
+ * MMPLD_NAMESPACE::skip_cluster_info
  */
-template<class F> void mmpld::skip_cluster_info(F& file) {
+template<class F> void MMPLD_NAMESPACE::skip_cluster_info(F& file) {
     typedef detail::basic_io_traits<F> io_traits_type;
     std::uint32_t cnt = 0;
     std::uint64_t size = 0; // HAZARD: This is just a guess.
