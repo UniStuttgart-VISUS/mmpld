@@ -383,6 +383,8 @@ This is a simple test application for dumping meta data from an MMPLD file. It s
 | `/nologo`                          | Supresses the output of the version of the tool. |
 
 ## Nuget package
+Do not forget to update the ABI version in [abi.h](mmpld/abi.h) before packaging!
+
 The project contains a nuspec to create a Nuget package using the tools from https://www.nuget.org/downloads with the following command line:
 
 ```posh
